@@ -1,5 +1,5 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)](LICENSE)
-[![Docs](https://img.shields.io/badge/docs-Usage-blue.svg)](../docs/usage/)
+[![Docs](https://img.shields.io/badge/docs-Website-blue.svg)](../docs/)
 
 # camouflage-dart
 
@@ -12,8 +12,12 @@ Dart implementation of Camouflage (part of the SRC Tool). This module lives insi
 
 ## Documentation
 
-- Internal design/architecture notes: ../docs/internal/dart/
-- User-facing usage docs: ../docs/usage/
+- Docs website sections:
+  - Guide → /guide
+  - Components → /components
+  - API → /api
+  - Architecture → /architecture
+- Docs source (in this repo): see ../docs/development/* folders and their sidebars.ts files.
 
 ---
 
