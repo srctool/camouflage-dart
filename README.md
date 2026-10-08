@@ -1,30 +1,26 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)](LICENSE)
-[![Docs](https://img.shields.io/badge/docs-Website-blue.svg)](../docs/)
+[![Docs](https://img.shields.io/badge/docs-Website-blue.svg)](https://camouflage-dev.srctool.com)
 
 # camouflage-dart
 
-Dart implementation of Camouflage (part of the SRC Tool). This module lives inside the umbrella repo and mirrors the upstream project.
+Dart implementation of Camouflage (part of the SRC Tool). This repository is also included as the `dart-lib` submodule of the umbrella repository [srctool/camouflage](https://github.com/srctool/camouflage), which holds the documentation.
 
-- Upstream repository: https://github.com/srctool/camouflage-dart
-- Issues/PRs for Dart code should target this path in the umbrella repo or the upstream as appropriate.
+- Issues and pull requests for the Dart code go here, into `main`.
+- Cross-platform design questions and documentation changes go to [srctool/camouflage](https://github.com/srctool/camouflage).
 
 ---
 
 ## Documentation
 
-- Docs website sections:
-  - Guide → /guide
-  - Components → /components
-  - API → /api
-  - Architecture → /architecture
-- Docs source (in this repo): see ../docs/development/* folders and their sidebars.ts files.
+- Usage docs: https://camouflage.srctool.com
+- Contributor docs (design, architecture, components, contributing): https://camouflage-dev.srctool.com
 
 ---
 
 ## Development
 
-- Build & test: use the Dart/Flutter toolchain as applicable (see CONTRIBUTING if present)
-- Format/lint: run standard Dart format/lint tools
+- Format, analyze and test with the Flutter toolchain (see CONTRIBUTING.md).
+- Branch from `main`, open a PR into `main`, squash merge; releases are tags on `main`. See CONTRIBUTING.md.
 
 ---
 
