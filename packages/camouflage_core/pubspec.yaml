@@ -1,0 +1,21 @@
+name: camouflage_core
+description: "Camouflage core: the components, the Theme and the Skin contract. Visually neutral, no Material."
+version: 0.1.0-dev.1
+repository: https://github.com/srctool/camouflage-dart
+issue_tracker: https://github.com/srctool/camouflage-dart/issues
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+  flutter: ">=3.47.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  intl: ^0.20.2                       # date and time names and formats for the pickers (ADR-35)
+  material_color_utilities: ^0.13.0   # CamoTheme.fromSeed (M1)
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
