@@ -15,9 +15,6 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  contents: read
-
 jobs:
   analyze-test:
     name: Analyze, format, test, layers
