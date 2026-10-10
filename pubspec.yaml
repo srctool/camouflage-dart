@@ -1,0 +1,26 @@
+name: camouflage_workspace
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+workspace:
+  - packages/camouflage_core
+  - packages/camouflage_skin_minimal
+  - packages/camouflage_skin_testing
+  - example
+
+dev_dependencies:
+  melos: ^8.9.0
+  yaml: ^3.1.4
+
+melos:
+  repository: https://github.com/srctool/camouflage-dart
+  # Melos scripts only, no shell wrappers: they run the same on macOS, Linux and Windows.
+  scripts:
+    analyze: melos exec -- dart analyze --fatal-infos .
+    format: dart format --set-exit-if-changed .
+    test: melos exec --dir-exists=test -- flutter test
+    test:goldens:ci: melos exec --dir-exists=test -- flutter test --tags golden
+    layers: dart run tool/check_layers.dart
+    no-material: dart run tool/check_no_material.dart

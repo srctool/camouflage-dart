@@ -1,0 +1,20 @@
+name: camouflage_skin_testing
+description: "Test-only checks for any Camouflage skin: renderers apply behavior, and no literals."
+version: 0.1.0-dev.1
+repository: https://github.com/srctool/camouflage-dart
+issue_tracker: https://github.com/srctool/camouflage-dart/issues
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+  flutter: ">=3.47.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  camouflage_core: ^0.1.0-dev.1
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
