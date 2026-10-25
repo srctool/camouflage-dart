@@ -1,0 +1,220 @@
+import 'package:camouflage_core/camouflage_core.dart';
+import 'package:flutter/widgets.dart';
+
+// The M3 components in their states, for screenshot goldens of any skin. Static: no animation, no input.
+
+/// A small star-shaped test icon.
+const IconSource galleryIcon = IconSource.builder(_star);
+
+Widget _star(double size, Color? color) => CustomPaint(
+  size: Size.square(size),
+  painter: _StarPainter(color ?? const Color(0xFF000000)),
+);
+
+class _StarPainter extends CustomPainter {
+  _StarPainter(this.color);
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final s = size.width / 24;
+    final points = [
+      (12, 2),
+      (15, 9),
+      (22, 9),
+      (16.5, 14),
+      (18.5, 21),
+      (12, 17),
+      (5.5, 21),
+      (7.5, 14),
+      (2, 9),
+      (9, 9),
+    ];
+    final path = Path()..moveTo(points.first.$1 * s, points.first.$2 * s);
+    for (final p in points.skip(1)) {
+      path.lineTo(p.$1 * s, p.$2 * s);
+    }
+    canvas.drawPath(path..close(), Paint()..color = color);
+  }
+
+  @override
+  bool shouldRepaint(_StarPainter old) => old.color != color;
+}
+
+/// Every button appearance, enabled and disabled, in the default and the error tone, plus icons and loading.
+class ButtonGallery extends StatelessWidget {
+  /// Creates the gallery.
+  const ButtonGallery({super.key});
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 8,
+      children: [
+        for (final tone in [Tone.defaultTone, Tone.error])
+          for (final enabled in [true, false])
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 8,
+              children: [
+                for (final a in Appearance.values)
+                  CamoButton(
+                    text: a.name,
+                    onPressed: enabled ? () {} : null,
+                    appearance: a,
+                    tone: tone,
+                  ),
+              ],
+            ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8,
+          children: [
+            CamoButton(
+              text: 'Save',
+              onPressed: () {},
+              prefixIcon: const CamoIcon(galleryIcon),
+            ),
+            CamoButton(
+              text: 'Next',
+              onPressed: () {},
+              appearance: Appearance.outline,
+              suffixIcon: const CamoIcon(galleryIcon),
+            ),
+            CamoButton(
+              text: 'Done',
+              onPressed: () {},
+              tone: Tone.success,
+              appearance: Appearance.soft,
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+/// Every icon button appearance, a checked toggle, a disabled one and a tone.
+class IconButtonGallery extends StatelessWidget {
+  /// Creates the gallery.
+  const IconButtonGallery({super.key});
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.all(16),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: 8,
+      children: [
+        for (final a in [
+          Appearance.solid,
+          Appearance.soft,
+          Appearance.outline,
+          Appearance.ghost,
+        ])
+          CamoIconButton(
+            icon: const CamoIcon(galleryIcon),
+            semanticLabel: a.name,
+            onPressed: () {},
+            appearance: a,
+          ),
+        CamoIconButton(
+          icon: const CamoIcon(galleryIcon),
+          semanticLabel: 'Checked',
+          onPressed: () {},
+          checked: true,
+        ),
+        const CamoIconButton(
+          icon: CamoIcon(galleryIcon),
+          semanticLabel: 'Disabled',
+          onPressed: null,
+        ),
+        CamoIconButton(
+          icon: const CamoIcon(galleryIcon),
+          semanticLabel: 'Delete',
+          onPressed: () {},
+          tone: Tone.error,
+        ),
+      ],
+    ),
+  );
+}
+
+/// Text styles and links, the surface levels, dividers, progress circles and a tooltip bubble.
+class PrimitiveGallery extends StatelessWidget {
+  /// Creates the gallery.
+  const PrimitiveGallery({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Camouflage.themeOf(context);
+    final type = theme.typography;
+    final tooltip = Camouflage.skinOf(context).tooltip;
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: SizedBox(
+        width: 388,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 8,
+          children: [
+            CamoText('Headline', style: type.headlineSmall),
+            CamoText('Title', style: type.titleMedium),
+            CamoText.rich([
+              const CamoSpan('Body with a '),
+              CamoSpan('link', onTap: () {}),
+              const CamoSpan('.'),
+            ]),
+            CamoText('Success', color: theme.colors.success),
+            Row(
+              spacing: 8,
+              children: [
+                for (final level in SurfaceLevel.values)
+                  CamoSurface(
+                    level: level,
+                    shape: ShapeRole.medium,
+                    border: true,
+                    child: const SizedBox.square(dimension: 40),
+                  ),
+                const CamoSurface(
+                  shape: ShapeRole.medium,
+                  elevation: ElevationLevel.level3,
+                  child: SizedBox.square(dimension: 40),
+                ),
+              ],
+            ),
+            const CamoDivider(),
+            const CamoDivider(inset: DividerInset.middle),
+            const IntrinsicHeight(
+              child: Row(
+                spacing: 8,
+                children: [
+                  CamoIcon(galleryIcon),
+                  CamoDivider(orientation: Axis.vertical),
+                  CamoProgressCircle(value: 0.3, size: ProgressSize.small),
+                  CamoProgressCircle(value: 0.6),
+                  CamoProgressCircle(
+                    value: 0.9,
+                    tone: Tone.error,
+                    size: ProgressSize.large,
+                  ),
+                ],
+              ),
+            ),
+            tooltip.render(
+              context,
+              const TooltipState(text: 'Tooltip', visible: true),
+              theme,
+              tooltip.defaults(theme).merge(theme.components.tooltip),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

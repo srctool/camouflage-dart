@@ -2,59 +2,7 @@ import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-class _Fill implements SurfaceTreatment {
-  const _Fill();
-
-  @override
-  Widget decorate({
-    required Widget child,
-    required Color color,
-    required BorderRadius shape,
-    required double elevation,
-    required CamoTheme theme,
-  }) => DecoratedBox(
-    decoration: BoxDecoration(color: color, borderRadius: shape),
-    child: child,
-  );
-}
-
-class _None implements InteractionFeedback {
-  const _None();
-
-  @override
-  Widget wrap({
-    required Widget child,
-    required CamoInteractionController controller,
-    required Color contentColor,
-    required BorderRadius shape,
-    required CamoTheme theme,
-  }) => child;
-}
-
-class _Brand extends CamoTokenSet<_Brand> {
-  const _Brand();
-
-  @override
-  _Brand lerp(_Brand to, double t) => this;
-}
-
-const _skinA = CamoSkin(
-  name: 'a',
-  surfaceTreatment: _Fill(),
-  feedback: _None(),
-);
-const _skinB = CamoSkin(
-  name: 'b',
-  surfaceTreatment: _Fill(),
-  feedback: _None(),
-);
-final _themeT = CamoTheme(
-  colors: CamoColors.fromSeed(primary: const Color(0xFF0B57D0)),
-  typography: CamoTypography.system(),
-);
-final _themeU = _themeT.copyWith(
-  colors: CamoColors.fromSeed(primary: const Color(0xFFB3261E)),
-);
+import 'test_skins.dart';
 
 Widget _app(Widget child, {bool disableAnimations = false}) => MediaQuery(
   data: MediaQueryData(disableAnimations: disableAnimations),
@@ -98,37 +46,28 @@ void main() {
 
   group('inheritance', () {
     testWidgets('an inner provider with nothing inherits both', (t) async {
-      expect(await inside(t, (_skinA, _themeT), (null, null)), (
-        _skinA,
-        _themeT,
-      ));
+      expect(await inside(t, (skinA, themeT), (null, null)), (skinA, themeT));
     });
     testWidgets('an inner theme overrides only the theme', (t) async {
-      expect(await inside(t, (_skinA, _themeT), (null, _themeU)), (
-        _skinA,
-        _themeU,
-      ));
+      expect(await inside(t, (skinA, themeT), (null, themeU)), (skinA, themeU));
     });
     testWidgets('an inner skin overrides only the skin', (t) async {
-      expect(await inside(t, (_skinA, _themeT), (_skinB, null)), (
-        _skinB,
-        _themeT,
-      ));
+      expect(await inside(t, (skinA, themeT), (skinB, null)), (skinB, themeT));
     });
     testWidgets('an inner skin and theme override both', (t) async {
-      expect(await inside(t, (_skinA, _themeT), (_skinB, _themeU)), (
-        _skinB,
-        _themeU,
+      expect(await inside(t, (skinA, themeT), (skinB, themeU)), (
+        skinB,
+        themeU,
       ));
     });
     testWidgets('a lone skin has no theme', (t) async {
-      expect(await inside(t, null, (_skinB, null)), (_skinB, null));
+      expect(await inside(t, null, (skinB, null)), (skinB, null));
     });
     testWidgets('a lone theme has no skin', (t) async {
-      expect(await inside(t, null, (null, _themeU)), (null, _themeU));
+      expect(await inside(t, null, (null, themeU)), (null, themeU));
     });
     testWidgets('a lone provider with both works', (t) async {
-      expect(await inside(t, null, (_skinB, _themeU)), (_skinB, _themeU));
+      expect(await inside(t, null, (skinB, themeU)), (skinB, themeU));
     });
   });
 
@@ -163,7 +102,7 @@ void main() {
       final message = await errorOf(
         t,
         CamouflageProvider(
-          theme: _themeU,
+          theme: themeU,
           child: Builder(
             builder: (context) {
               Camouflage.skinOf(context, component: 'CamoButton');
@@ -184,17 +123,17 @@ void main() {
       final message = await errorOf(
         t,
         CamouflageProvider(
-          skin: _skinA,
-          theme: _themeT,
+          skin: skinA,
+          theme: themeT,
           child: Builder(
             builder: (context) {
-              Camouflage.tokensOf<_Brand>(context);
+              Camouflage.tokensOf<Brand>(context);
               return const SizedBox();
             },
           ),
         ),
       );
-      expect(message, contains('missing token set _Brand in the theme.'));
+      expect(message, contains('missing token set Brand in the theme.'));
     });
   });
 
@@ -203,7 +142,7 @@ void main() {
     Widget app(CamoSkin skin) => _app(
       CamouflageProvider(
         skin: skin,
-        theme: _themeT,
+        theme: themeT,
         child: Builder(
           builder: (context) {
             names.add(Camouflage.skinOf(context).name);
@@ -212,8 +151,8 @@ void main() {
         ),
       ),
     );
-    await tester.pumpWidget(app(_skinA));
-    await tester.pumpWidget(app(_skinB));
+    await tester.pumpWidget(app(skinA));
+    await tester.pumpWidget(app(skinB));
     expect(names, ['a', 'b']);
   });
 
@@ -223,8 +162,8 @@ void main() {
       _app(
         disableAnimations: true,
         CamouflageProvider(
-          skin: _skinA,
-          theme: _themeT,
+          skin: skinA,
+          theme: themeT,
           child: Builder(
             builder: (context) {
               motion = Camouflage.motionOf(context);
@@ -251,8 +190,8 @@ void main() {
     await tester.pumpWidget(
       _app(
         CamouflageProvider(
-          skin: _skinA,
-          theme: _themeT,
+          skin: skinA,
+          theme: themeT,
           child: CamoContentStyle(
             color: const Color(0xFFFF0000),
             iconStyle: const CamoIconStyle(size: 18, color: Color(0xFF0000FF)),
@@ -266,7 +205,7 @@ void main() {
                   },
                 ),
                 CamouflageProvider(
-                  theme: _themeU,
+                  theme: themeU,
                   child: Builder(
                     builder: (context) {
                       reset = Camouflage.contentColorOf(context);
@@ -284,8 +223,8 @@ void main() {
     expect(inner, const Color(0xFFFF0000));
     expect(iconTheme.color, const Color(0xFF0000FF));
     expect(iconTheme.size, 18);
-    expect(reset, _themeU.colors.onSurface);
-    expect(resetIcon, CamoIconStyle(size: 20, color: _themeU.colors.onSurface));
+    expect(reset, themeU.colors.onSurface);
+    expect(resetIcon, CamoIconStyle(size: 24, color: themeU.colors.onSurface));
   });
 
   testWidgets('a route pushed from a nested provider sees the nested theme', (
@@ -294,14 +233,14 @@ void main() {
     CamoTheme? inRoute;
     await tester.pumpWidget(
       CamouflageProvider(
-        skin: _skinA,
-        theme: _themeT,
+        skin: skinA,
+        theme: themeT,
         child: WidgetsApp(
           color: const Color(0xFF000000),
           pageRouteBuilder: <T>(settings, builder) =>
               PageRouteBuilder<T>(pageBuilder: (c, _, _) => builder(c)),
           home: CamouflageProvider(
-            theme: _themeU,
+            theme: themeU,
             child: Builder(
               builder: (context) => GestureDetector(
                 onTap: () => pushCamoRoute<void>(
@@ -322,14 +261,14 @@ void main() {
     );
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
-    expect(inRoute, same(_themeU));
+    expect(inRoute, same(themeU));
   });
 
   test('copyWith keeps the other fields identical', () {
-    const feedback = _None();
-    final copy = _skinA.copyWith(feedback: feedback);
-    expect(identical(copy.surfaceTreatment, _skinA.surfaceTreatment), isTrue);
-    expect(identical(copy.name, _skinA.name), isTrue);
+    const feedback = NoFeedback();
+    final copy = skinA.copyWith(feedback: feedback);
+    expect(identical(copy.surfaceTreatment, skinA.surfaceTreatment), isTrue);
+    expect(identical(copy.name, skinA.name), isTrue);
     expect(identical(copy.feedback, feedback), isTrue);
     // A skin that leaves out a field doesn't compile: CamoSkin has no defaults (Skin Contract §3.3).
   });

@@ -1,5 +1,7 @@
 // Checks every workspace package's Camouflage dependencies against tool/layers.yaml (ADR-27):
-// a package may depend only on lower layers. dev_dependencies count too, since pub allows cycles through them.
+// a package may depend only on lower layers. dev_dependencies count too, since pub allows cycles through them,
+// but they may also point at the same layer: tests don't ship, and the skins test themselves with
+// camouflage_skin_testing (ADR-27, amended 2026-10-25).
 // Usage (from dart-lib/): dart run tool/check_layers.dart, or melos run layers
 import 'dart:io';
 
@@ -28,7 +30,10 @@ void main() {
           const <String>[];
       for (final dep in deps.where(layers.containsKey)) {
         final depLayer = layers[dep]!;
-        if (depLayer >= layer)
+        final allowed = section == 'dev_dependencies'
+            ? depLayer <= layer
+            : depLayer < layer;
+        if (!allowed)
           problems.add(
             '$name -> $dep ($section): layer $layer may not depend on layer $depLayer',
           );
