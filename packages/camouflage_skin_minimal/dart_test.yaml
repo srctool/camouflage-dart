@@ -1,0 +1,2 @@
+tags:
+  golden:   # Alchemist goldens; `melos run test:goldens:ci` runs only these

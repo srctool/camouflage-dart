@@ -1,18 +1,24 @@
 import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
-/// A skin for proving the contract before any real skin exists: plain fills and no press feedback.
+import 'debug_renderers.dart';
+
+export 'debug_renderers.dart';
+
+/// A skin for proving the contract before any real skin exists: plain fills, no press feedback, and labelled
+/// boxes from the reference renderers in `debug_renderers.dart`.
 const CamoSkin debugSkin = CamoSkin(
   name: 'debug',
   surfaceTreatment: NoTreatment(),
   feedback: NoFeedback(),
-);
-
-/// A second debug skin, to show a skin switch: outlined surfaces and a tint while pressed.
-const CamoSkin debugOutlineSkin = CamoSkin(
-  name: 'debug-outline',
-  surfaceTreatment: OutlineTreatment(),
-  feedback: PressTint(),
+  text: DebugTextRenderer(),
+  icon: DebugIconRenderer(),
+  surface: DebugSurfaceRenderer(),
+  divider: DebugDividerRenderer(),
+  button: DebugButtonRenderer(),
+  iconButton: DebugIconButtonRenderer(),
+  progressCircle: DebugProgressCircleRenderer(),
+  tooltip: DebugTooltipRenderer(),
 );
 
 /// Fills the container and nothing else: no depth, no border.

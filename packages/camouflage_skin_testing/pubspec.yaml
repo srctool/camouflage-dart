@@ -13,8 +13,9 @@ dependencies:
   flutter:
     sdk: flutter
   camouflage_core: ^0.1.0-dev.1
+  flutter_test:          # the checks drive a WidgetTester
+    sdk: flutter
 
 dev_dependencies:
+  camouflage_skin_minimal: ^0.1.0-dev.1   # a real skin to break on purpose; test-only, same layer (ADR-27)
   flutter_lints: ^6.0.0
-  flutter_test:
-    sdk: flutter

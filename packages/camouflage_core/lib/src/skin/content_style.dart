@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 
+import '../icon/camo_icon.dart';
+
 /// The size and color icons take by default inside a container.
 @immutable
 class CamoIconStyle {
@@ -11,6 +13,15 @@ class CamoIconStyle {
 
   /// The icon's color.
   final Color color;
+
+  /// This style with [o]'s non-null fields applied.
+  CamoIconStyle merge(CamoIconTheme? o) => o == null
+      ? this
+      : CamoIconStyle(size: o.size ?? size, color: o.color ?? color);
+
+  /// A copy with the given fields replaced.
+  CamoIconStyle copyWith({double? size, Color? color}) =>
+      CamoIconStyle(size: size ?? this.size, color: color ?? this.color);
 
   @override
   bool operator ==(Object other) =>

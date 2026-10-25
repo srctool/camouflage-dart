@@ -5,9 +5,6 @@ import '../skin/content_style.dart';
 import '../theme/camo_theme.dart';
 import 'camouflage.dart';
 
-// Core's root icon size until the icon renderer's defaults exist (M3, ADR-39): the Minimal value (ADR-24).
-const double _rootIconSize = 20;
-
 /// Puts a skin and a theme into the tree for every `Camo*` widget below. A `null` argument inherits the
 /// value from the provider above, so nested providers can override just the skin or just the theme.
 ///
@@ -41,15 +38,20 @@ class CamouflageProvider extends StatelessWidget {
     final effectiveTheme = baseTheme != null && reduceMotion
         ? baseTheme.copyWith(motion: baseTheme.motion.reduced())
         : baseTheme;
-    final onSurface = effectiveTheme?.colors.onSurface;
+    // The root icon style is the icon component theme: the skin's defaults, then the theme's overrides.
+    final rootIcon = effectiveSkin == null || effectiveTheme == null
+        ? null
+        : effectiveSkin.icon
+              .defaults(effectiveTheme)
+              .merge(effectiveTheme.components.icon);
     return CamouflageScope(
       skin: effectiveSkin,
       theme: effectiveTheme,
-      child: onSurface == null
+      child: rootIcon == null
           ? child
           : CamoContentStyle(
-              color: onSurface,
-              iconStyle: CamoIconStyle(size: _rootIconSize, color: onSurface),
+              color: effectiveTheme!.colors.onSurface,
+              iconStyle: rootIcon,
               child: child,
             ),
     );

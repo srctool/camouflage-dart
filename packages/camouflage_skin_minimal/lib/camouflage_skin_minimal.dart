@@ -1,11 +1,61 @@
-/// The Minimal skin: Camouflage's own neutral dialect.
+/// The Minimal skin: Camouflage's own neutral dialect. Flat surfaces with hairlines, a quiet fade for
+/// feedback, ink as the primary, and a clear focus ring.
 library;
 
 import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
-/// The Minimal skin's starter theme: monochrome ink on true grays. A placeholder until milestone M3 builds the skin.
-final CamoTheme minimalTheme = CamoTheme(
-  colors: CamoColors.fromSeed(primary: const Color(0xFF1F1F1F)),
-  typography: CamoTypography.system(),
+import 'src/fade.dart';
+import 'src/flat.dart';
+import 'src/minimal_theme.dart';
+import 'src/renderer/minimal_actions.dart';
+import 'src/renderer/minimal_primitives.dart';
+
+export 'src/fade.dart';
+export 'src/flat.dart';
+export 'src/minimal_theme.dart';
+export 'src/renderer/minimal_actions.dart'
+    show
+        MinimalButtonRenderer,
+        MinimalIconButtonRenderer,
+        MinimalProgressCircleRenderer;
+export 'src/renderer/minimal_primitives.dart';
+
+/// The Minimal skin. Each component's renderer joins in its milestone; skins also serve as renderer libraries,
+/// so each renderer is public for borrowing (ADR-28).
+const CamoSkin minimalSkin = CamoSkin(
+  name: 'minimal',
+  surfaceTreatment: Flat(),
+  feedback: Fade(),
+  text: MinimalTextRenderer(),
+  icon: MinimalIconRenderer(),
+  surface: MinimalSurfaceRenderer(),
+  divider: MinimalDividerRenderer(),
+  button: MinimalButtonRenderer(),
+  iconButton: MinimalIconButtonRenderer(),
+  progressCircle: MinimalProgressCircleRenderer(),
+  tooltip: MinimalTooltipRenderer(),
 );
+
+/// A provider for widget previews and golden setups with [minimalSkin] and [minimalLight] or [minimalDark].
+class MinimalPreview extends StatelessWidget {
+  /// Creates a preview of [child].
+  const MinimalPreview({
+    super.key,
+    this.brightness = Brightness.light,
+    required this.child,
+  });
+
+  /// Light or dark.
+  final Brightness brightness;
+
+  /// The widget to preview.
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => CamouflagePreview(
+    skin: minimalSkin,
+    theme: brightness == Brightness.dark ? minimalDark : minimalLight,
+    child: child,
+  );
+}

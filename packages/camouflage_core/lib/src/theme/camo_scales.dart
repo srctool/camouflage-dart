@@ -196,6 +196,12 @@ class CamoElevation {
     'level3': level3, 'level4': level4, 'level5': level5,
   };
 
+  /// The highest level whose depth is at most [elevation], for surface treatments that draw by level.
+  ElevationLevel levelOf(double elevation) => ElevationLevel.values.lastWhere(
+    (l) => of(l) <= elevation,
+    orElse: () => ElevationLevel.level0,
+  );
+
   /// The depth for an [ElevationLevel].
   double of(ElevationLevel level) => switch (level) {
     ElevationLevel.level0 => level0,

@@ -1,15 +1,87 @@
 import 'package:flutter/foundation.dart';
 
+import '../button/camo_button.dart';
+import '../divider/camo_divider.dart';
+import '../icon/camo_icon.dart';
+import '../icon_button/camo_icon_button.dart';
+import '../progress/camo_progress.dart';
+import '../surface/camo_surface.dart';
+import '../tooltip/camo_tooltip.dart';
+
 /// Per-component overrides: one nullable `CamoXTheme` per component, `null` meaning the skin's default.
-/// Each component adds its field here, with its `CamoXTheme` / `CamoXStyle` pair, in its own milestone (M3 to M8).
+/// Each component adds its field here in its own milestone (ADR-39).
 @immutable
 class CamoComponentThemes {
-  /// Creates component themes (none yet).
-  const CamoComponentThemes();
+  /// Creates component themes.
+  const CamoComponentThemes({
+    this.icon,
+    this.surface,
+    this.divider,
+    this.button,
+    this.iconButton,
+    this.progress,
+    this.tooltip,
+  });
+
+  /// Icons outside any component.
+  final CamoIconTheme? icon;
+
+  /// Surfaces.
+  final CamoSurfaceTheme? surface;
+
+  /// Dividers.
+  final CamoDividerTheme? divider;
+
+  /// Buttons.
+  final CamoButtonTheme? button;
+
+  /// Icon buttons.
+  final CamoIconButtonTheme? iconButton;
+
+  /// Progress indicators.
+  final CamoProgressTheme? progress;
+
+  /// Tooltips.
+  final CamoTooltipTheme? tooltip;
+
+  /// A copy with the given fields replaced.
+  CamoComponentThemes copyWith({
+    CamoIconTheme? icon,
+    CamoSurfaceTheme? surface,
+    CamoDividerTheme? divider,
+    CamoButtonTheme? button,
+    CamoIconButtonTheme? iconButton,
+    CamoProgressTheme? progress,
+    CamoTooltipTheme? tooltip,
+  }) => CamoComponentThemes(
+    icon: icon ?? this.icon,
+    surface: surface ?? this.surface,
+    divider: divider ?? this.divider,
+    button: button ?? this.button,
+    iconButton: iconButton ?? this.iconButton,
+    progress: progress ?? this.progress,
+    tooltip: tooltip ?? this.tooltip,
+  );
 
   @override
-  bool operator ==(Object other) => other is CamoComponentThemes;
+  bool operator ==(Object other) =>
+      other is CamoComponentThemes &&
+      other.icon == icon &&
+      other.surface == surface &&
+      other.divider == divider &&
+      other.button == button &&
+      other.iconButton == iconButton &&
+      other.progress == progress &&
+      other.tooltip == tooltip;
 
   @override
-  int get hashCode => 0;
+  int get hashCode => Object.hash(
+    icon,
+    surface,
+    divider,
+    button,
+    iconButton,
+    progress,
+    tooltip,
+  );
 }
