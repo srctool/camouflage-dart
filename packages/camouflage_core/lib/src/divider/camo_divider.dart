@@ -38,6 +38,19 @@ class CamoDividerTheme {
   /// The end space used by `middle` insets.
   final double? endInset;
 
+  /// A copy with the given fields replaced.
+  CamoDividerTheme copyWith({
+    double? thickness,
+    Color? color,
+    double? startInset,
+    double? endInset,
+  }) => CamoDividerTheme(
+    thickness: thickness ?? this.thickness,
+    color: color ?? this.color,
+    startInset: startInset ?? this.startInset,
+    endInset: endInset ?? this.endInset,
+  );
+
   @override
   bool operator ==(Object other) =>
       other is CamoDividerTheme &&

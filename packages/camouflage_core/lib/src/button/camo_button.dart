@@ -128,6 +128,50 @@ class CamoButtonTheme {
   /// The disabled content's alpha of `onSurface`.
   final double? disabledContentAlpha;
 
+  /// A copy with the given fields replaced.
+  CamoButtonTheme copyWith({
+    Appearance? defaultAppearance,
+    double? height,
+    double? minWidth,
+    BorderRadius? shape,
+    EdgeInsetsDirectional? padding,
+    EdgeInsetsDirectional? paddingWithIcon,
+    TextStyle? textStyle,
+    double? iconSize,
+    double? iconGap,
+    double? borderWidth,
+    ElevationLevel? raisedElevation,
+    ButtonColors? solidColors,
+    ButtonColors? softColors,
+    ButtonColors? raisedColors,
+    ButtonColors? outlineColors,
+    ButtonColors? ghostColors,
+    ButtonColors? linkColors,
+    double? disabledContainerAlpha,
+    double? disabledContentAlpha,
+  }) => CamoButtonTheme(
+    defaultAppearance: defaultAppearance ?? this.defaultAppearance,
+    height: height ?? this.height,
+    minWidth: minWidth ?? this.minWidth,
+    shape: shape ?? this.shape,
+    padding: padding ?? this.padding,
+    paddingWithIcon: paddingWithIcon ?? this.paddingWithIcon,
+    textStyle: textStyle ?? this.textStyle,
+    iconSize: iconSize ?? this.iconSize,
+    iconGap: iconGap ?? this.iconGap,
+    borderWidth: borderWidth ?? this.borderWidth,
+    raisedElevation: raisedElevation ?? this.raisedElevation,
+    solidColors: solidColors ?? this.solidColors,
+    softColors: softColors ?? this.softColors,
+    raisedColors: raisedColors ?? this.raisedColors,
+    outlineColors: outlineColors ?? this.outlineColors,
+    ghostColors: ghostColors ?? this.ghostColors,
+    linkColors: linkColors ?? this.linkColors,
+    disabledContainerAlpha:
+        disabledContainerAlpha ?? this.disabledContainerAlpha,
+    disabledContentAlpha: disabledContentAlpha ?? this.disabledContentAlpha,
+  );
+
   @override
   bool operator ==(Object other) =>
       other is CamoButtonTheme &&

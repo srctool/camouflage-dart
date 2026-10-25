@@ -76,6 +76,10 @@ class CamoIconTheme {
   /// The icon color.
   final Color? color;
 
+  /// A copy with the given fields replaced.
+  CamoIconTheme copyWith({double? size, Color? color}) =>
+      CamoIconTheme(size: size ?? this.size, color: color ?? this.color);
+
   @override
   bool operator ==(Object other) =>
       other is CamoIconTheme && other.size == size && other.color == color;

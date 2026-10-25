@@ -67,6 +67,27 @@ class CamoTooltipTheme {
   /// The colors.
   final TooltipColors? colors;
 
+  /// A copy with the given fields replaced.
+  CamoTooltipTheme copyWith({
+    BorderRadius? shape,
+    EdgeInsetsGeometry? padding,
+    double? offset,
+    TextStyle? textStyle,
+    Duration? showDelay,
+    Duration? hideDelay,
+    double? maxWidth,
+    TooltipColors? colors,
+  }) => CamoTooltipTheme(
+    shape: shape ?? this.shape,
+    padding: padding ?? this.padding,
+    offset: offset ?? this.offset,
+    textStyle: textStyle ?? this.textStyle,
+    showDelay: showDelay ?? this.showDelay,
+    hideDelay: hideDelay ?? this.hideDelay,
+    maxWidth: maxWidth ?? this.maxWidth,
+    colors: colors ?? this.colors,
+  );
+
   @override
   bool operator ==(Object other) =>
       other is CamoTooltipTheme &&

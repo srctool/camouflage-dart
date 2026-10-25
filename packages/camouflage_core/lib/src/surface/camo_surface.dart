@@ -17,6 +17,13 @@ class CamoSurfaceTheme {
   /// The outline's color.
   final Color? borderColor;
 
+  /// A copy with the given fields replaced.
+  CamoSurfaceTheme copyWith({double? borderWidth, Color? borderColor}) =>
+      CamoSurfaceTheme(
+        borderWidth: borderWidth ?? this.borderWidth,
+        borderColor: borderColor ?? this.borderColor,
+      );
+
   @override
   bool operator ==(Object other) =>
       other is CamoSurfaceTheme &&

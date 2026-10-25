@@ -6,6 +6,8 @@ import 'package:camouflage_skin_minimal/camouflage_skin_minimal.dart';
 import 'package:flutter/widgets.dart';
 
 import 'app_icon.dart';
+import 'brands.dart';
+import 'checkout.dart';
 import 'debug_skin.dart';
 
 void main() => runApp(const CamouflageExampleApp());
@@ -14,29 +16,50 @@ const _debugSeed = Color(0xFF0B57D0);
 const _promoSeed = Color(0xFFE8710A);
 const _fakeRequest = Duration(seconds: 2);
 
-// The three skins the example switches between, each with its own starter theme.
-enum _Skin {
+/// The three skins the example switches between, each with its own starter theme.
+enum SampleSkin {
+  /// Camouflage's own dialect.
   minimal('Minimal', minimalSkin),
+
+  /// Fluent 2.
   fluent('Fluent', fluentSkinDefault),
+
+  /// The reference renderers.
   debug('Debug', debugSkin);
 
-  const _Skin(this.label, this.skin);
+  const SampleSkin(this.label, this.skin);
 
+  /// The switcher's label.
   final String label;
+
+  /// The skin.
   final CamoSkin skin;
 
+  /// The skin's starter theme.
   CamoTheme theme(Brightness b) => switch (this) {
-    _Skin.minimal => minimalTheme(brightness: b),
-    _Skin.fluent => fluentTheme(brightness: b),
-    _Skin.debug => CamoTheme(
+    SampleSkin.minimal => minimalTheme(brightness: b),
+    SampleSkin.fluent => fluentTheme(brightness: b),
+    SampleSkin.debug => CamoTheme(
       colors: CamoColors.fromSeed(primary: _debugSeed, brightness: b),
       typography: CamoTypography.system(),
     ),
   };
 }
 
+/// A brand on a skin's starter theme, light or dark: everything the example can switch. A skin with its own
+/// token set takes the brand color too (Fluent derives its hover and pressed steps from it), so the brand reaches
+/// every state, not only the roles.
+CamoTheme sampleTheme(SampleSkin skin, Brand brand, Brightness brightness) {
+  final seed = brand.tokens?.brand[600];
+  final base = skin == SampleSkin.fluent && seed != null
+      ? fluentTheme(brand: seed, brightness: brightness)
+      : skin.theme(brightness);
+  return brand.on(base, brightness);
+}
+
 /// The example app. Built on [WidgetsApp], not MaterialApp, to prove core works without Material.
-/// M3: the first components on DebugSkin, Minimal and Fluent, switched live, like the Kotlin sample.
+/// M4: one screen, two brands, two skins and dark mode, switched live at the provider, like the Kotlin sample;
+/// then the component gallery.
 class CamouflageExampleApp extends StatefulWidget {
   /// Creates the example app.
   const CamouflageExampleApp({super.key});
@@ -47,7 +70,8 @@ class CamouflageExampleApp extends StatefulWidget {
 
 class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
   bool? _dark;
-  _Skin _skin = _Skin.minimal;
+  SampleSkin _skin = SampleSkin.minimal;
+  Brand _brand = Brand.defaultBrand;
 
   @override
   Widget build(BuildContext context) => WidgetsApp(
@@ -58,7 +82,7 @@ class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
           _dark ?? MediaQuery.platformBrightnessOf(context) == Brightness.dark;
       final brightness = dark ? Brightness.dark : Brightness.light;
       return CamoAnimatedTheme(
-        theme: _skin.theme(brightness),
+        theme: sampleTheme(_skin, _brand, brightness),
         builder: (context, theme) => CamouflageProvider(
           skin: _skin.skin,
           theme: theme,
@@ -73,25 +97,27 @@ class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         spacing: theme.spacing.l,
                         children: [
-                          Wrap(
-                            spacing: theme.spacing.s,
-                            runSpacing: theme.spacing.s,
-                            children: [
-                              for (final s in _Skin.values)
-                                CamoButton(
-                                  text: s.label,
-                                  onPressed: () => setState(() => _skin = s),
-                                  appearance: s == _skin
-                                      ? Appearance.solid
-                                      : Appearance.outline,
-                                ),
-                              CamoButton(
-                                text: dark ? 'Light' : 'Dark',
-                                onPressed: () => setState(() => _dark = !dark),
-                                appearance: Appearance.ghost,
-                              ),
-                            ],
+                          _Switcher(
+                            options: SampleSkin.values,
+                            chosen: _skin,
+                            label: (s) => s.label,
+                            onChoose: (s) => setState(() => _skin = s),
                           ),
+                          _Switcher(
+                            options: Brand.values,
+                            chosen: _brand,
+                            label: (b) => b.label,
+                            onChoose: (b) => setState(() => _brand = b),
+                          ),
+                          Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: CamoButton(
+                              text: dark ? 'Light' : 'Dark',
+                              onPressed: () => setState(() => _dark = !dark),
+                              appearance: Appearance.ghost,
+                            ),
+                          ),
+                          const Checkout(),
                           const _Section(title: 'Buttons', child: _Buttons()),
                           const _Section(
                             title: 'Icon buttons',
@@ -104,8 +130,7 @@ class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
                           ),
                           const _Section(title: 'Progress', child: _Progress()),
                           CamouflageProvider(
-                            theme: _skin
-                                .theme(brightness)
+                            theme: sampleTheme(_skin, _brand, brightness)
                                 .copyWith(
                                   colors: CamoColors.fromSeed(
                                     primary: _promoSeed,
@@ -136,6 +161,38 @@ class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
       );
     },
   );
+}
+
+// A row of buttons, one per option; the chosen one is solid.
+class _Switcher<T> extends StatelessWidget {
+  const _Switcher({
+    required this.options,
+    required this.chosen,
+    required this.label,
+    required this.onChoose,
+  });
+
+  final List<T> options;
+  final T chosen;
+  final String Function(T) label;
+  final void Function(T) onChoose;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = Camouflage.spacingOf(context).s;
+    return Wrap(
+      spacing: s,
+      runSpacing: s,
+      children: [
+        for (final o in options)
+          CamoButton(
+            text: label(o),
+            onPressed: () => onChoose(o),
+            appearance: o == chosen ? Appearance.solid : Appearance.outline,
+          ),
+      ],
+    );
+  }
 }
 
 class _Section extends StatelessWidget {
