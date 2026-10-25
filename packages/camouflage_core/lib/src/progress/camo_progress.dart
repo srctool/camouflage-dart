@@ -64,6 +64,21 @@ class CamoProgressTheme {
   /// The colors for the default tone.
   final ProgressColors? colors;
 
+  /// A copy with the given fields replaced.
+  CamoProgressTheme copyWith({
+    double? circleStroke,
+    double? circleSizeSmall,
+    double? circleSizeMedium,
+    double? circleSizeLarge,
+    ProgressColors? colors,
+  }) => CamoProgressTheme(
+    circleStroke: circleStroke ?? this.circleStroke,
+    circleSizeSmall: circleSizeSmall ?? this.circleSizeSmall,
+    circleSizeMedium: circleSizeMedium ?? this.circleSizeMedium,
+    circleSizeLarge: circleSizeLarge ?? this.circleSizeLarge,
+    colors: colors ?? this.colors,
+  );
+
   @override
   bool operator ==(Object other) =>
       other is CamoProgressTheme &&

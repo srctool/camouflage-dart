@@ -302,6 +302,13 @@ void main() {
       );
     });
 
+    test('a component theme copies with one field replaced', () {
+      const theme = CamoButtonTheme(height: 40, minWidth: 64);
+      final copy = theme.copyWith(height: 48);
+      expect(copy.height, 48);
+      expect(copy.minWidth, 64);
+    });
+
     test('style merges, and status tones take their family', () {
       final style = skinA.button.defaults(themeT);
       expect(style.merge(const CamoButtonTheme(height: 56)).height, 56);

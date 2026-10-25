@@ -93,6 +93,36 @@ class CamoIconButtonTheme {
   /// The disabled content's alpha.
   final double? disabledContentAlpha;
 
+  /// A copy with the given fields replaced.
+  CamoIconButtonTheme copyWith({
+    Appearance? defaultAppearance,
+    double? containerSize,
+    BorderRadius? shape,
+    double? iconSize,
+    double? borderWidth,
+    IconButtonColors? solidColors,
+    IconButtonColors? softColors,
+    IconButtonColors? outlineColors,
+    IconButtonColors? ghostColors,
+    IconButtonColors? checkedColors,
+    double? disabledContainerAlpha,
+    double? disabledContentAlpha,
+  }) => CamoIconButtonTheme(
+    defaultAppearance: defaultAppearance ?? this.defaultAppearance,
+    containerSize: containerSize ?? this.containerSize,
+    shape: shape ?? this.shape,
+    iconSize: iconSize ?? this.iconSize,
+    borderWidth: borderWidth ?? this.borderWidth,
+    solidColors: solidColors ?? this.solidColors,
+    softColors: softColors ?? this.softColors,
+    outlineColors: outlineColors ?? this.outlineColors,
+    ghostColors: ghostColors ?? this.ghostColors,
+    checkedColors: checkedColors ?? this.checkedColors,
+    disabledContainerAlpha:
+        disabledContainerAlpha ?? this.disabledContainerAlpha,
+    disabledContentAlpha: disabledContentAlpha ?? this.disabledContentAlpha,
+  );
+
   @override
   bool operator ==(Object other) =>
       other is CamoIconButtonTheme &&
