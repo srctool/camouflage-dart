@@ -1,112 +1,159 @@
 import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
+import 'debug_skin.dart';
+import 'debug_placeholder.dart';
+
 void main() => runApp(const CamouflageExampleApp());
 
-const _seed = Color(0xFF0B57D0);
+enum _Brand {
+  blue('blue', Color(0xFF0B57D0)),
+  green('green', Color(0xFF146C2E));
+
+  const _Brand(this.label, this.seed);
+
+  final String label;
+  final Color seed;
+}
+
+const _promoSeed = Color(0xFFE8710A);
+
+CamoTheme _theme(Color seed, Brightness brightness) => CamoTheme(
+  colors: CamoColors.fromSeed(primary: seed, brightness: brightness),
+  typography: CamoTypography.system(),
+);
 
 /// The example app. Built on [WidgetsApp], not MaterialApp, to prove core works without Material.
-/// M1: every color role of a seed theme, in light and dark, like the Kotlin sample.
-class CamouflageExampleApp extends StatelessWidget {
+/// M2: placeholders drawn through DebugSkin, with nested providers and live switching, like the Kotlin sample.
+class CamouflageExampleApp extends StatefulWidget {
   /// Creates the example app.
   const CamouflageExampleApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final light = CamoTheme(
-      colors: CamoColors.fromSeed(primary: _seed),
-      typography: CamoTypography.system(),
-    );
-    final dark = light.copyWith(
-      colors: CamoColors.fromSeed(primary: _seed, brightness: Brightness.dark),
-    );
-    return WidgetsApp(
-      title: 'Camouflage',
-      color: _seed,
-      builder: (context, _) => SingleChildScrollView(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: _Swatches(title: 'Light', theme: light),
-            ),
-            Expanded(
-              child: _Swatches(title: 'Dark', theme: dark),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  State<CamouflageExampleApp> createState() => _CamouflageExampleAppState();
 }
 
-class _Swatches extends StatelessWidget {
-  const _Swatches({required this.title, required this.theme});
-
-  final String title;
-  final CamoTheme theme;
+class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
+  bool? _dark;
+  _Brand _brand = _Brand.blue;
+  CamoSkin _skin = debugSkin;
 
   @override
   Widget build(BuildContext context) {
-    final c = theme.colors;
-    return ColoredBox(
-      color: c.surface,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              '$title · seed #0B57D0',
-              style: theme.typography.titleMedium.copyWith(color: c.onSurface),
-            ),
-            for (final (name, color, content) in _roles(c))
-              Container(
-                height: 36,
-                margin: const EdgeInsets.only(top: 4),
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                alignment: Alignment.centerLeft,
-                decoration: BoxDecoration(
-                  color: color,
-                  border: Border.all(color: c.outlineVariant),
-                ),
-                child: Text(
-                  name,
-                  style: theme.typography.labelMedium.copyWith(color: content),
+    final otherSkin = _skin == debugSkin ? debugOutlineSkin : debugSkin;
+    return WidgetsApp(
+      title: 'Camouflage',
+      color: _brand.seed,
+      builder: (context, _) {
+        final dark =
+            _dark ??
+            MediaQuery.platformBrightnessOf(context) == Brightness.dark;
+        final brightness = dark ? Brightness.dark : Brightness.light;
+        return CamoAnimatedTheme(
+          theme: _theme(_brand.seed, brightness),
+          builder: (context, theme) => CamouflageProvider(
+            skin: _skin,
+            theme: theme,
+            child: ColoredBox(
+              color: theme.colors.surface,
+              child: SizedBox.expand(
+                child: SingleChildScrollView(
+                  child: _Section(
+                    title: 'Root provider',
+                    children: [
+                      Wrap(
+                        spacing: theme.spacing.s,
+                        runSpacing: theme.spacing.s,
+                        children: [
+                          DebugPlaceholder(
+                            'Skin: ${_skin.name}',
+                            onPressed: () => setState(() => _skin = otherSkin),
+                          ),
+                          DebugPlaceholder(
+                            'Brand: ${_brand.label}',
+                            onPressed: () => setState(
+                              () => _brand =
+                                  _Brand.values[(_brand.index + 1) %
+                                      _Brand.values.length],
+                            ),
+                          ),
+                          DebugPlaceholder(
+                            dark ? 'Dark' : 'Light',
+                            onPressed: () => setState(() => _dark = !dark),
+                          ),
+                        ],
+                      ),
+                      const DebugPlaceholder(
+                        'Inherits the root skin and theme',
+                      ),
+                      CamoAnimatedTheme(
+                        theme: _theme(_promoSeed, brightness),
+                        builder: (context, promo) => CamouflageProvider(
+                          theme: promo,
+                          child: const _Section(
+                            title: 'Nested provider: theme only',
+                            children: [
+                              DebugPlaceholder(
+                                'Inherits the root skin, uses the promo theme',
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      CamouflageProvider(
+                        skin: otherSkin,
+                        child: const _Section(
+                          title: 'Nested provider: skin only',
+                          children: [
+                            DebugPlaceholder(
+                              'Uses the other skin, inherits the root theme',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+// A region on the theme's surface, drawn with the current skin's surface treatment.
+class _Section extends StatelessWidget {
+  const _Section({required this.title, required this.children});
+
+  final String title;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Camouflage.themeOf(context);
+    return Camouflage.skinOf(context).surfaceTreatment.decorate(
+      color: theme.colors.surface,
+      shape: theme.shapes.large,
+      elevation: 0,
+      theme: theme,
+      child: Padding(
+        padding: EdgeInsets.all(theme.spacing.l),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: theme.spacing.m,
+          children: [
+            Text(
+              title,
+              style: theme.typography.titleMedium.copyWith(
+                color: Camouflage.contentColorOf(context),
+              ),
+            ),
+            ...children,
           ],
         ),
       ),
     );
   }
 }
-
-// Each role with the content color drawn on it.
-List<(String, Color, Color)> _roles(CamoColors c) => [
-  ('primary', c.primary, c.onPrimary),
-  ('primaryContainer', c.primaryContainer, c.onPrimaryContainer),
-  ('secondary', c.secondary, c.onSecondary),
-  ('secondaryContainer', c.secondaryContainer, c.onSecondaryContainer),
-  ('tertiary', c.tertiary, c.onTertiary),
-  ('tertiaryContainer', c.tertiaryContainer, c.onTertiaryContainer),
-  ('surface', c.surface, c.onSurface),
-  ('surfaceContainerLowest', c.surfaceContainerLowest, c.onSurface),
-  ('surfaceContainerLow', c.surfaceContainerLow, c.onSurface),
-  ('surfaceContainer', c.surfaceContainer, c.onSurface),
-  ('surfaceContainerHigh', c.surfaceContainerHigh, c.onSurface),
-  ('surfaceContainerHighest', c.surfaceContainerHighest, c.onSurfaceVariant),
-  ('outline', c.outline, c.surface),
-  ('outlineVariant', c.outlineVariant, c.onSurface),
-  ('error', c.error, c.onError),
-  ('errorContainer', c.errorContainer, c.onErrorContainer),
-  ('success', c.success, c.onSuccess),
-  ('successContainer', c.successContainer, c.onSuccessContainer),
-  ('warning', c.warning, c.onWarning),
-  ('warningContainer', c.warningContainer, c.onWarningContainer),
-  ('info', c.info, c.onInfo),
-  ('infoContainer', c.infoContainer, c.onInfoContainer),
-  ('inverseSurface', c.inverseSurface, c.inverseOnSurface),
-  ('inversePrimary', c.inversePrimary, c.inverseSurface),
-  ('scrim', c.scrim, const Color(0xFFFFFFFF)), // the scrim has no content role
-];

@@ -81,3 +81,24 @@ enum SurfaceLevel {
   /// `surfaceContainerHighest`.
   highest,
 }
+
+/// The visual weight of a component, from strongest to lightest. Each skin maps it to its own dialect.
+enum Appearance {
+  /// A filled container in the brand color.
+  solid,
+
+  /// A tinted container.
+  soft,
+
+  /// A container lifted by the skin's depth.
+  raised,
+
+  /// A border, no fill.
+  outline,
+
+  /// No container until hovered or pressed.
+  ghost,
+
+  /// Text only, like a link.
+  link,
+}
