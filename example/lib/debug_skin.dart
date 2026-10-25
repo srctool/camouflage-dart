@@ -1,0 +1,101 @@
+import 'package:camouflage_core/camouflage_core.dart';
+import 'package:flutter/widgets.dart';
+
+/// A skin for proving the contract before any real skin exists: plain fills and no press feedback.
+const CamoSkin debugSkin = CamoSkin(
+  name: 'debug',
+  surfaceTreatment: NoTreatment(),
+  feedback: NoFeedback(),
+);
+
+/// A second debug skin, to show a skin switch: outlined surfaces and a tint while pressed.
+const CamoSkin debugOutlineSkin = CamoSkin(
+  name: 'debug-outline',
+  surfaceTreatment: OutlineTreatment(),
+  feedback: PressTint(),
+);
+
+/// Fills the container and nothing else: no depth, no border.
+class NoTreatment implements SurfaceTreatment {
+  /// Creates the treatment.
+  const NoTreatment();
+
+  @override
+  Widget decorate({
+    required Widget child,
+    required Color color,
+    required BorderRadius shape,
+    required double elevation,
+    required CamoTheme theme,
+  }) => DecoratedBox(
+    decoration: BoxDecoration(color: color, borderRadius: shape),
+    child: child,
+  );
+}
+
+/// An outline in `outline` instead of depth.
+class OutlineTreatment implements SurfaceTreatment {
+  /// Creates the treatment.
+  const OutlineTreatment();
+
+  @override
+  Widget decorate({
+    required Widget child,
+    required Color color,
+    required BorderRadius shape,
+    required double elevation,
+    required CamoTheme theme,
+  }) => DecoratedBox(
+    decoration: BoxDecoration(
+      color: color,
+      borderRadius: shape,
+      border: Border.all(color: theme.colors.outline),
+    ),
+    child: child,
+  );
+}
+
+/// Draws no feedback. DebugSkin's placeholders draw their own focus border.
+class NoFeedback implements InteractionFeedback {
+  /// Creates the feedback.
+  const NoFeedback();
+
+  @override
+  Widget wrap({
+    required Widget child,
+    required CamoInteractionController controller,
+    required Color contentColor,
+    required BorderRadius shape,
+    required CamoTheme theme,
+  }) => child;
+}
+
+/// A content-color tint while pressed.
+class PressTint implements InteractionFeedback {
+  /// Creates the feedback.
+  const PressTint();
+
+  static const double _pressedAlpha = 0.12;
+
+  @override
+  Widget wrap({
+    required Widget child,
+    required CamoInteractionController controller,
+    required Color contentColor,
+    required BorderRadius shape,
+    required CamoTheme theme,
+  }) => ValueListenableBuilder<InteractionState>(
+    valueListenable: controller,
+    child: child,
+    builder: (context, state, child) => DecoratedBox(
+      position: DecorationPosition.foreground,
+      decoration: BoxDecoration(
+        borderRadius: shape,
+        color: state.pressed
+            ? contentColor.withValues(alpha: _pressedAlpha)
+            : null,
+      ),
+      child: child,
+    ),
+  );
+}
