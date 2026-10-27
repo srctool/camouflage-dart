@@ -1,6 +1,7 @@
 import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
+import 'debug_input_renderers.dart';
 import 'debug_renderers.dart';
 
 export 'debug_renderers.dart';
@@ -19,6 +20,12 @@ const CamoSkin debugSkin = CamoSkin(
   iconButton: DebugIconButtonRenderer(),
   progressCircle: DebugProgressCircleRenderer(),
   tooltip: DebugTooltipRenderer(),
+  checkbox: DebugCheckboxRenderer(),
+  switchRenderer: DebugSwitchRenderer(),
+  radio: DebugRadioRenderer(),
+  segmentedControl: DebugSegmentedControlRenderer(),
+  slider: DebugSliderRenderer(),
+  stepper: DebugStepperRenderer(),
 );
 
 /// Fills the container and nothing else: no depth, no border.

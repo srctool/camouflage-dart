@@ -1,11 +1,17 @@
 import 'package:flutter/foundation.dart';
 
 import '../button/camo_button.dart';
+import '../checkbox/camo_checkbox.dart';
 import '../divider/camo_divider.dart';
 import '../icon/camo_icon.dart';
 import '../icon_button/camo_icon_button.dart';
 import '../progress/camo_progress.dart';
+import '../radio/camo_radio.dart';
+import '../segmented/camo_segmented_control.dart';
+import '../slider/camo_slider.dart';
+import '../stepper/camo_stepper.dart';
 import '../surface/camo_surface.dart';
+import '../switch/camo_switch.dart';
 import '../tooltip/camo_tooltip.dart';
 
 /// Per-component overrides: one nullable `CamoXTheme` per component, `null` meaning the skin's default.
@@ -21,6 +27,12 @@ class CamoComponentThemes {
     this.iconButton,
     this.progress,
     this.tooltip,
+    this.checkbox,
+    this.switchTheme,
+    this.radio,
+    this.segmentedControl,
+    this.slider,
+    this.stepper,
   });
 
   /// Icons outside any component.
@@ -44,6 +56,24 @@ class CamoComponentThemes {
   /// Tooltips.
   final CamoTooltipTheme? tooltip;
 
+  /// Checkboxes.
+  final CamoCheckboxTheme? checkbox;
+
+  /// Switches (`switch` is a Dart keyword).
+  final CamoSwitchTheme? switchTheme;
+
+  /// Radios.
+  final CamoRadioTheme? radio;
+
+  /// Segmented controls.
+  final CamoSegmentedControlTheme? segmentedControl;
+
+  /// Sliders.
+  final CamoSliderTheme? slider;
+
+  /// Steppers.
+  final CamoStepperTheme? stepper;
+
   /// A copy with the given fields replaced.
   CamoComponentThemes copyWith({
     CamoIconTheme? icon,
@@ -53,6 +83,12 @@ class CamoComponentThemes {
     CamoIconButtonTheme? iconButton,
     CamoProgressTheme? progress,
     CamoTooltipTheme? tooltip,
+    CamoCheckboxTheme? checkbox,
+    CamoSwitchTheme? switchTheme,
+    CamoRadioTheme? radio,
+    CamoSegmentedControlTheme? segmentedControl,
+    CamoSliderTheme? slider,
+    CamoStepperTheme? stepper,
   }) => CamoComponentThemes(
     icon: icon ?? this.icon,
     surface: surface ?? this.surface,
@@ -61,6 +97,12 @@ class CamoComponentThemes {
     iconButton: iconButton ?? this.iconButton,
     progress: progress ?? this.progress,
     tooltip: tooltip ?? this.tooltip,
+    checkbox: checkbox ?? this.checkbox,
+    switchTheme: switchTheme ?? this.switchTheme,
+    radio: radio ?? this.radio,
+    segmentedControl: segmentedControl ?? this.segmentedControl,
+    slider: slider ?? this.slider,
+    stepper: stepper ?? this.stepper,
   );
 
   @override
@@ -72,7 +114,13 @@ class CamoComponentThemes {
       other.button == button &&
       other.iconButton == iconButton &&
       other.progress == progress &&
-      other.tooltip == tooltip;
+      other.tooltip == tooltip &&
+      other.checkbox == checkbox &&
+      other.switchTheme == switchTheme &&
+      other.radio == radio &&
+      other.segmentedControl == segmentedControl &&
+      other.slider == slider &&
+      other.stepper == stepper;
 
   @override
   int get hashCode => Object.hash(
@@ -83,5 +131,11 @@ class CamoComponentThemes {
     iconButton,
     progress,
     tooltip,
+    checkbox,
+    switchTheme,
+    radio,
+    segmentedControl,
+    slider,
+    stepper,
   );
 }
