@@ -92,6 +92,12 @@ class _SignUpFormState extends State<SignUpForm> {
             inputFilter: CamoInputFilter.digitsOnly(maxLength: 13),
             displayFormat: CamoDisplayFormat.pattern('####-####-#####'),
           ),
+          CamoDateFormField(
+            fieldKey: 'birthDate',
+            label: 'Birth date',
+            lastDate: DateTime.now(),
+            rules: [CamoRules.required('Enter your birth date')],
+          ),
           CamoTextFormField(
             fieldKey: 'budget',
             label: 'Monthly budget',

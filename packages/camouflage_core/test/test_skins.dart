@@ -2,6 +2,7 @@ import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
 import 'input_test_renderers.dart';
+import 'overlay_test_renderers.dart';
 import 'text_test_renderers.dart';
 
 // A plain skin for core's own tests: every renderer draws from its style and theme, nothing more.
@@ -351,6 +352,10 @@ const skinA = CamoSkin(
   stepper: PlainStepper(),
   textField: PlainTextField(),
   searchField: PlainSearchField(),
+  menu: PlainMenu(),
+  bottomSheet: PlainBottomSheet(),
+  datePicker: PlainDatePicker(),
+  timePicker: PlainTimePicker(),
 );
 final skinB = skinA.copyWith(name: 'b');
 final themeT = CamoTheme(

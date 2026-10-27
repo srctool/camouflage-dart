@@ -34,3 +34,12 @@ class CamoItemPosition {
   @override
   int get hashCode => Object.hash(index, count);
 }
+
+/// Where a header's title sits: at the start, or centered.
+enum CamoTitleAlign {
+  /// At the start, in reading order.
+  start,
+
+  /// Centered.
+  center,
+}

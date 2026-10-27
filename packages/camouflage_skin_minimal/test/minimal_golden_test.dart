@@ -22,6 +22,7 @@ void main() {
     ('primitives', const PrimitiveGallery()),
     ('inputs', const InputGallery()),
     ('textinputs', const TextInputGallery()),
+    ('pickers', const PickerGallery()),
   ]) {
     goldenTest(
       'minimal $name',

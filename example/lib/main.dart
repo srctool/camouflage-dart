@@ -4,15 +4,21 @@ import 'package:camouflage_core/camouflage_core.dart';
 import 'package:camouflage_skin_fluent/camouflage_skin_fluent.dart';
 import 'package:camouflage_skin_minimal/camouflage_skin_minimal.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'app_icon.dart';
 import 'brands.dart';
 import 'checkout.dart';
+import 'dates_and_times.dart';
 import 'forms.dart';
 import 'selection.dart';
 import 'debug_skin.dart';
 
-void main() => runApp(const CamouflageExampleApp());
+Future<void> main() async {
+  // The date and time pickers' names and formats in every locale, not only en_US.
+  await initializeDateFormatting();
+  runApp(const CamouflageExampleApp());
+}
 
 const _debugSeed = Color(0xFF0B57D0);
 const _promoSeed = Color(0xFFE8710A);
@@ -88,83 +94,83 @@ class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
         builder: (context, theme) => CamouflageProvider(
           skin: _skin.skin,
           theme: theme,
-          child: Overlay(
-            initialEntries: [
-              OverlayEntry(
-                builder: (context) => CamoSurface(
-                  child: SizedBox.expand(
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.all(theme.spacing.l),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        spacing: theme.spacing.l,
-                        children: [
-                          _Switcher(
-                            options: SampleSkin.values,
-                            chosen: _skin,
-                            label: (s) => s.label,
-                            onChoose: (s) => setState(() => _skin = s),
-                          ),
-                          _Switcher(
-                            options: Brand.values,
-                            chosen: _brand,
-                            label: (b) => b.label,
-                            onChoose: (b) => setState(() => _brand = b),
-                          ),
-                          Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: CamoButton(
-                              text: dark ? 'Light' : 'Dark',
-                              onPressed: () => setState(() => _dark = !dark),
-                              appearance: Appearance.ghost,
-                            ),
-                          ),
-                          const Checkout(),
-                          const _Section(title: 'Buttons', child: _Buttons()),
-                          const _Section(
-                            title: 'Icon buttons',
-                            child: _IconButtons(),
-                          ),
-                          const _Section(title: 'Text', child: _Texts()),
-                          const _Section(
-                            title: 'Surfaces and dividers',
-                            child: _Surfaces(),
-                          ),
-                          const _Section(title: 'Progress', child: _Progress()),
-                          const _Section(
-                            title: 'Selection controls',
-                            child: SelectionControls(),
-                          ),
-                          const _Section(
-                            title: 'Sign-up form',
-                            child: SignUpForm(),
-                          ),
-                          const _Section(
-                            title: 'Search',
-                            child: CountrySearch(),
-                          ),
-                          CamouflageProvider(
-                            theme: sampleTheme(_skin, _brand, brightness)
-                                .copyWith(
-                                  colors: CamoColors.fromSeed(
-                                    primary: _promoSeed,
-                                    brightness: brightness,
-                                  ),
-                                ),
-                            child: _Section(
-                              title: 'Nested provider: a promo theme',
-                              child: Align(
-                                alignment: AlignmentDirectional.centerStart,
-                                child: CamoButton(
-                                  text: 'Claim offer',
-                                  onPressed: () {},
-                                  suffixIcon: const AppIcon.chevronRight(),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+          child: Navigator(
+            onGenerateRoute: (_) => PageRouteBuilder<void>(
+              pageBuilder: (context, _, _) => _page(context),
+            ),
+          ),
+        ),
+      );
+    },
+  );
+
+  // The gallery page. It reads the theme from the provider, so a skin, brand or dark switch rebuilds it
+  // inside the Navigator (which the date and time pickers open their routes on).
+  Widget _page(BuildContext context) {
+    final theme = Camouflage.themeOf(context);
+    final brightness = theme.colors.surface.computeLuminance() < 0.5
+        ? Brightness.dark
+        : Brightness.light;
+    final dark = brightness == Brightness.dark;
+    return CamoSurface(
+      child: SizedBox.expand(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(theme.spacing.l),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: theme.spacing.l,
+            children: [
+              _Switcher(
+                options: SampleSkin.values,
+                chosen: _skin,
+                label: (s) => s.label,
+                onChoose: (s) => setState(() => _skin = s),
+              ),
+              _Switcher(
+                options: Brand.values,
+                chosen: _brand,
+                label: (b) => b.label,
+                onChoose: (b) => setState(() => _brand = b),
+              ),
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: CamoButton(
+                  text: dark ? 'Light' : 'Dark',
+                  onPressed: () => setState(() => _dark = !dark),
+                  appearance: Appearance.ghost,
+                ),
+              ),
+              const Checkout(),
+              const _Section(title: 'Buttons', child: _Buttons()),
+              const _Section(title: 'Icon buttons', child: _IconButtons()),
+              const _Section(title: 'Text', child: _Texts()),
+              const _Section(
+                title: 'Surfaces and dividers',
+                child: _Surfaces(),
+              ),
+              const _Section(title: 'Progress', child: _Progress()),
+              const _Section(
+                title: 'Selection controls',
+                child: SelectionControls(),
+              ),
+              const _Section(title: 'Sign-up form', child: SignUpForm()),
+              const _Section(title: 'Search', child: CountrySearch()),
+              const _Section(title: 'Dates and times', child: DatesAndTimes()),
+              CamouflageProvider(
+                theme: sampleTheme(_skin, _brand, brightness).copyWith(
+                  colors: CamoColors.fromSeed(
+                    primary: _promoSeed,
+                    brightness: brightness,
+                  ),
+                ),
+                child: _Section(
+                  title: 'Nested provider: a promo theme',
+                  child: Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: CamoButton(
+                      text: 'Claim offer',
+                      onPressed: () {},
+                      suffixIcon: const AppIcon.chevronRight(),
                     ),
                   ),
                 ),
@@ -172,9 +178,9 @@ class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
             ],
           ),
         ),
-      );
-    },
-  );
+      ),
+    );
+  }
 }
 
 // A row of buttons, one per option; the chosen one is solid.

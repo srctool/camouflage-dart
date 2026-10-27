@@ -2,6 +2,7 @@ import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
 import 'debug_input_renderers.dart';
+import 'debug_picker_renderers.dart';
 import 'debug_renderers.dart';
 import 'debug_text_renderers.dart';
 
@@ -29,6 +30,10 @@ const CamoSkin debugSkin = CamoSkin(
   stepper: DebugStepperRenderer(),
   textField: DebugTextFieldRenderer(),
   searchField: DebugSearchFieldRenderer(),
+  menu: DebugMenuRenderer(),
+  bottomSheet: DebugBottomSheetRenderer(),
+  datePicker: DebugDatePickerRenderer(),
+  timePicker: DebugTimePickerRenderer(),
 );
 
 /// Fills the container and nothing else: no depth, no border.

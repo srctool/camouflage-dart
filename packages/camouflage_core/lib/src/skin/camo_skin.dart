@@ -1,5 +1,9 @@
 import 'package:flutter/foundation.dart';
 
+import '../bottom_sheet/camo_bottom_sheet.dart';
+import '../datepicker/camo_calendar.dart';
+import '../menu/camo_menu.dart';
+import '../timepicker/camo_time_picker.dart';
 import '../button/camo_button.dart';
 import '../checkbox/camo_checkbox.dart';
 import '../divider/camo_divider.dart';
@@ -47,6 +51,10 @@ class CamoSkin {
     required this.stepper,
     required this.textField,
     required this.searchField,
+    required this.menu,
+    required this.bottomSheet,
+    required this.datePicker,
+    required this.timePicker,
   });
 
   /// For debugging and tests, e.g. `'minimal'`.
@@ -106,6 +114,18 @@ class CamoSkin {
   /// Draws `CamoSearchField`.
   final CamoSearchFieldRenderer searchField;
 
+  /// Draws `CamoMenuPanel` (M5) and the menus (M6).
+  final CamoMenuRenderer menu;
+
+  /// Draws `CamoBottomSheet`.
+  final CamoBottomSheetRenderer bottomSheet;
+
+  /// Draws `CamoCalendar` and the date fields' pickers.
+  final CamoDatePickerRenderer datePicker;
+
+  /// Draws `CamoTimeInput` and the time field's picker.
+  final CamoTimePickerRenderer timePicker;
+
   /// A copy with the given fields replaced; the others stay `identical`.
   CamoSkin copyWith({
     String? name,
@@ -127,6 +147,10 @@ class CamoSkin {
     CamoStepperRenderer? stepper,
     CamoTextFieldRenderer? textField,
     CamoSearchFieldRenderer? searchField,
+    CamoMenuRenderer? menu,
+    CamoBottomSheetRenderer? bottomSheet,
+    CamoDatePickerRenderer? datePicker,
+    CamoTimePickerRenderer? timePicker,
   }) => CamoSkin(
     name: name ?? this.name,
     surfaceTreatment: surfaceTreatment ?? this.surfaceTreatment,
@@ -147,6 +171,10 @@ class CamoSkin {
     stepper: stepper ?? this.stepper,
     textField: textField ?? this.textField,
     searchField: searchField ?? this.searchField,
+    menu: menu ?? this.menu,
+    bottomSheet: bottomSheet ?? this.bottomSheet,
+    datePicker: datePicker ?? this.datePicker,
+    timePicker: timePicker ?? this.timePicker,
   );
 
   @override
@@ -170,7 +198,11 @@ class CamoSkin {
       other.slider == slider &&
       other.stepper == stepper &&
       other.textField == textField &&
-      other.searchField == searchField;
+      other.searchField == searchField &&
+      other.menu == menu &&
+      other.bottomSheet == bottomSheet &&
+      other.datePicker == datePicker &&
+      other.timePicker == timePicker;
 
   @override
   int get hashCode => Object.hashAll([
@@ -193,6 +225,10 @@ class CamoSkin {
     stepper,
     textField,
     searchField,
+    menu,
+    bottomSheet,
+    datePicker,
+    timePicker,
   ]);
 
   @override
