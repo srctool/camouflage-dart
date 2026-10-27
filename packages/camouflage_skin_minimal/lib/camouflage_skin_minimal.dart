@@ -10,6 +10,7 @@ import 'src/flat.dart';
 import 'src/minimal_theme.dart';
 import 'src/renderer/minimal_actions.dart';
 import 'src/renderer/minimal_inputs.dart';
+import 'src/renderer/minimal_pickers.dart';
 import 'src/renderer/minimal_primitives.dart';
 import 'src/renderer/minimal_text.dart';
 
@@ -29,6 +30,12 @@ export 'src/renderer/minimal_inputs.dart'
         MinimalSliderRenderer,
         MinimalStepperRenderer,
         MinimalSwitchRenderer;
+export 'src/renderer/minimal_pickers.dart'
+    show
+        MinimalBottomSheetRenderer,
+        MinimalDatePickerRenderer,
+        MinimalMenuRenderer,
+        MinimalTimePickerRenderer;
 export 'src/renderer/minimal_primitives.dart';
 export 'src/renderer/minimal_text.dart'
     show MinimalSearchFieldRenderer, MinimalTextFieldRenderer;
@@ -57,6 +64,10 @@ const CamoSkin minimalSkin = CamoSkin(
   stepper: MinimalStepperRenderer(),
   textField: MinimalTextFieldRenderer(),
   searchField: MinimalSearchFieldRenderer(),
+  menu: MinimalMenuRenderer(),
+  bottomSheet: MinimalBottomSheetRenderer(),
+  datePicker: MinimalDatePickerRenderer(),
+  timePicker: MinimalTimePickerRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [minimalSkin] and [minimalLight] or [minimalDark].

@@ -447,3 +447,112 @@ class TextInputGallery extends StatelessWidget {
     );
   }
 }
+
+/// The M5 pickers and overlay looks, inline: a calendar with a selected day and one with a range, the time input in
+/// its three forms, closed date and time fields, a bottom sheet's content and a popup panel. The month is fixed in
+/// the past, so today never shows and the goldens stay put.
+class PickerGallery extends StatelessWidget {
+  /// Creates the gallery.
+  const PickerGallery({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    void ignore(Object? _) {}
+    final theme = Camouflage.themeOf(context);
+    final month = const CamoYearMonth(2024, 3);
+    Widget withTime(TimePickerForm form, Widget child) => CamouflageProvider(
+      theme: theme.copyWith(
+        components: theme.components.copyWith(
+          timePicker: CamoTimePickerTheme(form: form),
+        ),
+      ),
+      child: child,
+    );
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: SizedBox(
+        width: 360,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 12,
+          children: [
+            CamoCalendar(
+              selection: SingleDate(DateTime(2024, 3, 14)),
+              onSelectionChanged: ignore,
+              visibleMonth: month,
+              onVisibleMonthChanged: ignore,
+              firstDate: DateTime(2024, 3, 4),
+            ),
+            CamoCalendar(
+              selection: DateRangeSelection(
+                DateTime(2024, 3, 11),
+                DateTime(2024, 3, 15),
+              ),
+              onSelectionChanged: ignore,
+              visibleMonth: month,
+              onVisibleMonthChanged: ignore,
+            ),
+            CamoTimeInput(
+              value: const CamoTime(hour: 14, minute: 30),
+              onChanged: ignore,
+              use24Hour: true,
+            ),
+            CamoTimeInput(
+              value: const CamoTime(hour: 9, minute: 5),
+              onChanged: ignore,
+              use24Hour: false,
+            ),
+            withTime(
+              TimePickerForm.dial,
+              CamoTimeInput(
+                value: const CamoTime(hour: 14, minute: 30),
+                onChanged: ignore,
+                use24Hour: true,
+              ),
+            ),
+            withTime(
+              TimePickerForm.wheel,
+              CamoTimeInput(
+                value: const CamoTime(hour: 9, minute: 15),
+                onChanged: ignore,
+                minuteStep: 15,
+                use24Hour: false,
+              ),
+            ),
+            SizedBox(
+              width: 360,
+              child: CamoDateField(
+                value: DateTime(2024, 3, 14),
+                onChanged: ignore,
+                label: 'Birth date',
+              ),
+            ),
+            SizedBox(
+              width: 360,
+              child: CamoTimeField(
+                value: null,
+                onChanged: ignore,
+                label: 'Pickup',
+                placeholder: 'Choose a time',
+              ),
+            ),
+            const SizedBox(
+              width: 360,
+              child: CamoBottomSheet(
+                title: 'Filters',
+                child: CamoText('Sheet content'),
+              ),
+            ),
+            const CamoMenuPanel(
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: CamoText('Popup content'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

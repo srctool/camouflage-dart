@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
 
+import '../bottom_sheet/camo_bottom_sheet.dart';
 import '../button/camo_button.dart';
 import '../checkbox/camo_checkbox.dart';
+import '../datepicker/camo_calendar.dart';
 import '../divider/camo_divider.dart';
 import '../icon/camo_icon.dart';
 import '../icon_button/camo_icon_button.dart';
+import '../menu/camo_menu.dart';
 import '../progress/camo_progress.dart';
 import '../radio/camo_radio.dart';
 import '../search/camo_search_field.dart';
@@ -14,6 +17,7 @@ import '../stepper/camo_stepper.dart';
 import '../surface/camo_surface.dart';
 import '../switch/camo_switch.dart';
 import '../textfield/camo_text_field.dart';
+import '../timepicker/camo_time_picker.dart';
 import '../tooltip/camo_tooltip.dart';
 
 /// Per-component overrides: one nullable `CamoXTheme` per component, `null` meaning the skin's default.
@@ -37,6 +41,10 @@ class CamoComponentThemes {
     this.stepper,
     this.textField,
     this.searchField,
+    this.menu,
+    this.bottomSheet,
+    this.datePicker,
+    this.timePicker,
   });
 
   /// Icons outside any component.
@@ -84,6 +92,18 @@ class CamoComponentThemes {
   /// Search fields.
   final CamoSearchFieldTheme? searchField;
 
+  /// Overrides for menus and popup panels.
+  final CamoMenuTheme? menu;
+
+  /// Overrides for bottom sheets.
+  final CamoBottomSheetTheme? bottomSheet;
+
+  /// Overrides for date pickers and date fields.
+  final CamoDatePickerTheme? datePicker;
+
+  /// Overrides for time pickers and time fields.
+  final CamoTimePickerTheme? timePicker;
+
   /// A copy with the given fields replaced.
   CamoComponentThemes copyWith({
     CamoIconTheme? icon,
@@ -101,6 +121,10 @@ class CamoComponentThemes {
     CamoStepperTheme? stepper,
     CamoTextFieldTheme? textField,
     CamoSearchFieldTheme? searchField,
+    CamoMenuTheme? menu,
+    CamoBottomSheetTheme? bottomSheet,
+    CamoDatePickerTheme? datePicker,
+    CamoTimePickerTheme? timePicker,
   }) => CamoComponentThemes(
     icon: icon ?? this.icon,
     surface: surface ?? this.surface,
@@ -117,6 +141,10 @@ class CamoComponentThemes {
     stepper: stepper ?? this.stepper,
     textField: textField ?? this.textField,
     searchField: searchField ?? this.searchField,
+    menu: menu ?? this.menu,
+    bottomSheet: bottomSheet ?? this.bottomSheet,
+    datePicker: datePicker ?? this.datePicker,
+    timePicker: timePicker ?? this.timePicker,
   );
 
   @override
@@ -136,7 +164,11 @@ class CamoComponentThemes {
       other.slider == slider &&
       other.stepper == stepper &&
       other.textField == textField &&
-      other.searchField == searchField;
+      other.searchField == searchField &&
+      other.menu == menu &&
+      other.bottomSheet == bottomSheet &&
+      other.datePicker == datePicker &&
+      other.timePicker == timePicker;
 
   @override
   int get hashCode => Object.hash(
@@ -155,5 +187,9 @@ class CamoComponentThemes {
     stepper,
     textField,
     searchField,
+    menu,
+    bottomSheet,
+    datePicker,
+    timePicker,
   );
 }
