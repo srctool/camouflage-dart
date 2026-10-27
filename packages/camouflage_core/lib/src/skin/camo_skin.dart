@@ -7,11 +7,13 @@ import '../icon/camo_icon.dart';
 import '../icon_button/camo_icon_button.dart';
 import '../progress/camo_progress.dart';
 import '../radio/camo_radio.dart';
+import '../search/camo_search_field.dart';
 import '../segmented/camo_segmented_control.dart';
 import '../slider/camo_slider.dart';
 import '../stepper/camo_stepper.dart';
 import '../surface/camo_surface.dart';
 import '../switch/camo_switch.dart';
+import '../textfield/camo_text_field.dart';
 import '../text/camo_text.dart';
 import '../tooltip/camo_tooltip.dart';
 import 'contract.dart';
@@ -43,6 +45,8 @@ class CamoSkin {
     required this.segmentedControl,
     required this.slider,
     required this.stepper,
+    required this.textField,
+    required this.searchField,
   });
 
   /// For debugging and tests, e.g. `'minimal'`.
@@ -96,6 +100,12 @@ class CamoSkin {
   /// Draws `CamoStepper`.
   final CamoStepperRenderer stepper;
 
+  /// Draws `CamoTextField` and every field built on its frame, with the text-editing visuals.
+  final CamoTextFieldRenderer textField;
+
+  /// Draws `CamoSearchField`.
+  final CamoSearchFieldRenderer searchField;
+
   /// A copy with the given fields replaced; the others stay `identical`.
   CamoSkin copyWith({
     String? name,
@@ -115,6 +125,8 @@ class CamoSkin {
     CamoSegmentedControlRenderer? segmentedControl,
     CamoSliderRenderer? slider,
     CamoStepperRenderer? stepper,
+    CamoTextFieldRenderer? textField,
+    CamoSearchFieldRenderer? searchField,
   }) => CamoSkin(
     name: name ?? this.name,
     surfaceTreatment: surfaceTreatment ?? this.surfaceTreatment,
@@ -133,6 +145,8 @@ class CamoSkin {
     segmentedControl: segmentedControl ?? this.segmentedControl,
     slider: slider ?? this.slider,
     stepper: stepper ?? this.stepper,
+    textField: textField ?? this.textField,
+    searchField: searchField ?? this.searchField,
   );
 
   @override
@@ -154,7 +168,9 @@ class CamoSkin {
       other.radio == radio &&
       other.segmentedControl == segmentedControl &&
       other.slider == slider &&
-      other.stepper == stepper;
+      other.stepper == stepper &&
+      other.textField == textField &&
+      other.searchField == searchField;
 
   @override
   int get hashCode => Object.hashAll([
@@ -175,6 +191,8 @@ class CamoSkin {
     segmentedControl,
     slider,
     stepper,
+    textField,
+    searchField,
   ]);
 
   @override

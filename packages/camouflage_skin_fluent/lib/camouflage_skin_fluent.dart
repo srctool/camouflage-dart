@@ -10,6 +10,7 @@ import 'src/fluent_theme.dart';
 import 'src/renderer/fluent_actions.dart';
 import 'src/renderer/fluent_inputs.dart';
 import 'src/renderer/fluent_primitives.dart';
+import 'src/renderer/fluent_text.dart';
 import 'src/subtle.dart';
 
 export 'src/fluent_palette.dart' show fluentBrandBlue;
@@ -19,6 +20,7 @@ export 'src/fluent_tokens.dart';
 export 'src/renderer/fluent_actions.dart';
 export 'src/renderer/fluent_inputs.dart';
 export 'src/renderer/fluent_primitives.dart';
+export 'src/renderer/fluent_text.dart';
 export 'src/subtle.dart';
 
 /// The surface treatments Fluent offers. `acrylic` joins with the overlays (M6) and `mica` with M8.
@@ -50,6 +52,8 @@ const CamoSkin fluentSkinDefault = CamoSkin(
   segmentedControl: FluentSegmentedControlRenderer(),
   slider: FluentSliderRenderer(),
   stepper: FluentStepperRenderer(),
+  textField: FluentTextFieldRenderer(),
+  searchField: FluentSearchFieldRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [fluentSkinDefault] and [fluentTheme].

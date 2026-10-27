@@ -176,4 +176,42 @@ void main() {
       );
     });
   }
+
+  testWidgets('text field honors its height', (tester) async {
+    await assertNoLiterals(
+      tester,
+      skin: skin,
+      theme: theme,
+      oddStyle: const CamoTextFieldTheme(height: 77),
+      build: (o) => ProvideComponentThemes(
+        components: CamoComponentThemes(textField: o),
+        child: SizedBox(
+          width: 200,
+          child: CamoTextField(value: '', onChanged: (_) {}),
+        ),
+      ),
+      measure: (size) => size.height >= 77 && size.height < 100,
+    );
+  });
+
+  testWidgets('search field honors its height', (tester) async {
+    await assertNoLiterals(
+      tester,
+      skin: skin,
+      theme: theme,
+      oddStyle: const CamoSearchFieldTheme(height: 77),
+      build: (o) => ProvideComponentThemes(
+        components: CamoComponentThemes(searchField: o),
+        child: SizedBox(
+          width: 200,
+          child: CamoSearchField(
+            query: '',
+            onChanged: (_) {},
+            onSubmitted: (_) {},
+          ),
+        ),
+      ),
+      measure: (size) => size.height == 77,
+    );
+  });
 }

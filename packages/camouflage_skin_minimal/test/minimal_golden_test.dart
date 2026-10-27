@@ -21,6 +21,7 @@ void main() {
     ('iconbutton', const IconButtonGallery()),
     ('primitives', const PrimitiveGallery()),
     ('inputs', const InputGallery()),
+    ('textinputs', const TextInputGallery()),
   ]) {
     goldenTest(
       'minimal $name',

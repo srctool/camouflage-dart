@@ -11,6 +11,7 @@ import 'src/minimal_theme.dart';
 import 'src/renderer/minimal_actions.dart';
 import 'src/renderer/minimal_inputs.dart';
 import 'src/renderer/minimal_primitives.dart';
+import 'src/renderer/minimal_text.dart';
 
 export 'src/fade.dart';
 export 'src/flat.dart';
@@ -29,9 +30,13 @@ export 'src/renderer/minimal_inputs.dart'
         MinimalStepperRenderer,
         MinimalSwitchRenderer;
 export 'src/renderer/minimal_primitives.dart';
+export 'src/renderer/minimal_text.dart'
+    show MinimalSearchFieldRenderer, MinimalTextFieldRenderer;
 
 /// The Minimal skin. Each component's renderer joins in its milestone; skins also serve as renderer libraries,
-/// so each renderer is public for borrowing (ADR-28).
+/// so each renderer is public for borrowing (ADR-28). Text fields put the label above them; for a floating
+/// label by default, use `minimalSkin.copyWith(textField: const MinimalTextFieldRenderer(labelPlacement:
+/// LabelPlacement.floating))`.
 const CamoSkin minimalSkin = CamoSkin(
   name: 'minimal',
   surfaceTreatment: Flat(),
@@ -50,6 +55,8 @@ const CamoSkin minimalSkin = CamoSkin(
   segmentedControl: MinimalSegmentedControlRenderer(),
   slider: MinimalSliderRenderer(),
   stepper: MinimalStepperRenderer(),
+  textField: MinimalTextFieldRenderer(),
+  searchField: MinimalSearchFieldRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [minimalSkin] and [minimalLight] or [minimalDark].

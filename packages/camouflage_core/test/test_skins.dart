@@ -2,6 +2,7 @@ import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
 import 'input_test_renderers.dart';
+import 'text_test_renderers.dart';
 
 // A plain skin for core's own tests: every renderer draws from its style and theme, nothing more.
 
@@ -348,6 +349,8 @@ const skinA = CamoSkin(
   segmentedControl: PlainSegmented(),
   slider: PlainSlider(),
   stepper: PlainStepper(),
+  textField: PlainTextField(),
+  searchField: PlainSearchField(),
 );
 final skinB = skinA.copyWith(name: 'b');
 final themeT = CamoTheme(

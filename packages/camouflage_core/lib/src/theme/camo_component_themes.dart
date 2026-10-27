@@ -7,11 +7,13 @@ import '../icon/camo_icon.dart';
 import '../icon_button/camo_icon_button.dart';
 import '../progress/camo_progress.dart';
 import '../radio/camo_radio.dart';
+import '../search/camo_search_field.dart';
 import '../segmented/camo_segmented_control.dart';
 import '../slider/camo_slider.dart';
 import '../stepper/camo_stepper.dart';
 import '../surface/camo_surface.dart';
 import '../switch/camo_switch.dart';
+import '../textfield/camo_text_field.dart';
 import '../tooltip/camo_tooltip.dart';
 
 /// Per-component overrides: one nullable `CamoXTheme` per component, `null` meaning the skin's default.
@@ -33,6 +35,8 @@ class CamoComponentThemes {
     this.segmentedControl,
     this.slider,
     this.stepper,
+    this.textField,
+    this.searchField,
   });
 
   /// Icons outside any component.
@@ -74,6 +78,12 @@ class CamoComponentThemes {
   /// Steppers.
   final CamoStepperTheme? stepper;
 
+  /// Text fields and the fields built on their frame.
+  final CamoTextFieldTheme? textField;
+
+  /// Search fields.
+  final CamoSearchFieldTheme? searchField;
+
   /// A copy with the given fields replaced.
   CamoComponentThemes copyWith({
     CamoIconTheme? icon,
@@ -89,6 +99,8 @@ class CamoComponentThemes {
     CamoSegmentedControlTheme? segmentedControl,
     CamoSliderTheme? slider,
     CamoStepperTheme? stepper,
+    CamoTextFieldTheme? textField,
+    CamoSearchFieldTheme? searchField,
   }) => CamoComponentThemes(
     icon: icon ?? this.icon,
     surface: surface ?? this.surface,
@@ -103,6 +115,8 @@ class CamoComponentThemes {
     segmentedControl: segmentedControl ?? this.segmentedControl,
     slider: slider ?? this.slider,
     stepper: stepper ?? this.stepper,
+    textField: textField ?? this.textField,
+    searchField: searchField ?? this.searchField,
   );
 
   @override
@@ -120,7 +134,9 @@ class CamoComponentThemes {
       other.radio == radio &&
       other.segmentedControl == segmentedControl &&
       other.slider == slider &&
-      other.stepper == stepper;
+      other.stepper == stepper &&
+      other.textField == textField &&
+      other.searchField == searchField;
 
   @override
   int get hashCode => Object.hash(
@@ -137,5 +153,7 @@ class CamoComponentThemes {
     segmentedControl,
     slider,
     stepper,
+    textField,
+    searchField,
   );
 }
