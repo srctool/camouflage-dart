@@ -1,11 +1,17 @@
 import 'package:flutter/foundation.dart';
 
 import '../button/camo_button.dart';
+import '../checkbox/camo_checkbox.dart';
 import '../divider/camo_divider.dart';
 import '../icon/camo_icon.dart';
 import '../icon_button/camo_icon_button.dart';
 import '../progress/camo_progress.dart';
+import '../radio/camo_radio.dart';
+import '../segmented/camo_segmented_control.dart';
+import '../slider/camo_slider.dart';
+import '../stepper/camo_stepper.dart';
 import '../surface/camo_surface.dart';
+import '../switch/camo_switch.dart';
 import '../text/camo_text.dart';
 import '../tooltip/camo_tooltip.dart';
 import 'contract.dart';
@@ -31,6 +37,12 @@ class CamoSkin {
     required this.iconButton,
     required this.progressCircle,
     required this.tooltip,
+    required this.checkbox,
+    required this.switchRenderer,
+    required this.radio,
+    required this.segmentedControl,
+    required this.slider,
+    required this.stepper,
   });
 
   /// For debugging and tests, e.g. `'minimal'`.
@@ -66,6 +78,24 @@ class CamoSkin {
   /// Draws `CamoTooltip`'s bubble.
   final CamoTooltipRenderer tooltip;
 
+  /// Draws `CamoCheckbox`.
+  final CamoCheckboxRenderer checkbox;
+
+  /// Draws `CamoSwitch` (`switch` is a Dart keyword).
+  final CamoSwitchRenderer switchRenderer;
+
+  /// Draws `CamoRadio` and `CamoRadioGroup`'s options.
+  final CamoRadioRenderer radio;
+
+  /// Draws `CamoSegmentedControl` and its building blocks.
+  final CamoSegmentedControlRenderer segmentedControl;
+
+  /// Draws `CamoSlider`.
+  final CamoSliderRenderer slider;
+
+  /// Draws `CamoStepper`.
+  final CamoStepperRenderer stepper;
+
   /// A copy with the given fields replaced; the others stay `identical`.
   CamoSkin copyWith({
     String? name,
@@ -79,6 +109,12 @@ class CamoSkin {
     CamoIconButtonRenderer? iconButton,
     CamoProgressCircleRenderer? progressCircle,
     CamoTooltipRenderer? tooltip,
+    CamoCheckboxRenderer? checkbox,
+    CamoSwitchRenderer? switchRenderer,
+    CamoRadioRenderer? radio,
+    CamoSegmentedControlRenderer? segmentedControl,
+    CamoSliderRenderer? slider,
+    CamoStepperRenderer? stepper,
   }) => CamoSkin(
     name: name ?? this.name,
     surfaceTreatment: surfaceTreatment ?? this.surfaceTreatment,
@@ -91,6 +127,12 @@ class CamoSkin {
     iconButton: iconButton ?? this.iconButton,
     progressCircle: progressCircle ?? this.progressCircle,
     tooltip: tooltip ?? this.tooltip,
+    checkbox: checkbox ?? this.checkbox,
+    switchRenderer: switchRenderer ?? this.switchRenderer,
+    radio: radio ?? this.radio,
+    segmentedControl: segmentedControl ?? this.segmentedControl,
+    slider: slider ?? this.slider,
+    stepper: stepper ?? this.stepper,
   );
 
   @override
@@ -106,10 +148,16 @@ class CamoSkin {
       other.button == button &&
       other.iconButton == iconButton &&
       other.progressCircle == progressCircle &&
-      other.tooltip == tooltip;
+      other.tooltip == tooltip &&
+      other.checkbox == checkbox &&
+      other.switchRenderer == switchRenderer &&
+      other.radio == radio &&
+      other.segmentedControl == segmentedControl &&
+      other.slider == slider &&
+      other.stepper == stepper;
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     name,
     surfaceTreatment,
     feedback,
@@ -121,7 +169,13 @@ class CamoSkin {
     iconButton,
     progressCircle,
     tooltip,
-  );
+    checkbox,
+    switchRenderer,
+    radio,
+    segmentedControl,
+    slider,
+    stepper,
+  ]);
 
   @override
   String toString() => 'CamoSkin($name)';

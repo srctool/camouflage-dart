@@ -4,7 +4,7 @@ import 'package:camouflage_skin_minimal/camouflage_skin_minimal.dart';
 import 'package:camouflage_skin_testing/camouflage_skin_testing.dart';
 import 'package:flutter/widgets.dart';
 
-// Screenshot goldens: light and dark for every M3 component, plus one brand theme (an accent), light only
+// Screenshot goldens: light and dark for every component so far, plus one brand theme (an accent), light only
 // (Testing §3). Update with `flutter test --update-goldens --tags golden`.
 void main() {
   final themes = {
@@ -20,6 +20,7 @@ void main() {
     ('button', const ButtonGallery()),
     ('iconbutton', const IconButtonGallery()),
     ('primitives', const PrimitiveGallery()),
+    ('inputs', const InputGallery()),
   ]) {
     goldenTest(
       'minimal $name',

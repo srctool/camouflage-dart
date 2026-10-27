@@ -9,6 +9,7 @@ import 'src/fade.dart';
 import 'src/flat.dart';
 import 'src/minimal_theme.dart';
 import 'src/renderer/minimal_actions.dart';
+import 'src/renderer/minimal_inputs.dart';
 import 'src/renderer/minimal_primitives.dart';
 
 export 'src/fade.dart';
@@ -19,6 +20,14 @@ export 'src/renderer/minimal_actions.dart'
         MinimalButtonRenderer,
         MinimalIconButtonRenderer,
         MinimalProgressCircleRenderer;
+export 'src/renderer/minimal_inputs.dart'
+    show
+        MinimalCheckboxRenderer,
+        MinimalRadioRenderer,
+        MinimalSegmentedControlRenderer,
+        MinimalSliderRenderer,
+        MinimalStepperRenderer,
+        MinimalSwitchRenderer;
 export 'src/renderer/minimal_primitives.dart';
 
 /// The Minimal skin. Each component's renderer joins in its milestone; skins also serve as renderer libraries,
@@ -35,6 +44,12 @@ const CamoSkin minimalSkin = CamoSkin(
   iconButton: MinimalIconButtonRenderer(),
   progressCircle: MinimalProgressCircleRenderer(),
   tooltip: MinimalTooltipRenderer(),
+  checkbox: MinimalCheckboxRenderer(),
+  switchRenderer: MinimalSwitchRenderer(),
+  radio: MinimalRadioRenderer(),
+  segmentedControl: MinimalSegmentedControlRenderer(),
+  slider: MinimalSliderRenderer(),
+  stepper: MinimalStepperRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [minimalSkin] and [minimalLight] or [minimalDark].

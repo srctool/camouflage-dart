@@ -1,7 +1,7 @@
 import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
-// The M3 components in their states, for screenshot goldens of any skin. Static: no animation, no input.
+// The components in their states, for screenshot goldens of any skin. Static: no animation, no input.
 
 /// A small star-shaped test icon.
 const IconSource galleryIcon = IconSource.builder(_star);
@@ -214,6 +214,130 @@ class PrimitiveGallery extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// The M5 selection controls, slider and stepper in their states: checked, unchecked, disabled, with a
+/// description and with an error.
+class InputGallery extends StatelessWidget {
+  /// Creates the gallery.
+  const InputGallery({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    void ignore(Object? _) {}
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 8,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 16,
+            children: [
+              CamoCheckbox(checked: false, onChanged: ignore),
+              CamoCheckbox(checked: true, onChanged: ignore),
+              CamoCheckbox(checked: true, onChanged: ignore, enabled: false),
+              CamoCheckbox(
+                checked: true,
+                onChanged: ignore,
+                label: 'Remember me',
+              ),
+            ],
+          ),
+          CamoCheckbox(
+            checked: false,
+            onChanged: ignore,
+            label: 'I agree',
+            description: 'Required to continue',
+            error: 'Please accept',
+          ),
+          SizedBox(
+            width: 280,
+            child: CamoSwitch(
+              checked: true,
+              onChanged: ignore,
+              label: 'Wi-Fi',
+              description: 'Uses more battery',
+            ),
+          ),
+          SizedBox(
+            width: 280,
+            child: CamoSwitch(
+              checked: false,
+              onChanged: ignore,
+              label: 'Bluetooth',
+            ),
+          ),
+          SizedBox(
+            width: 280,
+            child: CamoSwitch(
+              checked: true,
+              onChanged: ignore,
+              label: 'Airplane mode',
+              enabled: false,
+            ),
+          ),
+          CamoRadioGroup<String>(
+            value: 'standard',
+            onChanged: ignore,
+            label: 'Shipping',
+            options: const [
+              RadioOption('standard', 'Standard', description: '3 to 5 days'),
+              RadioOption('express', 'Express'),
+              RadioOption('pickup', 'Pick up', enabled: false),
+            ],
+          ),
+          CamoSegmentedControl<String>(
+            options: const [
+              Segment('d', label: 'Day'),
+              Segment('w', label: 'Week'),
+              Segment('m', label: 'Month'),
+            ],
+            selected: 'w',
+            onChanged: ignore,
+          ),
+          SizedBox(
+            width: 280,
+            child: CamoSlider(
+              value: 0.3,
+              onChanged: ignore,
+              semanticLabel: 'Volume',
+            ),
+          ),
+          SizedBox(
+            width: 280,
+            child: CamoSlider(
+              value: 0.5,
+              onChanged: ignore,
+              divisions: 4,
+              semanticLabel: 'Rating',
+            ),
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 16,
+            children: [
+              CamoStepper(
+                value: 2,
+                onChanged: ignore,
+                max: 9,
+                semanticLabel: 'Quantity',
+              ),
+              CamoStepper(
+                value: 0,
+                onChanged: ignore,
+                max: 9,
+                semanticLabel: 'Guests',
+                error: 'Add a guest',
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

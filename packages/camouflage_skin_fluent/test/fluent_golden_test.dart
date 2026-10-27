@@ -21,6 +21,7 @@ void main() {
     ('button', const ButtonGallery()),
     ('iconbutton', const IconButtonGallery()),
     ('primitives', const PrimitiveGallery()),
+    ('inputs', const InputGallery()),
   ]) {
     goldenTest(
       'fluent $name',

@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'src/fluent_solid.dart';
 import 'src/fluent_theme.dart';
 import 'src/renderer/fluent_actions.dart';
+import 'src/renderer/fluent_inputs.dart';
 import 'src/renderer/fluent_primitives.dart';
 import 'src/subtle.dart';
 
@@ -16,6 +17,7 @@ export 'src/fluent_solid.dart';
 export 'src/fluent_theme.dart';
 export 'src/fluent_tokens.dart';
 export 'src/renderer/fluent_actions.dart';
+export 'src/renderer/fluent_inputs.dart';
 export 'src/renderer/fluent_primitives.dart';
 export 'src/subtle.dart';
 
@@ -42,6 +44,12 @@ const CamoSkin fluentSkinDefault = CamoSkin(
   iconButton: FluentIconButtonRenderer(),
   progressCircle: FluentProgressCircleRenderer(),
   tooltip: FluentTooltipRenderer(),
+  checkbox: FluentCheckboxRenderer(),
+  switchRenderer: FluentSwitchRenderer(),
+  radio: FluentRadioRenderer(),
+  segmentedControl: FluentSegmentedControlRenderer(),
+  slider: FluentSliderRenderer(),
+  stepper: FluentStepperRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [fluentSkinDefault] and [fluentTheme].
