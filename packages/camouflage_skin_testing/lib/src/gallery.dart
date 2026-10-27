@@ -342,3 +342,108 @@ class InputGallery extends StatelessWidget {
     );
   }
 }
+
+/// The M5 text inputs in their states: empty with a placeholder, filled with an icon and prefix text, with an
+/// action, an error, disabled, a floating label, a custom input in [CamoFieldFrame], and search fields.
+class TextInputGallery extends StatelessWidget {
+  /// Creates the gallery.
+  const TextInputGallery({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    void ignore(Object? _) {}
+    final theme = Camouflage.themeOf(context);
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: SizedBox(
+        width: 320,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 8,
+          children: [
+            CamoTextField(
+              value: '',
+              onChanged: ignore,
+              label: 'Email',
+              placeholder: 'you@example.com',
+              supportingText: 'We never share it',
+            ),
+            CamoTextField(
+              value: '0812345',
+              onChanged: ignore,
+              label: 'Phone',
+              prefixIcon: const CamoIcon(galleryIcon),
+              prefixText: '+62',
+            ),
+            CamoTextField(
+              value: 'ab',
+              onChanged: ignore,
+              label: 'Password',
+              secure: true,
+              error: 'Use at least 8 characters',
+              suffixIcon: CamoFieldAction(
+                icon: const CamoIcon(galleryIcon),
+                semanticLabel: 'Show password',
+                onPressed: () {},
+              ),
+            ),
+            CamoTextField(
+              value: 'Locked',
+              onChanged: ignore,
+              label: 'Company',
+              enabled: false,
+            ),
+            CamouflageProvider(
+              theme: theme.copyWith(
+                components: theme.components.copyWith(
+                  textField: const CamoTextFieldTheme(
+                    labelPlacement: LabelPlacement.floating,
+                  ),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                spacing: 16,
+                children: [
+                  CamoTextField(
+                    value: '',
+                    onChanged: ignore,
+                    label: 'Floating, resting',
+                  ),
+                  CamoTextField(
+                    value: 'Ann',
+                    onChanged: ignore,
+                    label: 'Floating, floated',
+                    suffixText: 'kg',
+                  ),
+                ],
+              ),
+            ),
+            const CamoFieldFrame(
+              focused: false,
+              isEmpty: false,
+              label: 'Code',
+              child: Row(
+                spacing: 8,
+                children: [
+                  CamoText('•'),
+                  CamoText('•'),
+                  CamoText('•'),
+                  CamoText('•'),
+                ],
+              ),
+            ),
+            CamoSearchField(query: '', onChanged: ignore, onSubmitted: ignore),
+            CamoSearchField(
+              query: 'tea',
+              onChanged: ignore,
+              onSubmitted: ignore,
+              placeholder: 'Search drinks',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

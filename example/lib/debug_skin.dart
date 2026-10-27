@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 
 import 'debug_input_renderers.dart';
 import 'debug_renderers.dart';
+import 'debug_text_renderers.dart';
 
 export 'debug_renderers.dart';
 
@@ -26,6 +27,8 @@ const CamoSkin debugSkin = CamoSkin(
   segmentedControl: DebugSegmentedControlRenderer(),
   slider: DebugSliderRenderer(),
   stepper: DebugStepperRenderer(),
+  textField: DebugTextFieldRenderer(),
+  searchField: DebugSearchFieldRenderer(),
 );
 
 /// Fills the container and nothing else: no depth, no border.

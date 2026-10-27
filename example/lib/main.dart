@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'app_icon.dart';
 import 'brands.dart';
 import 'checkout.dart';
+import 'forms.dart';
 import 'selection.dart';
 import 'debug_skin.dart';
 
@@ -133,6 +134,14 @@ class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
                           const _Section(
                             title: 'Selection controls',
                             child: SelectionControls(),
+                          ),
+                          const _Section(
+                            title: 'Sign-up form',
+                            child: SignUpForm(),
+                          ),
+                          const _Section(
+                            title: 'Search',
+                            child: CountrySearch(),
                           ),
                           CamouflageProvider(
                             theme: sampleTheme(_skin, _brand, brightness)
