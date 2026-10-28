@@ -4,6 +4,7 @@ import '../bottom_sheet/camo_bottom_sheet.dart';
 import '../button/camo_button.dart';
 import '../checkbox/camo_checkbox.dart';
 import '../datepicker/camo_calendar.dart';
+import '../dialog/camo_dialog.dart';
 import '../divider/camo_divider.dart';
 import '../icon/camo_icon.dart';
 import '../icon_button/camo_icon_button.dart';
@@ -57,6 +58,7 @@ class CamoComponentThemes {
     this.skeleton,
     this.topBar,
     this.pagedList,
+    this.dialog,
   });
 
   /// Icons outside any component.
@@ -134,6 +136,9 @@ class CamoComponentThemes {
   /// Paged lists.
   final CamoPagedListTheme? pagedList;
 
+  /// Dialogs.
+  final CamoDialogTheme? dialog;
+
   /// A copy with the given fields replaced.
   CamoComponentThemes copyWith({
     CamoIconTheme? icon,
@@ -161,6 +166,7 @@ class CamoComponentThemes {
     CamoSkeletonTheme? skeleton,
     CamoTopBarTheme? topBar,
     CamoPagedListTheme? pagedList,
+    CamoDialogTheme? dialog,
   }) => CamoComponentThemes(
     icon: icon ?? this.icon,
     surface: surface ?? this.surface,
@@ -187,6 +193,7 @@ class CamoComponentThemes {
     skeleton: skeleton ?? this.skeleton,
     topBar: topBar ?? this.topBar,
     pagedList: pagedList ?? this.pagedList,
+    dialog: dialog ?? this.dialog,
   );
 
   @override
@@ -216,7 +223,8 @@ class CamoComponentThemes {
       other.accordion == accordion &&
       other.skeleton == skeleton &&
       other.topBar == topBar &&
-      other.pagedList == pagedList;
+      other.pagedList == pagedList &&
+      other.dialog == dialog;
 
   @override
   int get hashCode => Object.hashAll([
@@ -245,5 +253,6 @@ class CamoComponentThemes {
     skeleton,
     topBar,
     pagedList,
+    dialog,
   ]);
 }

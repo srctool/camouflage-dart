@@ -24,6 +24,7 @@ void main() {
     ('textinputs', const TextInputGallery()),
     ('pickers', const PickerGallery()),
     ('structure', const StructureGallery()),
+    ('dialogs', const DialogGallery()),
   ]) {
     goldenTest(
       'minimal $name',

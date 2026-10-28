@@ -11,11 +11,20 @@ export 'src/datepicker/camo_date_field.dart'
     hide openFieldPicker, prefersTyping;
 export 'src/datepicker/camo_dates.dart'
     hide monthGrid, weekdayOrder, typingMask, typedDigits;
+export 'src/dialog/camo_dialog.dart';
 export 'src/divider/camo_divider.dart';
 export 'src/icon/camo_icon.dart';
 export 'src/icon_button/camo_icon_button.dart';
 export 'src/list/camo_list_item.dart' hide dividedColumn, listDivider;
 export 'src/menu/camo_menu.dart';
+export 'src/overlay/camo_overlay_routes.dart'
+    show
+        CamoDialogPage,
+        CamoDialogRoute,
+        CamoSheetPage,
+        CamoSheetRoute,
+        showCamoBottomSheet,
+        showCamoDialog;
 export 'src/paged_list/camo_paged_list.dart';
 export 'src/progress/camo_progress.dart';
 export 'src/radio/camo_radio.dart';

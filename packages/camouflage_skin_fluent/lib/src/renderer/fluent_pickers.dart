@@ -9,7 +9,13 @@ import '../fluent_tokens.dart';
 // Acrylic arrives in M6: 4 px corners, a neutral stroke, brand for the selection.
 
 const double _disabled = 0.38;
-const double _scrim = 0.4;
+const double _smokeLight = 0.4;
+const double _smokeDark = 0.5;
+
+// Fluent's Smoke, the dimming layer behind modal dialogs and sheets: `colors.scrim` (black) at Fluent 2's
+// `colorBackgroundOverlay` alpha, 40% in light and 50% in dark.
+double _smoke(CamoTheme theme) =>
+    theme.colors.surface.computeLuminance() < 0.5 ? _smokeDark : _smokeLight;
 const double _outerLabels = 0.8;
 const double _innerLabels = 0.45;
 
@@ -29,7 +35,8 @@ class FluentMenuRenderer implements CamoMenuRenderer {
       contentPadding: EdgeInsetsDirectional.all(theme.spacing.xs),
       textStyle: theme.typography.bodyMedium,
       iconSize: 20,
-      elevation: theme.elevation.level3,
+      // shadow16: Fluent's flyout depth, where Acrylic applies.
+      elevation: theme.elevation.level4,
       checkPosition: CheckPosition.leading,
       colors: MenuColors(
         container: c.surface,
@@ -106,7 +113,7 @@ class FluentBottomSheetRenderer implements CamoBottomSheetRenderer {
       showCloseButton: true,
       closeIcon: const IconSource.builder(_closeIcon),
       containerColor: c.surface,
-      scrimAlpha: _scrim,
+      scrimAlpha: _smoke(theme),
       widePresentation: WidePresentation.sheet,
       stackedScrim: StackedScrim.each,
     );
@@ -726,4 +733,165 @@ class _StrokePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_StrokePainter old) => old.color != color;
+}
+
+/// Fluent's dialog: radius 8, shadow64, a 20 semibold title, actions at the end.
+class FluentDialogRenderer implements CamoDialogRenderer {
+  /// Creates the renderer.
+  const FluentDialogRenderer();
+
+  @override
+  CamoDialogStyle defaults(CamoTheme theme) {
+    final c = theme.colors;
+    return CamoDialogStyle(
+      shape: theme.shapes.medium,
+      minWidth: 280,
+      maxWidth: 560,
+      padding: EdgeInsetsDirectional.all(theme.spacing.xl),
+      titleStyle: theme.typography.titleLarge.copyWith(
+        fontWeight: FontWeight.w600,
+      ),
+      messageStyle: theme.typography.bodyMedium,
+      titleAlign: CamoTitleAlign.start,
+      actionsLayout: DialogActionsLayout.end,
+      actionGap: theme.spacing.s,
+      sectionGap: theme.spacing.l,
+      showCloseButton: false,
+      closeIcon: const IconSource.builder(_closeIcon),
+      elevation: ElevationLevel.level5,
+      scrimAlpha: _smoke(theme),
+      stackedScrim: StackedScrim.each,
+      colors: DialogColors(
+        container: c.surface,
+        title: c.onSurface,
+        message: c.onSurface,
+      ),
+    );
+  }
+
+  @override
+  Widget render(
+    BuildContext context,
+    DialogState state,
+    DialogSlots slots,
+    CamoTheme theme,
+    CamoDialogStyle style,
+  ) => _paintDialog(context, state, slots, theme, style, null);
+}
+
+// A dialog: the container (with a hairline in [border] when set), the title row with the optional close button,
+// the message and content scrolling between them, and the actions laid out by `actionsLayout`.
+Widget _paintDialog(
+  BuildContext context,
+  DialogState state,
+  DialogSlots slots,
+  CamoTheme theme,
+  CamoDialogStyle style,
+  Color? border,
+) {
+  final skin = Camouflage.skinOf(context);
+  final center = style.titleAlign == CamoTitleAlign.center;
+  final align = center ? TextAlign.center : TextAlign.start;
+  final close = style.showCloseButton && state.dismissible;
+  Widget dialog = Padding(
+    padding: style.padding,
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: style.sectionGap,
+      children: [
+        if (state.title != null || close)
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: state.title == null
+                    ? const SizedBox.shrink()
+                    : Text(
+                        state.title!,
+                        textAlign: align,
+                        style: style.titleStyle.copyWith(
+                          color: style.colors.title,
+                        ),
+                      ),
+              ),
+              if (close)
+                CamoIconButton(
+                  icon: CamoIcon(style.closeIcon),
+                  semanticLabel: 'Close',
+                  onPressed: state.onDismissRequest,
+                ),
+            ],
+          ),
+        Flexible(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: style.sectionGap,
+              children: [
+                Text(
+                  state.message,
+                  textAlign: align,
+                  style: style.messageStyle.copyWith(
+                    color: style.colors.message,
+                  ),
+                ),
+                ?slots.content,
+              ],
+            ),
+          ),
+        ),
+        _dialogActions(slots, style.actionsLayout, style.actionGap),
+      ],
+    ),
+  );
+  if (border != null) {
+    dialog = DecoratedBox(
+      position: DecorationPosition.foreground,
+      decoration: BoxDecoration(
+        borderRadius: style.shape,
+        border: Border.all(color: border),
+      ),
+      child: dialog,
+    );
+  }
+  return skin.surfaceTreatment.decorate(
+    color: style.colors.container,
+    shape: style.shape,
+    elevation: theme.elevation.of(style.elevation),
+    theme: theme,
+    child: ClipRRect(borderRadius: style.shape, child: dialog),
+  );
+}
+
+// `confirm` and `dismiss` arranged by [layout]: `dismiss` first in a row (confirm at the end), confirm on top
+// when stacked.
+Widget _dialogActions(
+  DialogSlots slots,
+  DialogActionsLayout layout,
+  double gap,
+) {
+  final dismiss = slots.dismiss;
+  return switch (layout) {
+    DialogActionsLayout.end || DialogActionsLayout.center => Wrap(
+      alignment: layout == DialogActionsLayout.end
+          ? WrapAlignment.end
+          : WrapAlignment.center,
+      spacing: gap,
+      runSpacing: gap,
+      children: [?dismiss, slots.confirm],
+    ),
+    DialogActionsLayout.fullWidthRow => Row(
+      spacing: gap,
+      children: [
+        if (dismiss != null) Expanded(child: dismiss),
+        Expanded(child: slots.confirm),
+      ],
+    ),
+    DialogActionsLayout.stacked => Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: gap,
+      children: [slots.confirm, ?dismiss],
+    ),
+  };
 }

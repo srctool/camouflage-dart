@@ -363,6 +363,7 @@ const skinA = CamoSkin(
   skeleton: PlainSkeleton(),
   topBar: PlainTopBar(),
   pagedList: PlainPagedList(),
+  dialog: PlainDialog(),
 );
 final skinB = skinA.copyWith(name: 'b');
 final themeT = CamoTheme(

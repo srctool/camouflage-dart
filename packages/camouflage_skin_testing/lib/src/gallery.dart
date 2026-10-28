@@ -735,3 +735,89 @@ class StructureGallery extends StatelessWidget {
     );
   }
 }
+
+/// The M6 dialog content, inline (no route): a confirmation with a title, a message-only notice, actions
+/// stacked and in a full-width row, and a centered title with custom content.
+class DialogGallery extends StatelessWidget {
+  /// Creates the gallery.
+  const DialogGallery({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Camouflage.themeOf(context);
+    Widget themed(CamoDialogTheme dialog, Widget child) => CamouflageProvider(
+      theme: theme.copyWith(
+        components: theme.components.copyWith(dialog: dialog),
+      ),
+      child: child,
+    );
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: SizedBox(
+        width: 380,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 16,
+          children: [
+            CamoDialog(
+              title: 'Delete item?',
+              message: "This can't be undone.",
+              confirm: CamoButton(
+                text: 'Delete',
+                onPressed: () {},
+                tone: Tone.error,
+              ),
+              dismiss: CamoButton(
+                text: 'Cancel',
+                onPressed: () {},
+                appearance: Appearance.ghost,
+              ),
+            ),
+            CamoDialog(
+              message: 'Your changes were saved.',
+              confirm: CamoButton(text: 'OK', onPressed: () {}),
+            ),
+            themed(
+              const CamoDialogTheme(actionsLayout: DialogActionsLayout.stacked),
+              CamoDialog(
+                title: 'Stay updated',
+                message: 'Turn on notifications to hear about your orders.',
+                confirm: CamoButton(text: 'Allow', onPressed: () {}),
+                dismiss: CamoButton(
+                  text: 'Not now',
+                  onPressed: () {},
+                  appearance: Appearance.ghost,
+                ),
+              ),
+            ),
+            themed(
+              const CamoDialogTheme(
+                titleAlign: CamoTitleAlign.center,
+                actionsLayout: DialogActionsLayout.fullWidthRow,
+              ),
+              CamoDialog(
+                title: 'Sort by',
+                message: 'Choose how items are ordered.',
+                confirm: CamoButton(text: 'Apply', onPressed: () {}),
+                dismiss: CamoButton(
+                  text: 'Cancel',
+                  onPressed: () {},
+                  appearance: Appearance.outline,
+                ),
+                content: CamoRadioGroup<String>(
+                  value: 'newest',
+                  onChanged: (_) {},
+                  options: const [
+                    RadioOption('newest', 'Newest'),
+                    RadioOption('price', 'Price'),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

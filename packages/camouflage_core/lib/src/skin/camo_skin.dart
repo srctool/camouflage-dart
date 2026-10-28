@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../bottom_sheet/camo_bottom_sheet.dart';
 import '../datepicker/camo_calendar.dart';
+import '../dialog/camo_dialog.dart';
 import '../menu/camo_menu.dart';
 import '../timepicker/camo_time_picker.dart';
 import '../card/camo_card.dart';
@@ -67,6 +68,7 @@ class CamoSkin {
     required this.skeleton,
     required this.topBar,
     required this.pagedList,
+    required this.dialog,
   });
 
   /// For debugging and tests, e.g. `'minimal'`.
@@ -156,6 +158,9 @@ class CamoSkin {
   /// Paged lists.
   final CamoPagedListRenderer pagedList;
 
+  /// Dialogs.
+  final CamoDialogRenderer dialog;
+
   /// A copy with the given fields replaced; the others stay `identical`.
   CamoSkin copyWith({
     String? name,
@@ -187,6 +192,7 @@ class CamoSkin {
     CamoSkeletonRenderer? skeleton,
     CamoTopBarRenderer? topBar,
     CamoPagedListRenderer? pagedList,
+    CamoDialogRenderer? dialog,
   }) => CamoSkin(
     name: name ?? this.name,
     surfaceTreatment: surfaceTreatment ?? this.surfaceTreatment,
@@ -217,6 +223,7 @@ class CamoSkin {
     skeleton: skeleton ?? this.skeleton,
     topBar: topBar ?? this.topBar,
     pagedList: pagedList ?? this.pagedList,
+    dialog: dialog ?? this.dialog,
   );
 
   @override
@@ -250,7 +257,8 @@ class CamoSkin {
       other.accordion == accordion &&
       other.skeleton == skeleton &&
       other.topBar == topBar &&
-      other.pagedList == pagedList;
+      other.pagedList == pagedList &&
+      other.dialog == dialog;
 
   @override
   int get hashCode => Object.hashAll([
@@ -283,6 +291,7 @@ class CamoSkin {
     skeleton,
     topBar,
     pagedList,
+    dialog,
   ]);
 
   @override

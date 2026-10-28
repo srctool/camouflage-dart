@@ -5,6 +5,7 @@ library;
 import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
+import 'src/fluent_acrylic.dart';
 import 'src/fluent_solid.dart';
 import 'src/fluent_theme.dart';
 import 'src/renderer/fluent_actions.dart';
@@ -15,6 +16,7 @@ import 'src/renderer/fluent_structure.dart';
 import 'src/renderer/fluent_text.dart';
 import 'src/subtle.dart';
 
+export 'src/fluent_acrylic.dart';
 export 'src/fluent_palette.dart' show fluentBrandBlue;
 export 'src/fluent_solid.dart';
 export 'src/fluent_theme.dart';
@@ -25,6 +27,7 @@ export 'src/renderer/fluent_pickers.dart'
     show
         FluentBottomSheetRenderer,
         FluentDatePickerRenderer,
+        FluentDialogRenderer,
         FluentMenuRenderer,
         FluentTimePickerRenderer;
 export 'src/renderer/fluent_primitives.dart';
@@ -39,15 +42,23 @@ export 'src/renderer/fluent_structure.dart'
 export 'src/renderer/fluent_text.dart';
 export 'src/subtle.dart';
 
-/// The surface treatments Fluent offers. `acrylic` joins with the overlays (M6) and `mica` with M8.
+/// The surface treatments Fluent offers. `mica` joins with M8.
 enum FluentSurface {
   /// Fills and Fluent's shadows.
   solid,
+
+  /// Frosted glass for flyouts, menus and dialogs; other containers stay solid.
+  acrylic,
 }
 
 /// The Fluent skin with the given [surface]. Each component's renderer joins in its milestone.
 CamoSkin fluentSkin({FluentSurface surface = FluentSurface.solid}) =>
-    fluentSkinDefault;
+    switch (surface) {
+      FluentSurface.solid => fluentSkinDefault,
+      FluentSurface.acrylic => fluentSkinDefault.copyWith(
+        surfaceTreatment: const FluentAcrylic(),
+      ),
+    };
 
 /// The Fluent skin with the `solid` surface.
 const CamoSkin fluentSkinDefault = CamoSkin(
@@ -80,6 +91,7 @@ const CamoSkin fluentSkinDefault = CamoSkin(
   skeleton: FluentSkeletonRenderer(),
   topBar: FluentTopBarRenderer(),
   pagedList: FluentPagedListRenderer(),
+  dialog: FluentDialogRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [fluentSkinDefault] and [fluentTheme].

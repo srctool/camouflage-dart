@@ -25,6 +25,7 @@ void main() {
     ('textinputs', const TextInputGallery()),
     ('pickers', const PickerGallery()),
     ('structure', const StructureGallery()),
+    ('dialogs', const DialogGallery()),
   ]) {
     goldenTest(
       'fluent $name',
@@ -45,4 +46,46 @@ void main() {
       ),
     );
   }
+
+  // Acrylic: a panel at flyout depth over stripes, blurring them.
+  goldenTest(
+    'fluent acrylic',
+    fileName: 'acrylic_fluent',
+    builder: () => GoldenTestScenario(
+      name: 'light',
+      child: CamouflagePreview(
+        skin: fluentSkin(surface: FluentSurface.acrylic),
+        theme: fluentTheme(),
+        child: SizedBox(
+          width: 360,
+          height: 200,
+          child: Stack(
+            children: [
+              Column(
+                children: [
+                  for (var i = 0; i < 8; i++)
+                    Expanded(
+                      child: ColoredBox(
+                        color: i.isEven
+                            ? const Color(0xFF0F6CBD)
+                            : const Color(0xFFF7630C),
+                        child: const SizedBox.expand(),
+                      ),
+                    ),
+                ],
+              ),
+              const Center(
+                child: CamoMenuPanel(
+                  child: Padding(
+                    padding: EdgeInsets.all(24),
+                    child: CamoText('Acrylic'),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
 }
