@@ -55,6 +55,21 @@ class AppIcon extends StatelessWidget {
     : _asset = 'edit',
       _mirror = false;
 
+  /// A box with a down arrow.
+  const AppIcon.archive({super.key, this.size, this.color})
+    : _asset = 'archive',
+      _mirror = false;
+
+  /// A bell.
+  const AppIcon.notifications({super.key, this.size, this.color})
+    : _asset = 'notifications',
+      _mirror = false;
+
+  /// A cloud with an up arrow.
+  const AppIcon.upload({super.key, this.size, this.color})
+    : _asset = 'upload',
+      _mirror = false;
+
   final String _asset;
   final bool _mirror;
 

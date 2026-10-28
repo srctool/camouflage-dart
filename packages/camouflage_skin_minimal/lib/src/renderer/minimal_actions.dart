@@ -270,6 +270,10 @@ class MinimalProgressCircleRenderer implements CamoProgressCircleRenderer {
       active: theme.colors.primary,
       track: theme.colors.outlineVariant,
     ),
+    // A 2 px ink bar on a hairline track, no gap, no stop dot.
+    barHeight: 2,
+    trackGap: 0,
+    showStopIndicator: false,
   );
 
   @override

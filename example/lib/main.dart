@@ -13,6 +13,7 @@ import 'data_display.dart';
 import 'dates_and_times.dart';
 import 'documents.dart';
 import 'forms.dart';
+import 'inbox.dart';
 import 'selection.dart';
 import 'overlays.dart';
 import 'structure.dart';
@@ -188,6 +189,10 @@ class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
               const _Section(
                 title: 'Chips, badges and avatars',
                 child: DataDisplayDemo(),
+              ),
+              const _Section(
+                title: 'Inbox: progress, snackbars and banners',
+                child: InboxScreen(),
               ),
               CamouflageProvider(
                 theme: sampleTheme(_skin, _brand, brightness).copyWith(

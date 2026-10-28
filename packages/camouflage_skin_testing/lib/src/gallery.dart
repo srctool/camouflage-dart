@@ -1052,3 +1052,109 @@ class DataDisplayGallery extends StatelessWidget {
     );
   }
 }
+
+/// The M7 feedback components: determinate bars in two tones, banners in each tone and appearance (with a title,
+/// actions and a ✕), and snackbars drawn by the renderer as they appear: plain, with an action, with a ✕ and a
+/// tone icon. Static: no indeterminate animation.
+class FeedbackGallery extends StatelessWidget {
+  /// Creates the gallery.
+  const FeedbackGallery({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final skin = Camouflage.skinOf(context);
+    final theme = Camouflage.themeOf(context);
+    final style = skin.snackbar
+        .defaults(theme)
+        .merge(theme.components.snackbar);
+    final toneIcons = skin.banner
+        .defaults(theme)
+        .merge(theme.components.banner)
+        .toneIcons;
+    final action = Builder(
+      builder: (context) => Text(
+        'Undo',
+        style: style.actionStyle.copyWith(
+          color: Camouflage.contentColorOf(context),
+        ),
+      ),
+    );
+    final dismiss = CamoFieldAction(
+      icon: CamoIcon(style.dismissIcon),
+      semanticLabel: 'Dismiss',
+      onPressed: () {},
+    );
+    Widget snackbar(Tone tone, SnackbarSlots slots) => SizedBox(
+      width: 360,
+      child: skin.snackbar.render(
+        context,
+        SnackbarState(
+          message: 'Message archived',
+          action: null,
+          tone: tone,
+          withDismiss: slots.dismiss != null,
+          showToneIcon: slots.icon != null,
+          position: style.position,
+          interaction: InteractionState.none,
+        ),
+        slots,
+        theme,
+        style,
+      ),
+    );
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: SizedBox(
+        width: 388,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 12,
+          children: [
+            const SizedBox(width: 320, child: CamoProgressBar(value: 0.4)),
+            const SizedBox(
+              width: 320,
+              child: CamoProgressBar(value: 0.75, tone: Tone.error),
+            ),
+            CamoBanner(
+              message: 'Your trial ends in 3 days.',
+              title: 'Trial',
+              actions: [
+                CamoButton(
+                  text: 'Upgrade',
+                  onPressed: () {},
+                  appearance: Appearance.ghost,
+                ),
+              ],
+              onDismiss: () {},
+            ),
+            const CamoBanner(message: 'Payment received.', tone: Tone.success),
+            const CamoBanner(
+              message: 'Storage is almost full.',
+              tone: Tone.warning,
+              appearance: Appearance.outline,
+            ),
+            CamoBanner(
+              message: "Couldn't sync.",
+              tone: Tone.error,
+              appearance: Appearance.solid,
+              actions: [
+                CamoButton(
+                  text: 'Retry',
+                  onPressed: () {},
+                  appearance: Appearance.ghost,
+                ),
+              ],
+            ),
+            snackbar(Tone.defaultTone, const SnackbarSlots()),
+            snackbar(Tone.defaultTone, SnackbarSlots(action: action)),
+            snackbar(
+              Tone.error,
+              SnackbarSlots(icon: CamoIcon(toneIcons.error), dismiss: dismiss),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

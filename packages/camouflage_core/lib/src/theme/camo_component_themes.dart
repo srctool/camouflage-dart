@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../accordion/camo_accordion.dart';
 import '../avatar/camo_avatar.dart';
 import '../badge/camo_badge.dart';
+import '../banner/camo_banner.dart';
 import '../bottom_sheet/camo_bottom_sheet.dart';
 import '../button/camo_button.dart';
 import '../card/camo_card.dart';
@@ -23,6 +24,7 @@ import '../segmented/camo_segmented_control.dart';
 import '../select/camo_select.dart';
 import '../skeleton/camo_skeleton.dart';
 import '../slider/camo_slider.dart';
+import '../snackbar/camo_snackbar.dart';
 import '../stepper/camo_stepper.dart';
 import '../surface/camo_surface.dart';
 import '../switch/camo_switch.dart';
@@ -67,6 +69,8 @@ class CamoComponentThemes {
     this.chip,
     this.badge,
     this.avatar,
+    this.snackbar,
+    this.banner,
   });
 
   /// Icons outside any component.
@@ -159,6 +163,12 @@ class CamoComponentThemes {
   /// Avatars.
   final CamoAvatarTheme? avatar;
 
+  /// Snackbars.
+  final CamoSnackbarTheme? snackbar;
+
+  /// Banners.
+  final CamoBannerTheme? banner;
+
   /// A copy with the given fields replaced.
   CamoComponentThemes copyWith({
     CamoIconTheme? icon,
@@ -191,6 +201,8 @@ class CamoComponentThemes {
     CamoChipTheme? chip,
     CamoBadgeTheme? badge,
     CamoAvatarTheme? avatar,
+    CamoSnackbarTheme? snackbar,
+    CamoBannerTheme? banner,
   }) => CamoComponentThemes(
     icon: icon ?? this.icon,
     surface: surface ?? this.surface,
@@ -222,6 +234,8 @@ class CamoComponentThemes {
     chip: chip ?? this.chip,
     badge: badge ?? this.badge,
     avatar: avatar ?? this.avatar,
+    snackbar: snackbar ?? this.snackbar,
+    banner: banner ?? this.banner,
   );
 
   @override
@@ -256,7 +270,9 @@ class CamoComponentThemes {
       other.select == select &&
       other.chip == chip &&
       other.badge == badge &&
-      other.avatar == avatar;
+      other.avatar == avatar &&
+      other.snackbar == snackbar &&
+      other.banner == banner;
 
   @override
   int get hashCode => Object.hashAll([
@@ -290,5 +306,7 @@ class CamoComponentThemes {
     chip,
     badge,
     avatar,
+    snackbar,
+    banner,
   ]);
 }

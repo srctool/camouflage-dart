@@ -2,6 +2,7 @@ import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
 import 'debug_data_display_renderers.dart';
+import 'debug_feedback_renderers.dart';
 import 'debug_input_renderers.dart';
 import 'debug_picker_renderers.dart';
 import 'debug_renderers.dart';
@@ -23,6 +24,7 @@ const CamoSkin debugSkin = CamoSkin(
   button: DebugButtonRenderer(),
   iconButton: DebugIconButtonRenderer(),
   progressCircle: DebugProgressCircleRenderer(),
+  progressBar: DebugProgressBarRenderer(),
   tooltip: DebugTooltipRenderer(),
   checkbox: DebugCheckboxRenderer(),
   switchRenderer: DebugSwitchRenderer(),
@@ -46,6 +48,8 @@ const CamoSkin debugSkin = CamoSkin(
   chip: DebugChipRenderer(),
   badge: DebugBadgeRenderer(),
   avatar: DebugAvatarRenderer(),
+  snackbar: DebugSnackbarRenderer(),
+  banner: DebugBannerRenderer(),
 );
 
 /// Fills the container and nothing else: no depth, no border.

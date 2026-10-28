@@ -359,6 +359,10 @@ class FluentProgressCircleRenderer implements CamoProgressCircleRenderer {
       active: theme.colors.primary,
       track: theme.colors.primaryContainer,
     ),
+    // Fluent's ProgressBar: 2 px, rounded, no gap or stop dot.
+    barHeight: 2,
+    trackGap: 0,
+    showStopIndicator: false,
   );
 
   @override
