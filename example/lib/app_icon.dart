@@ -35,6 +35,26 @@ class AppIcon extends StatelessWidget {
     : _asset = 'chevron',
       _mirror = true;
 
+  /// Three dots: more options.
+  const AppIcon.more({super.key, this.size, this.color})
+    : _asset = 'more',
+      _mirror = false;
+
+  /// Sort lines.
+  const AppIcon.sort({super.key, this.size, this.color})
+    : _asset = 'sort',
+      _mirror = false;
+
+  /// Share.
+  const AppIcon.share({super.key, this.size, this.color})
+    : _asset = 'share',
+      _mirror = false;
+
+  /// A pencil.
+  const AppIcon.edit({super.key, this.size, this.color})
+    : _asset = 'edit',
+      _mirror = false;
+
   final String _asset;
   final bool _mirror;
 

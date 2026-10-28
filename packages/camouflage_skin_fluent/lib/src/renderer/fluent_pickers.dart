@@ -38,6 +38,7 @@ class FluentMenuRenderer implements CamoMenuRenderer {
       // shadow16: Fluent's flyout depth, where Acrylic applies.
       elevation: theme.elevation.level4,
       checkPosition: CheckPosition.leading,
+      checkIcon: const IconSource.builder(menuCheckIcon),
       colors: MenuColors(
         container: c.surface,
         text: c.onSurface,
@@ -87,6 +88,24 @@ class FluentMenuRenderer implements CamoMenuRenderer {
       ),
     );
   }
+
+  @override
+  Widget item(
+    BuildContext context,
+    MenuItemState state,
+    MenuItemSlots slots,
+    CamoTheme theme,
+    CamoMenuStyle style,
+  ) => paintMenuItem(
+    context,
+    state,
+    slots,
+    theme,
+    style,
+    theme.shapes.small,
+    theme.spacing.s,
+    theme.typography.bodySmall,
+  );
 }
 
 /// Fluent's bottom drawer: square corners, a level-5 shadow, no handle, and a ✕ in the header.
@@ -895,3 +914,103 @@ Widget _dialogActions(
     ),
   };
 }
+
+/// A menu row: the check column (leading or trailing, per `style.checkPosition`), the icon column, the text and
+/// the shortcut, in the item's tone, with the skin's feedback in [shape] for the highlight.
+Widget paintMenuItem(
+  BuildContext context,
+  MenuItemState state,
+  MenuItemSlots slots,
+  CamoTheme theme,
+  CamoMenuStyle style,
+  BorderRadius shape,
+  double gap,
+  TextStyle shortcutStyle,
+) {
+  final alpha = state.enabled ? 1.0 : _disabled;
+  Color dim(Color c) => c.withValues(alpha: c.a * alpha);
+  final toned = state.tone != Tone.defaultTone;
+  final text = dim(
+    toned ? theme.colors.family(state.tone).strong : style.colors.text,
+  );
+  final icon = toned ? text : dim(style.colors.icon);
+  final leadingCheck = style.checkPosition == CheckPosition.leading;
+  Widget check(bool show) => Padding(
+    padding: EdgeInsetsDirectional.only(end: gap),
+    child: SizedBox.square(
+      dimension: style.iconSize,
+      child: show ? CamoIcon(style.checkIcon, color: text) : null,
+    ),
+  );
+  final row = ConstrainedBox(
+    constraints: BoxConstraints(minHeight: style.itemHeight),
+    child: Padding(
+      padding: EdgeInsetsDirectional.symmetric(horizontal: gap),
+      child: CamoContentStyle(
+        color: text,
+        iconStyle: CamoIconStyle(size: style.iconSize, color: icon),
+        child: Row(
+          children: [
+            if (leadingCheck && state.reserveCheck)
+              check(state.checked == true),
+            if (state.reserveIcon)
+              Padding(
+                padding: EdgeInsetsDirectional.only(end: gap),
+                child: SizedBox.square(
+                  dimension: style.iconSize,
+                  child: Center(child: slots.leadingIcon),
+                ),
+              ),
+            Expanded(
+              child: Text(
+                state.text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: style.textStyle.copyWith(color: text),
+              ),
+            ),
+            if (state.trailingText case final shortcut?)
+              Padding(
+                padding: EdgeInsetsDirectional.only(start: gap),
+                child: Text(
+                  shortcut,
+                  style: shortcutStyle.copyWith(
+                    color: dim(style.colors.trailingText),
+                  ),
+                ),
+              ),
+            if (!leadingCheck && state.checked == true)
+              Padding(
+                padding: EdgeInsetsDirectional.only(start: gap),
+                child: CamoIcon(style.checkIcon, color: text),
+              ),
+          ],
+        ),
+      ),
+    ),
+  );
+  return Camouflage.skinOf(context).feedback.wrap(
+    controller: state.controller,
+    contentColor: style.colors.text,
+    shape: shape,
+    theme: theme,
+    child: row,
+  );
+}
+
+/// The checkmark of a checked menu item.
+Widget menuCheckIcon(double size, Color? color) => _glyph(size, color, (p) {
+  p
+    ..moveTo(5, 12.5)
+    ..lineTo(9.5, 17)
+    ..lineTo(19, 7);
+});
+
+/// The chevron of a field that opens a list.
+Widget dropdownChevronIcon(double size, Color? color) =>
+    _glyph(size, color, (p) {
+      p
+        ..moveTo(6, 9)
+        ..lineTo(12, 15)
+        ..lineTo(18, 9);
+    });

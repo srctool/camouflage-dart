@@ -10,6 +10,7 @@ import 'app_icon.dart';
 import 'brands.dart';
 import 'checkout.dart';
 import 'dates_and_times.dart';
+import 'documents.dart';
 import 'forms.dart';
 import 'selection.dart';
 import 'overlays.dart';
@@ -179,6 +180,10 @@ class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
               ),
               const _Section(title: 'Paged list', child: Products()),
               const _Section(title: 'Overlays', child: OverlayDemo()),
+              const _Section(
+                title: 'Documents: menus, selects, dialogs and sheets',
+                child: DocumentsScreen(),
+              ),
               CamouflageProvider(
                 theme: sampleTheme(_skin, _brand, brightness).copyWith(
                   colors: CamoColors.fromSeed(

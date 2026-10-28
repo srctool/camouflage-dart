@@ -17,6 +17,8 @@ export 'src/icon/camo_icon.dart';
 export 'src/icon_button/camo_icon_button.dart';
 export 'src/list/camo_list_item.dart' hide dividedColumn, listDivider;
 export 'src/menu/camo_menu.dart';
+export 'src/menu/camo_menu_anchor.dart'
+    hide MenuEntries, openedByKeyboard, runAfterFrame;
 export 'src/overlay/camo_overlay_routes.dart'
     show
         CamoDialogPage,
@@ -29,6 +31,7 @@ export 'src/paged_list/camo_paged_list.dart';
 export 'src/progress/camo_progress.dart';
 export 'src/radio/camo_radio.dart';
 export 'src/search/camo_search_field.dart';
+export 'src/select/camo_select.dart' hide fold;
 export 'src/segmented/camo_segmented_control.dart';
 export 'src/skeleton/camo_skeleton.dart';
 export 'src/slider/camo_slider.dart';

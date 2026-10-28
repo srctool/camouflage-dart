@@ -821,3 +821,94 @@ class DialogGallery extends StatelessWidget {
     );
   }
 }
+
+/// The M6 menu, open: icons, a shortcut, a disabled item, a checkable item, a destructive item and dividers;
+/// above it, a closed select showing its value and the dropdown chevron. The menu is a route, so the gallery
+/// brings its own navigator and opens it after the first frame.
+class MenuGallery extends StatelessWidget {
+  /// Creates the gallery.
+  const MenuGallery({super.key});
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 352,
+    height: 440,
+    child: Navigator(
+      onGenerateRoute: (_) =>
+          PageRouteBuilder<void>(pageBuilder: (_, _, _) => const _MenuScene()),
+    ),
+  );
+}
+
+class _MenuScene extends StatefulWidget {
+  const _MenuScene();
+
+  @override
+  State<_MenuScene> createState() => _MenuSceneState();
+}
+
+class _MenuSceneState extends State<_MenuScene> {
+  final _menu = CamoMenuController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _menu.open());
+  }
+
+  @override
+  void dispose() {
+    _menu.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 16,
+      children: [
+        CamoSelect<String>(
+          value: 'newest',
+          onChanged: (_) {},
+          options: const [
+            SelectOption('newest', 'Newest'),
+            SelectOption('price', 'Price'),
+          ],
+          label: 'Sort by',
+        ),
+        CamoMenuAnchor(
+          controller: _menu,
+          items: [
+            CamoMenuItem(
+              text: 'Share',
+              onPressed: () {},
+              leadingIcon: const CamoIcon(galleryIcon),
+            ),
+            CamoMenuItem(
+              text: 'Edit',
+              onPressed: () {},
+              leadingIcon: const CamoIcon(galleryIcon),
+              trailingText: 'Ctrl+E',
+            ),
+            CamoMenuItem(text: 'Archive', onPressed: () {}, enabled: false),
+            const CamoMenuDivider(),
+            CamoMenuItem(
+              text: 'Show hidden files',
+              onPressed: () {},
+              checked: true,
+            ),
+            const CamoMenuDivider(),
+            CamoMenuItem(text: 'Delete', onPressed: () {}, tone: Tone.error),
+          ],
+          builder: (context, open) => CamoButton(
+            text: 'More',
+            onPressed: open,
+            appearance: Appearance.outline,
+          ),
+        ),
+      ],
+    ),
+  );
+}

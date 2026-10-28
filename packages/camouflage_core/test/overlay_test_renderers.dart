@@ -19,6 +19,7 @@ class PlainMenu implements CamoMenuRenderer {
     iconSize: 24,
     elevation: 0,
     checkPosition: CheckPosition.trailing,
+    checkIcon: const IconSource.builder(_square),
     colors: MenuColors(
       container: theme.colors.surface,
       text: theme.colors.onSurface,
@@ -38,6 +39,24 @@ class PlainMenu implements CamoMenuRenderer {
     child: ConstrainedBox(
       constraints: BoxConstraints(minWidth: style.minWidth),
       child: child,
+    ),
+  );
+
+  @override
+  Widget item(
+    BuildContext context,
+    MenuItemState state,
+    MenuItemSlots slots,
+    CamoTheme theme,
+    CamoMenuStyle style,
+  ) => SizedBox(
+    height: style.itemHeight,
+    child: Row(
+      children: [
+        ?slots.leadingIcon,
+        Text(state.text),
+        if (state.trailingText case final shortcut?) Text(shortcut),
+      ],
     ),
   );
 }

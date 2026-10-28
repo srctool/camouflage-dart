@@ -1,6 +1,8 @@
 import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
+import 'fluent_pickers.dart' show dropdownChevronIcon;
+
 import '../fluent_tokens.dart';
 
 // Fluent's Input + Field and SearchBox (base Fluent Skin §3.2): 32 tall, radius 4, a stroke with a stronger
@@ -32,6 +34,7 @@ class FluentTextFieldRenderer implements CamoTextFieldRenderer {
       iconSize: 20,
       borderWidth: _hairline,
       focusedBorderWidth: 2,
+      dropdownIcon: const IconSource.builder(dropdownChevronIcon),
       colors: TextFieldColors(
         container: c.surface,
         border:

@@ -26,6 +26,7 @@ void main() {
     ('pickers', const PickerGallery()),
     ('structure', const StructureGallery()),
     ('dialogs', const DialogGallery()),
+    ('menus', const MenuGallery()),
   ]) {
     goldenTest(
       'fluent $name',

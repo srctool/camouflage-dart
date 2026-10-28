@@ -21,6 +21,7 @@ class DebugMenuRenderer implements CamoMenuRenderer {
     iconSize: 24,
     elevation: 0,
     checkPosition: CheckPosition.trailing,
+    checkIcon: const IconSource.builder(_square),
     colors: MenuColors(
       container: theme.colors.surface,
       text: theme.colors.onSurface,
@@ -45,6 +46,66 @@ class DebugMenuRenderer implements CamoMenuRenderer {
       child: child,
     ),
   );
+
+  // A row with a magenta border for the highlight; the check is a square at the end.
+  @override
+  Widget item(
+    BuildContext context,
+    MenuItemState state,
+    MenuItemSlots slots,
+    CamoTheme theme,
+    CamoMenuStyle style,
+  ) {
+    final i = state.interaction;
+    final highlight = i.hovered || i.focused || i.pressed;
+    final color = state.tone == Tone.defaultTone
+        ? style.colors.text
+        : theme.colors.family(state.tone).strong;
+    return Opacity(
+      opacity: state.enabled ? 1 : 0.38,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border.all(
+            width: 2,
+            color: highlight
+                ? const Color(0xFFFF00FF)
+                : const Color(0x00000000),
+          ),
+        ),
+        child: SizedBox(
+          height: style.itemHeight,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: theme.spacing.s),
+            child: Row(
+              spacing: theme.spacing.s,
+              children: [
+                if (state.reserveIcon)
+                  SizedBox.square(
+                    dimension: style.iconSize,
+                    child: slots.leadingIcon,
+                  ),
+                Expanded(
+                  child: Text(
+                    state.text,
+                    style: style.textStyle.copyWith(color: color),
+                  ),
+                ),
+                if (state.trailingText case final shortcut?)
+                  Text(
+                    shortcut,
+                    style: style.textStyle.copyWith(
+                      color: style.colors.trailingText,
+                    ),
+                  ),
+                if (state.checked == true)
+                  CamoIcon(style.checkIcon, size: style.iconSize, color: color),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 /// The debug skin's bottomsheet renderer.
