@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../skin/camo_skin.dart';
 import '../skin/content_style.dart';
+import '../snackbar/camo_messenger.dart' show installMessenger;
 import '../theme/camo_theme.dart';
 import 'camouflage.dart';
 
@@ -44,15 +45,17 @@ class CamouflageProvider extends StatelessWidget {
         : effectiveSkin.icon
               .defaults(effectiveTheme)
               .merge(effectiveTheme.components.icon);
+    // The root provider installs the app's messenger (snackbars); nested ones use it.
+    final content = installMessenger(context, child);
     return CamouflageScope(
       skin: effectiveSkin,
       theme: effectiveTheme,
       child: rootIcon == null
-          ? child
+          ? content
           : CamoContentStyle(
               color: effectiveTheme!.colors.onSurface,
               iconStyle: rootIcon,
-              child: child,
+              child: content,
             ),
     );
   }

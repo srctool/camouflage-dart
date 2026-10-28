@@ -27,6 +27,7 @@ void main() {
     ('dialogs', const DialogGallery()),
     ('menus', const MenuGallery()),
     ('datadisplay', const DataDisplayGallery()),
+    ('feedback', const FeedbackGallery()),
   ]) {
     goldenTest(
       'minimal $name',

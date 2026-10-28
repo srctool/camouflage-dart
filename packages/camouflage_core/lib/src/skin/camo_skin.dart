@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../accordion/camo_accordion.dart';
 import '../avatar/camo_avatar.dart';
 import '../badge/camo_badge.dart';
+import '../banner/camo_banner.dart';
 import '../bottom_sheet/camo_bottom_sheet.dart';
 import '../button/camo_button.dart';
 import '../card/camo_card.dart';
@@ -22,6 +23,7 @@ import '../search/camo_search_field.dart';
 import '../segmented/camo_segmented_control.dart';
 import '../skeleton/camo_skeleton.dart';
 import '../slider/camo_slider.dart';
+import '../snackbar/camo_snackbar.dart';
 import '../stepper/camo_stepper.dart';
 import '../surface/camo_surface.dart';
 import '../switch/camo_switch.dart';
@@ -52,6 +54,7 @@ class CamoSkin {
     required this.button,
     required this.iconButton,
     required this.progressCircle,
+    required this.progressBar,
     required this.tooltip,
     required this.checkbox,
     required this.switchRenderer,
@@ -75,6 +78,8 @@ class CamoSkin {
     required this.chip,
     required this.badge,
     required this.avatar,
+    required this.snackbar,
+    required this.banner,
   });
 
   /// For debugging and tests, e.g. `'minimal'`.
@@ -106,6 +111,9 @@ class CamoSkin {
 
   /// Draws `CamoProgressCircle`.
   final CamoProgressCircleRenderer progressCircle;
+
+  /// Progress bars.
+  final CamoProgressBarRenderer progressBar;
 
   /// Draws `CamoTooltip`'s bubble.
   final CamoTooltipRenderer tooltip;
@@ -176,6 +184,12 @@ class CamoSkin {
   /// Avatars.
   final CamoAvatarRenderer avatar;
 
+  /// Snackbars.
+  final CamoSnackbarRenderer snackbar;
+
+  /// Banners.
+  final CamoBannerRenderer banner;
+
   /// A copy with the given fields replaced; the others stay `identical`.
   CamoSkin copyWith({
     String? name,
@@ -188,6 +202,7 @@ class CamoSkin {
     CamoButtonRenderer? button,
     CamoIconButtonRenderer? iconButton,
     CamoProgressCircleRenderer? progressCircle,
+    CamoProgressBarRenderer? progressBar,
     CamoTooltipRenderer? tooltip,
     CamoCheckboxRenderer? checkbox,
     CamoSwitchRenderer? switchRenderer,
@@ -211,6 +226,8 @@ class CamoSkin {
     CamoChipRenderer? chip,
     CamoBadgeRenderer? badge,
     CamoAvatarRenderer? avatar,
+    CamoSnackbarRenderer? snackbar,
+    CamoBannerRenderer? banner,
   }) => CamoSkin(
     name: name ?? this.name,
     surfaceTreatment: surfaceTreatment ?? this.surfaceTreatment,
@@ -222,6 +239,7 @@ class CamoSkin {
     button: button ?? this.button,
     iconButton: iconButton ?? this.iconButton,
     progressCircle: progressCircle ?? this.progressCircle,
+    progressBar: progressBar ?? this.progressBar,
     tooltip: tooltip ?? this.tooltip,
     checkbox: checkbox ?? this.checkbox,
     switchRenderer: switchRenderer ?? this.switchRenderer,
@@ -245,6 +263,8 @@ class CamoSkin {
     chip: chip ?? this.chip,
     badge: badge ?? this.badge,
     avatar: avatar ?? this.avatar,
+    snackbar: snackbar ?? this.snackbar,
+    banner: banner ?? this.banner,
   );
 
   @override
@@ -260,6 +280,7 @@ class CamoSkin {
       other.button == button &&
       other.iconButton == iconButton &&
       other.progressCircle == progressCircle &&
+      other.progressBar == progressBar &&
       other.tooltip == tooltip &&
       other.checkbox == checkbox &&
       other.switchRenderer == switchRenderer &&
@@ -282,7 +303,9 @@ class CamoSkin {
       other.dialog == dialog &&
       other.chip == chip &&
       other.badge == badge &&
-      other.avatar == avatar;
+      other.avatar == avatar &&
+      other.snackbar == snackbar &&
+      other.banner == banner;
 
   @override
   int get hashCode => Object.hashAll([
@@ -296,6 +319,7 @@ class CamoSkin {
     button,
     iconButton,
     progressCircle,
+    progressBar,
     tooltip,
     checkbox,
     switchRenderer,
@@ -319,6 +343,8 @@ class CamoSkin {
     chip,
     badge,
     avatar,
+    snackbar,
+    banner,
   ]);
 
   @override

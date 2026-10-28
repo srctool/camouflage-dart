@@ -368,6 +368,9 @@ class DebugProgressCircleRenderer implements CamoProgressCircleRenderer {
       active: theme.colors.primary,
       track: theme.colors.outlineVariant,
     ),
+    barHeight: 4,
+    trackGap: 4,
+    showStopIndicator: true,
   );
 
   @override

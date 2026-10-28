@@ -2,6 +2,7 @@ import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
 import 'data_display_test_renderers.dart';
+import 'feedback_test_renderers.dart';
 import 'input_test_renderers.dart';
 import 'overlay_test_renderers.dart';
 import 'structure_test_renderers.dart';
@@ -280,6 +281,9 @@ class PlainProgressCircle implements CamoProgressCircleRenderer {
       active: theme.colors.primary,
       track: theme.colors.outlineVariant,
     ),
+    barHeight: 4,
+    trackGap: 0,
+    showStopIndicator: false,
   );
 
   @override
@@ -345,6 +349,7 @@ const skinA = CamoSkin(
   button: PlainButton(),
   iconButton: PlainIconButton(),
   progressCircle: PlainProgressCircle(),
+  progressBar: PlainProgressBar(),
   tooltip: PlainTooltip(),
   checkbox: PlainCheckbox(),
   switchRenderer: PlainSwitch(),
@@ -368,6 +373,8 @@ const skinA = CamoSkin(
   chip: PlainChip(),
   badge: PlainBadge(),
   avatar: PlainAvatar(),
+  snackbar: PlainSnackbar(),
+  banner: PlainBanner(),
 );
 final skinB = skinA.copyWith(name: 'b');
 final themeT = CamoTheme(

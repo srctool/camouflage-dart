@@ -10,6 +10,7 @@ import 'src/fluent_solid.dart';
 import 'src/fluent_theme.dart';
 import 'src/renderer/fluent_actions.dart';
 import 'src/renderer/fluent_data_display.dart';
+import 'src/renderer/fluent_feedback.dart';
 import 'src/renderer/fluent_inputs.dart';
 import 'src/renderer/fluent_pickers.dart';
 import 'src/renderer/fluent_primitives.dart';
@@ -25,6 +26,11 @@ export 'src/fluent_tokens.dart';
 export 'src/renderer/fluent_actions.dart';
 export 'src/renderer/fluent_data_display.dart'
     show FluentAvatarRenderer, FluentBadgeRenderer, FluentChipRenderer;
+export 'src/renderer/fluent_feedback.dart'
+    show
+        FluentBannerRenderer,
+        FluentProgressBarRenderer,
+        FluentSnackbarRenderer;
 export 'src/renderer/fluent_inputs.dart';
 export 'src/renderer/fluent_pickers.dart'
     show
@@ -75,6 +81,7 @@ const CamoSkin fluentSkinDefault = CamoSkin(
   button: FluentButtonRenderer(),
   iconButton: FluentIconButtonRenderer(),
   progressCircle: FluentProgressCircleRenderer(),
+  progressBar: FluentProgressBarRenderer(),
   tooltip: FluentTooltipRenderer(),
   checkbox: FluentCheckboxRenderer(),
   switchRenderer: FluentSwitchRenderer(),
@@ -98,6 +105,8 @@ const CamoSkin fluentSkinDefault = CamoSkin(
   chip: FluentChipRenderer(),
   badge: FluentBadgeRenderer(),
   avatar: FluentAvatarRenderer(),
+  snackbar: FluentSnackbarRenderer(),
+  banner: FluentBannerRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [fluentSkinDefault] and [fluentTheme].
