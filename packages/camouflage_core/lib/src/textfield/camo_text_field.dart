@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import '../icon/camo_icon.dart';
 import '../provider/camouflage.dart';
 import '../skin/interaction.dart';
 import '../theme/camo_theme.dart';
@@ -96,6 +97,7 @@ class CamoTextFieldTheme {
     this.iconSize,
     this.borderWidth,
     this.focusedBorderWidth,
+    this.dropdownIcon,
     this.colors,
   });
 
@@ -132,6 +134,9 @@ class CamoTextFieldTheme {
   /// The focused border.
   final double? focusedBorderWidth;
 
+  /// The chevron at the end of a field that opens a list (`CamoSelect`).
+  final IconSource? dropdownIcon;
+
   /// Every color it uses.
   final TextFieldColors? colors;
 
@@ -148,6 +153,7 @@ class CamoTextFieldTheme {
     double? iconSize,
     double? borderWidth,
     double? focusedBorderWidth,
+    IconSource? dropdownIcon,
     TextFieldColors? colors,
   }) => CamoTextFieldTheme(
     labelPlacement: labelPlacement ?? this.labelPlacement,
@@ -161,6 +167,7 @@ class CamoTextFieldTheme {
     iconSize: iconSize ?? this.iconSize,
     borderWidth: borderWidth ?? this.borderWidth,
     focusedBorderWidth: focusedBorderWidth ?? this.focusedBorderWidth,
+    dropdownIcon: dropdownIcon ?? this.dropdownIcon,
     colors: colors ?? this.colors,
   );
 
@@ -178,6 +185,7 @@ class CamoTextFieldTheme {
       other.iconSize == iconSize &&
       other.borderWidth == borderWidth &&
       other.focusedBorderWidth == focusedBorderWidth &&
+      other.dropdownIcon == dropdownIcon &&
       other.colors == colors;
 
   @override
@@ -193,6 +201,7 @@ class CamoTextFieldTheme {
     iconSize,
     borderWidth,
     focusedBorderWidth,
+    dropdownIcon,
     colors,
   );
 }
@@ -213,6 +222,7 @@ class CamoTextFieldStyle {
     required this.iconSize,
     required this.borderWidth,
     required this.focusedBorderWidth,
+    required this.dropdownIcon,
     required this.colors,
   });
 
@@ -249,6 +259,9 @@ class CamoTextFieldStyle {
   /// The focused border.
   final double focusedBorderWidth;
 
+  /// The chevron at the end of a field that opens a list (`CamoSelect`).
+  final IconSource dropdownIcon;
+
   /// Every color it uses.
   final TextFieldColors colors;
 
@@ -267,6 +280,7 @@ class CamoTextFieldStyle {
           iconSize: o.iconSize ?? iconSize,
           borderWidth: o.borderWidth ?? borderWidth,
           focusedBorderWidth: o.focusedBorderWidth ?? focusedBorderWidth,
+          dropdownIcon: o.dropdownIcon ?? dropdownIcon,
           colors: o.colors ?? colors,
         );
 }

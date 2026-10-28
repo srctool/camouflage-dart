@@ -1,6 +1,8 @@
 import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
+import 'minimal_pickers.dart' show dropdownChevronIcon;
+
 // Minimal's text field and search field (base Minimal Skin §3.4): a 44 field with a hairline, a 2 px primary
 // ring when focused, the label above by default.
 
@@ -34,6 +36,7 @@ class MinimalTextFieldRenderer implements CamoTextFieldRenderer {
       iconSize: 18,
       borderWidth: _hairline,
       focusedBorderWidth: 2,
+      dropdownIcon: const IconSource.builder(dropdownChevronIcon),
       colors: TextFieldColors(
         container: _clear,
         border: c.outline,

@@ -372,8 +372,6 @@ Future<T?> showCamoAnchoredPopup<T>(
   BuildContext anchor, {
   required WidgetBuilder builder,
 }) {
-  final scope = CamouflageScope.maybeOf(anchor);
-  final theme = Camouflage.themeOf(anchor, component: 'CamoAnchoredPopup');
   final navigator = Navigator.of(anchor);
   final box = anchor.findRenderObject()! as RenderBox;
   final overlay = navigator.overlay!.context.findRenderObject()! as RenderBox;
@@ -381,11 +379,23 @@ Future<T?> showCamoAnchoredPopup<T>(
     box.getTransformTo(overlay),
     Offset.zero & box.size,
   );
-  return navigator.push(
+  return showCamoAnchoredPopupAt<T>(anchor, rect, builder: builder);
+}
+
+/// [showCamoAnchoredPopup] anchored to [rect] in the navigator's overlay (a pointer position for a context
+/// menu: a zero-size rect).
+Future<T?> showCamoAnchoredPopupAt<T>(
+  BuildContext context,
+  Rect rect, {
+  required WidgetBuilder builder,
+}) {
+  final scope = CamouflageScope.maybeOf(context);
+  final theme = Camouflage.themeOf(context, component: 'CamoAnchoredPopup');
+  return Navigator.of(context).push(
     _AnchoredRoute<T>(
       anchor: rect,
       gap: theme.spacing.xs,
-      textDirection: Directionality.of(anchor),
+      textDirection: Directionality.of(context),
       duration: theme.motion.durationShort,
       builder: (context) => CamouflageProvider(
         skin: scope?.skin,

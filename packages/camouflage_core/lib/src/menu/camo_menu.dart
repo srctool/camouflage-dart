@@ -1,8 +1,11 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import '../icon/camo_icon.dart';
 import '../provider/camouflage.dart';
+import '../skin/interaction.dart';
 import '../theme/camo_theme.dart';
+import '../theme/roles.dart';
 
 /// Where a checked menu item's checkmark sits.
 enum CheckPosition {
@@ -62,6 +65,7 @@ class CamoMenuTheme {
     this.iconSize,
     this.elevation,
     this.checkPosition,
+    this.checkIcon,
     this.colors,
   });
 
@@ -92,6 +96,9 @@ class CamoMenuTheme {
   /// Where a checkmark sits (M6).
   final CheckPosition? checkPosition;
 
+  /// The checkmark of a checked item (and of the current option in a select's sheet).
+  final IconSource? checkIcon;
+
   /// Every color it uses.
   final MenuColors? colors;
 
@@ -106,6 +113,7 @@ class CamoMenuTheme {
     double? iconSize,
     double? elevation,
     CheckPosition? checkPosition,
+    IconSource? checkIcon,
     MenuColors? colors,
   }) => CamoMenuTheme(
     shape: shape ?? this.shape,
@@ -117,6 +125,7 @@ class CamoMenuTheme {
     iconSize: iconSize ?? this.iconSize,
     elevation: elevation ?? this.elevation,
     checkPosition: checkPosition ?? this.checkPosition,
+    checkIcon: checkIcon ?? this.checkIcon,
     colors: colors ?? this.colors,
   );
 
@@ -132,6 +141,7 @@ class CamoMenuTheme {
       other.iconSize == iconSize &&
       other.elevation == elevation &&
       other.checkPosition == checkPosition &&
+      other.checkIcon == checkIcon &&
       other.colors == colors;
 
   @override
@@ -145,6 +155,7 @@ class CamoMenuTheme {
     iconSize,
     elevation,
     checkPosition,
+    checkIcon,
     colors,
   );
 }
@@ -163,6 +174,7 @@ class CamoMenuStyle {
     required this.iconSize,
     required this.elevation,
     required this.checkPosition,
+    required this.checkIcon,
     required this.colors,
   });
 
@@ -193,6 +205,9 @@ class CamoMenuStyle {
   /// Where a checkmark sits.
   final CheckPosition checkPosition;
 
+  /// The checkmark of a checked item (and of the current option in a select's sheet).
+  final IconSource checkIcon;
+
   /// Every color it uses.
   final MenuColors colors;
 
@@ -209,12 +224,71 @@ class CamoMenuStyle {
           iconSize: o.iconSize ?? iconSize,
           elevation: o.elevation ?? elevation,
           checkPosition: o.checkPosition ?? checkPosition,
+          checkIcon: o.checkIcon ?? checkIcon,
           colors: o.colors ?? colors,
         );
 }
 
-/// Draws menus. In M5 it draws the popup panel, the surface every anchored popup sits on (a date picker's
-/// calendar, a custom menu); the menu's rows arrive with `CamoMenu` in M6.
+/// What a menu row renderer draws: [text] with [trailingText] (a shortcut) at the end, in [tone] (`error` for
+/// destructive items) and dimmed when not [enabled]. [checked] is `null` for a plain item; otherwise draw the
+/// check when `true`, at `style.checkPosition`. Keep the text aligned across the menu: leave the check column
+/// when [reserveCheck] (some item is checkable) and the icon column when [reserveIcon] (some item has an icon).
+/// Show the highlight from [interaction] (hovered, focused, pressed).
+@immutable
+class MenuItemState {
+  /// Creates a row state.
+  const MenuItemState({
+    required this.text,
+    required this.trailingText,
+    required this.tone,
+    required this.enabled,
+    required this.checked,
+    required this.reserveCheck,
+    required this.reserveIcon,
+    required this.interaction,
+    required this.controller,
+  });
+
+  /// The item's text.
+  final String text;
+
+  /// A shortcut at the end, if any.
+  final String? trailingText;
+
+  /// `error` for destructive items.
+  final Tone tone;
+
+  /// `false` shows the disabled look.
+  final bool enabled;
+
+  /// `null` for a plain item; otherwise whether it's checked.
+  final bool? checked;
+
+  /// Some item in the menu is checkable: keep the check column.
+  final bool reserveCheck;
+
+  /// Some item in the menu has an icon: keep the icon column.
+  final bool reserveIcon;
+
+  /// Press, hover and focus.
+  final InteractionState interaction;
+
+  /// For the skin's feedback.
+  final CamoInteractionController controller;
+}
+
+/// The item's leading icon, if any.
+@immutable
+class MenuItemSlots {
+  /// Creates the slots.
+  const MenuItemSlots({this.leadingIcon});
+
+  /// Before the text.
+  final Widget? leadingIcon;
+}
+
+/// Draws menus: the popup panel, the surface every anchored popup sits on (a menu, a date picker's calendar),
+/// and the menu's rows.
 abstract interface class CamoMenuRenderer {
   /// The complete menu style for [theme].
   CamoMenuStyle defaults(CamoTheme theme);
@@ -223,6 +297,15 @@ abstract interface class CamoMenuRenderer {
   Widget panel(
     BuildContext context,
     Widget child,
+    CamoTheme theme,
+    CamoMenuStyle style,
+  );
+
+  /// Draws one row, `style.itemHeight` tall and filling the panel's width. Keep the text in the semantics tree.
+  Widget item(
+    BuildContext context,
+    MenuItemState state,
+    MenuItemSlots slots,
     CamoTheme theme,
     CamoMenuStyle style,
   );

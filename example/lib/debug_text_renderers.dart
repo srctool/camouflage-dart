@@ -33,6 +33,7 @@ class DebugTextFieldRenderer implements CamoTextFieldRenderer {
       iconSize: 20,
       borderWidth: 1,
       focusedBorderWidth: 2,
+      dropdownIcon: const IconSource.builder(_square),
       colors: TextFieldColors(
         container: const Color(0x00000000),
         border: c.outline,

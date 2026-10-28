@@ -75,6 +75,7 @@ class CamoPickerField extends StatefulWidget {
     this.open = false,
     this.focusNode,
     this.onFocusChanged,
+    this.prefixIcon,
   });
 
   /// The value's text, or `null` when empty.
@@ -109,6 +110,9 @@ class CamoPickerField extends StatefulWidget {
 
   /// Reports focus changes.
   final ValueChanged<bool>? onFocusChanged;
+
+  /// An icon at the start of the field.
+  final Widget? prefixIcon;
 
   @override
   State<CamoPickerField> createState() => _CamoPickerFieldState();
@@ -159,14 +163,19 @@ class _CamoPickerFieldState extends State<CamoPickerField> {
       enabled: w.enabled,
       focusNode: w.focusNode,
       onActivate: () => w.onOpen(context),
-      semantics: (child) =>
-          Semantics(button: true, value: w.text, child: child),
+      semantics: (child) => Semantics(
+        button: true,
+        expanded: w.open,
+        value: w.text,
+        child: child,
+      ),
       child: CamoFieldFrame(
         focused: focused,
         isEmpty: w.text == null,
         label: w.label,
         supportingText: w.supportingText,
         error: w.error,
+        prefixIcon: w.prefixIcon,
         suffixIcon: CamoIcon(w.icon),
         enabled: w.enabled,
         child: ExcludeSemantics(

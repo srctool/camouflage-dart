@@ -24,6 +24,7 @@ class PlainTextField implements CamoTextFieldRenderer {
       iconSize: 24,
       borderWidth: 1,
       focusedBorderWidth: 2,
+      dropdownIcon: const IconSource.builder(_dot),
       colors: TextFieldColors(
         container: const Color(0x00000000),
         border: c.outline,
