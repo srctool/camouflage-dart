@@ -9,6 +9,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'app_icon.dart';
 import 'brands.dart';
 import 'checkout.dart';
+import 'data_display.dart';
 import 'dates_and_times.dart';
 import 'documents.dart';
 import 'forms.dart';
@@ -183,6 +184,10 @@ class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
               const _Section(
                 title: 'Documents: menus, selects, dialogs and sheets',
                 child: DocumentsScreen(),
+              ),
+              const _Section(
+                title: 'Chips, badges and avatars',
+                child: DataDisplayDemo(),
               ),
               CamouflageProvider(
                 theme: sampleTheme(_skin, _brand, brightness).copyWith(

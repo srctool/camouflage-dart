@@ -1,6 +1,7 @@
 import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
+import 'data_display_test_renderers.dart';
 import 'input_test_renderers.dart';
 import 'overlay_test_renderers.dart';
 import 'structure_test_renderers.dart';
@@ -364,6 +365,9 @@ const skinA = CamoSkin(
   topBar: PlainTopBar(),
   pagedList: PlainPagedList(),
   dialog: PlainDialog(),
+  chip: PlainChip(),
+  badge: PlainBadge(),
+  avatar: PlainAvatar(),
 );
 final skinB = skinA.copyWith(name: 'b');
 final themeT = CamoTheme(

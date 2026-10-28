@@ -912,3 +912,143 @@ class _MenuSceneState extends State<_MenuScene> {
     ),
   );
 }
+
+/// The M7 data display components: tags in each appearance and tone, filter, input and action chips, a
+/// single-choice group, badges (dot, count, "99+", tones) on icons, and avatars in each size, shape and
+/// presence, plus a group.
+class DataDisplayGallery extends StatelessWidget {
+  /// Creates the gallery.
+  const DataDisplayGallery({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Widget row(List<Widget> children, {double spacing = 8}) => Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: spacing,
+      children: children,
+    );
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 12,
+        children: [
+          row(const [
+            CamoChip(label: 'Outline', appearance: Appearance.outline),
+            CamoChip(label: 'Soft', appearance: Appearance.soft),
+            CamoChip(label: 'Solid', appearance: Appearance.solid),
+            CamoChip(
+              label: 'Paid',
+              appearance: Appearance.soft,
+              tone: Tone.success,
+            ),
+            CamoChip(
+              label: 'Overdue',
+              appearance: Appearance.outline,
+              tone: Tone.error,
+            ),
+          ]),
+          row([
+            CamoChip(label: 'Open', onPressed: () {}, selected: false),
+            CamoChip(label: 'Open now', onPressed: () {}, selected: true),
+            CamoChip(
+              label: 'Starred',
+              onPressed: () {},
+              selected: false,
+              leading: const CamoIcon(galleryIcon),
+            ),
+            CamoChip(
+              label: 'Off',
+              onPressed: () {},
+              selected: false,
+              enabled: false,
+            ),
+          ]),
+          row([
+            CamoChip(
+              label: 'Ada',
+              onDeleted: () {},
+              leading: const CamoAvatar(
+                name: 'Ada Lovelace',
+                size: AvatarSize.small,
+              ),
+            ),
+            CamoChip(label: 'Grace', onDeleted: () {}),
+            CamoChip(
+              label: 'Add to calendar',
+              onPressed: () {},
+              leading: const CamoIcon(galleryIcon),
+            ),
+          ]),
+          CamoChipGroup<String>(
+            options: const [
+              ChipOption('Newest', 'Newest'),
+              ChipOption('Oldest', 'Oldest'),
+              ChipOption('Popular', 'Popular'),
+            ],
+            selected: const {'Oldest'},
+            onChanged: (_) {},
+            multiSelect: false,
+          ),
+          row(spacing: 24, const [
+            CamoBadgedBox(badge: CamoBadge(), child: CamoIcon(galleryIcon)),
+            CamoBadgedBox(
+              badge: CamoBadge(count: 3),
+              child: CamoIcon(galleryIcon),
+            ),
+            CamoBadgedBox(
+              badge: CamoBadge(count: 120),
+              child: CamoIcon(galleryIcon),
+            ),
+            CamoBadgedBox(
+              badge: CamoBadge(
+                count: 7,
+                tone: Tone.info,
+                appearance: Appearance.soft,
+              ),
+              child: CamoIcon(galleryIcon),
+            ),
+            CamoBadgedBox(
+              badge: CamoBadge(count: 12, appearance: Appearance.outline),
+              child: CamoIcon(galleryIcon),
+            ),
+            CamoBadgedBox(
+              badge: CamoBadge(count: 2),
+              child: CamoAvatar(name: 'Grace Hopper'),
+            ),
+          ]),
+          row(const [
+            CamoAvatar(name: 'Dwiki Riyadi', size: AvatarSize.small),
+            CamoAvatar(name: 'Dwiki Riyadi', presence: Presence.online),
+            CamoAvatar(
+              name: 'Ada Lovelace',
+              size: AvatarSize.large,
+              presence: Presence.busy,
+            ),
+            CamoAvatar(
+              name: 'Grace Hopper',
+              shape: AvatarShape.rounded,
+              presence: Presence.away,
+            ),
+            CamoAvatar(
+              name: 'Alan Turing',
+              shape: AvatarShape.square,
+              presence: Presence.offline,
+            ),
+            CamoAvatar(),
+          ]),
+          const CamoAvatarGroup(
+            avatars: [
+              CamoAvatar(name: 'Ada Lovelace'),
+              CamoAvatar(name: 'Grace Hopper'),
+              CamoAvatar(name: 'Alan Turing'),
+              CamoAvatar(name: 'Edsger Dijkstra'),
+              CamoAvatar(name: 'Barbara Liskov'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}

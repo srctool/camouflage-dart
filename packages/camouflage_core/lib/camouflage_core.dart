@@ -2,10 +2,14 @@
 library;
 
 export 'src/accordion/camo_accordion.dart';
+export 'src/avatar/camo_avatar.dart' hide avatarInRow;
+export 'src/avatar/initials.dart' hide graphemes;
+export 'src/badge/camo_badge.dart';
 export 'src/bottom_sheet/camo_bottom_sheet.dart';
 export 'src/button/camo_button.dart';
 export 'src/card/camo_card.dart';
 export 'src/checkbox/camo_checkbox.dart' hide toggleSemantics;
+export 'src/chip/camo_chip.dart';
 export 'src/datepicker/camo_calendar.dart';
 export 'src/datepicker/camo_date_field.dart'
     hide openFieldPicker, prefersTyping;

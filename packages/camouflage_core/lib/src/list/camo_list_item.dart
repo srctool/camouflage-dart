@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../avatar/camo_avatar.dart' show avatarInRow;
 import '../divider/camo_divider.dart';
 import '../provider/camouflage.dart';
 import '../skin/interaction.dart';
@@ -526,7 +527,11 @@ class _CamoListItemState extends State<CamoListItem> {
           interaction: _interaction.value,
           controller: _interaction,
         ),
-        ListItemSlots(leading: widget.leading, trailing: widget.trailing),
+        // The row says the name, so an avatar in the leading slot is decorative.
+        ListItemSlots(
+          leading: widget.leading == null ? null : avatarInRow(widget.leading!),
+          trailing: widget.trailing,
+        ),
         theme,
         style,
       ),
