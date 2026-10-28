@@ -18,6 +18,12 @@ import '../surface/camo_surface.dart';
 import '../switch/camo_switch.dart';
 import '../textfield/camo_text_field.dart';
 import '../timepicker/camo_time_picker.dart';
+import '../card/camo_card.dart';
+import '../list/camo_list_item.dart';
+import '../accordion/camo_accordion.dart';
+import '../skeleton/camo_skeleton.dart';
+import '../topbar/camo_top_bar.dart';
+import '../paged_list/camo_paged_list.dart';
 import '../tooltip/camo_tooltip.dart';
 
 /// Per-component overrides: one nullable `CamoXTheme` per component, `null` meaning the skin's default.
@@ -45,6 +51,12 @@ class CamoComponentThemes {
     this.bottomSheet,
     this.datePicker,
     this.timePicker,
+    this.card,
+    this.listItem,
+    this.accordion,
+    this.skeleton,
+    this.topBar,
+    this.pagedList,
   });
 
   /// Icons outside any component.
@@ -104,6 +116,24 @@ class CamoComponentThemes {
   /// Overrides for time pickers and time fields.
   final CamoTimePickerTheme? timePicker;
 
+  /// Cards.
+  final CamoCardTheme? card;
+
+  /// List rows and sections.
+  final CamoListItemTheme? listItem;
+
+  /// Accordions.
+  final CamoAccordionTheme? accordion;
+
+  /// Skeleton placeholders.
+  final CamoSkeletonTheme? skeleton;
+
+  /// Top bars.
+  final CamoTopBarTheme? topBar;
+
+  /// Paged lists.
+  final CamoPagedListTheme? pagedList;
+
   /// A copy with the given fields replaced.
   CamoComponentThemes copyWith({
     CamoIconTheme? icon,
@@ -125,6 +155,12 @@ class CamoComponentThemes {
     CamoBottomSheetTheme? bottomSheet,
     CamoDatePickerTheme? datePicker,
     CamoTimePickerTheme? timePicker,
+    CamoCardTheme? card,
+    CamoListItemTheme? listItem,
+    CamoAccordionTheme? accordion,
+    CamoSkeletonTheme? skeleton,
+    CamoTopBarTheme? topBar,
+    CamoPagedListTheme? pagedList,
   }) => CamoComponentThemes(
     icon: icon ?? this.icon,
     surface: surface ?? this.surface,
@@ -145,6 +181,12 @@ class CamoComponentThemes {
     bottomSheet: bottomSheet ?? this.bottomSheet,
     datePicker: datePicker ?? this.datePicker,
     timePicker: timePicker ?? this.timePicker,
+    card: card ?? this.card,
+    listItem: listItem ?? this.listItem,
+    accordion: accordion ?? this.accordion,
+    skeleton: skeleton ?? this.skeleton,
+    topBar: topBar ?? this.topBar,
+    pagedList: pagedList ?? this.pagedList,
   );
 
   @override
@@ -168,10 +210,16 @@ class CamoComponentThemes {
       other.menu == menu &&
       other.bottomSheet == bottomSheet &&
       other.datePicker == datePicker &&
-      other.timePicker == timePicker;
+      other.timePicker == timePicker &&
+      other.card == card &&
+      other.listItem == listItem &&
+      other.accordion == accordion &&
+      other.skeleton == skeleton &&
+      other.topBar == topBar &&
+      other.pagedList == pagedList;
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     icon,
     surface,
     divider,
@@ -191,5 +239,11 @@ class CamoComponentThemes {
     bottomSheet,
     datePicker,
     timePicker,
-  );
+    card,
+    listItem,
+    accordion,
+    skeleton,
+    topBar,
+    pagedList,
+  ]);
 }

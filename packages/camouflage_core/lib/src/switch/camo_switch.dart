@@ -10,6 +10,7 @@ import '../theme/camo_theme.dart';
 import '../util/camo_behavior.dart';
 import '../util/camo_error_semantics.dart';
 import '../util/camo_touch_target.dart';
+import '../util/camo_row_toggle.dart';
 
 /// Every color a switch uses. Disabled and error colors come from the theme.
 @immutable
@@ -412,7 +413,9 @@ class _CamoSwitchState extends State<CamoSwitch> {
         style,
       ),
     );
-    if (onChanged == null) return visual;
+    if (onChanged == null) {
+      return reportRowToggle(context, toggled: widget.checked, child: visual);
+    }
     // The thumb's center travels from trackHeight / 2 to trackWidth - trackHeight / 2.
     final travel = (style.trackWidth - style.trackHeight).clamp(
       1.0,

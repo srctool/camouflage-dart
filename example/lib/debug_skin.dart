@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'debug_input_renderers.dart';
 import 'debug_picker_renderers.dart';
 import 'debug_renderers.dart';
+import 'debug_structure_renderers.dart';
 import 'debug_text_renderers.dart';
 
 export 'debug_renderers.dart';
@@ -34,6 +35,12 @@ const CamoSkin debugSkin = CamoSkin(
   bottomSheet: DebugBottomSheetRenderer(),
   datePicker: DebugDatePickerRenderer(),
   timePicker: DebugTimePickerRenderer(),
+  card: DebugCardRenderer(),
+  listItem: DebugListItemRenderer(),
+  accordion: DebugAccordionRenderer(),
+  skeleton: DebugSkeletonRenderer(),
+  topBar: DebugTopBarRenderer(),
+  pagedList: DebugPagedListRenderer(),
 );
 
 /// Fills the container and nothing else: no depth, no border.

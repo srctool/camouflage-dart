@@ -12,6 +12,7 @@ import 'checkout.dart';
 import 'dates_and_times.dart';
 import 'forms.dart';
 import 'selection.dart';
+import 'structure.dart';
 import 'debug_skin.dart';
 
 Future<void> main() async {
@@ -156,6 +157,14 @@ class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
               const _Section(title: 'Sign-up form', child: SignUpForm()),
               const _Section(title: 'Search', child: CountrySearch()),
               const _Section(title: 'Dates and times', child: DatesAndTimes()),
+              const _Section(title: 'Settings screen', child: SettingsScreen()),
+              const _Section(title: 'Cards', child: Cards()),
+              const _Section(title: 'Accordions', child: Faq()),
+              const _Section(
+                title: 'Loading placeholders',
+                child: LoadingProfile(),
+              ),
+              const _Section(title: 'Paged list', child: Products()),
               CamouflageProvider(
                 theme: sampleTheme(_skin, _brand, brightness).copyWith(
                   colors: CamoColors.fromSeed(

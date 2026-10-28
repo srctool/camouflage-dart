@@ -4,6 +4,12 @@ import '../bottom_sheet/camo_bottom_sheet.dart';
 import '../datepicker/camo_calendar.dart';
 import '../menu/camo_menu.dart';
 import '../timepicker/camo_time_picker.dart';
+import '../card/camo_card.dart';
+import '../list/camo_list_item.dart';
+import '../accordion/camo_accordion.dart';
+import '../skeleton/camo_skeleton.dart';
+import '../topbar/camo_top_bar.dart';
+import '../paged_list/camo_paged_list.dart';
 import '../button/camo_button.dart';
 import '../checkbox/camo_checkbox.dart';
 import '../divider/camo_divider.dart';
@@ -55,6 +61,12 @@ class CamoSkin {
     required this.bottomSheet,
     required this.datePicker,
     required this.timePicker,
+    required this.card,
+    required this.listItem,
+    required this.accordion,
+    required this.skeleton,
+    required this.topBar,
+    required this.pagedList,
   });
 
   /// For debugging and tests, e.g. `'minimal'`.
@@ -126,6 +138,24 @@ class CamoSkin {
   /// Draws `CamoTimeInput` and the time field's picker.
   final CamoTimePickerRenderer timePicker;
 
+  /// Cards.
+  final CamoCardRenderer card;
+
+  /// List rows and sections.
+  final CamoListItemRenderer listItem;
+
+  /// Accordions.
+  final CamoAccordionRenderer accordion;
+
+  /// Skeleton placeholders.
+  final CamoSkeletonRenderer skeleton;
+
+  /// Top bars.
+  final CamoTopBarRenderer topBar;
+
+  /// Paged lists.
+  final CamoPagedListRenderer pagedList;
+
   /// A copy with the given fields replaced; the others stay `identical`.
   CamoSkin copyWith({
     String? name,
@@ -151,6 +181,12 @@ class CamoSkin {
     CamoBottomSheetRenderer? bottomSheet,
     CamoDatePickerRenderer? datePicker,
     CamoTimePickerRenderer? timePicker,
+    CamoCardRenderer? card,
+    CamoListItemRenderer? listItem,
+    CamoAccordionRenderer? accordion,
+    CamoSkeletonRenderer? skeleton,
+    CamoTopBarRenderer? topBar,
+    CamoPagedListRenderer? pagedList,
   }) => CamoSkin(
     name: name ?? this.name,
     surfaceTreatment: surfaceTreatment ?? this.surfaceTreatment,
@@ -175,6 +211,12 @@ class CamoSkin {
     bottomSheet: bottomSheet ?? this.bottomSheet,
     datePicker: datePicker ?? this.datePicker,
     timePicker: timePicker ?? this.timePicker,
+    card: card ?? this.card,
+    listItem: listItem ?? this.listItem,
+    accordion: accordion ?? this.accordion,
+    skeleton: skeleton ?? this.skeleton,
+    topBar: topBar ?? this.topBar,
+    pagedList: pagedList ?? this.pagedList,
   );
 
   @override
@@ -202,7 +244,13 @@ class CamoSkin {
       other.menu == menu &&
       other.bottomSheet == bottomSheet &&
       other.datePicker == datePicker &&
-      other.timePicker == timePicker;
+      other.timePicker == timePicker &&
+      other.card == card &&
+      other.listItem == listItem &&
+      other.accordion == accordion &&
+      other.skeleton == skeleton &&
+      other.topBar == topBar &&
+      other.pagedList == pagedList;
 
   @override
   int get hashCode => Object.hashAll([
@@ -229,6 +277,12 @@ class CamoSkin {
     bottomSheet,
     datePicker,
     timePicker,
+    card,
+    listItem,
+    accordion,
+    skeleton,
+    topBar,
+    pagedList,
   ]);
 
   @override

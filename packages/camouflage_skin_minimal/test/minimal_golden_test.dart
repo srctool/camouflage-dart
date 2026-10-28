@@ -23,11 +23,14 @@ void main() {
     ('inputs', const InputGallery()),
     ('textinputs', const TextInputGallery()),
     ('pickers', const PickerGallery()),
+    ('structure', const StructureGallery()),
   ]) {
     goldenTest(
       'minimal $name',
       fileName: '${name}_minimal',
       constraints: const BoxConstraints(maxWidth: 1000),
+      // Skeletons animate forever, so the structure scene can't settle: one frame, at the start of the cycle.
+      pumpBeforeTest: name == 'structure' ? pumpOnce : onlyPumpAndSettle,
       builder: () => GoldenTestGroup(
         columns: 1,
         children: [

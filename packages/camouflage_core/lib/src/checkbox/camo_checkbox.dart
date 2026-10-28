@@ -8,6 +8,7 @@ import '../theme/camo_theme.dart';
 import '../util/camo_behavior.dart';
 import '../util/camo_error_semantics.dart';
 import '../util/camo_touch_target.dart';
+import '../util/camo_row_toggle.dart';
 
 /// Every color a checkbox uses. Disabled and error colors come from the theme.
 @immutable
@@ -320,7 +321,9 @@ class _CamoCheckboxState extends State<CamoCheckbox> {
         style,
       ),
     );
-    if (onChanged == null) return visual;
+    if (onChanged == null) {
+      return reportRowToggle(context, checked: widget.checked, child: visual);
+    }
     return CamoErrorSemantics(
       message: widget.error,
       child: CamoBehavior(

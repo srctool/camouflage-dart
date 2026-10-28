@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 
 import 'input_test_renderers.dart';
 import 'overlay_test_renderers.dart';
+import 'structure_test_renderers.dart';
 import 'text_test_renderers.dart';
 
 // A plain skin for core's own tests: every renderer draws from its style and theme, nothing more.
@@ -356,6 +357,12 @@ const skinA = CamoSkin(
   bottomSheet: PlainBottomSheet(),
   datePicker: PlainDatePicker(),
   timePicker: PlainTimePicker(),
+  card: PlainCard(),
+  listItem: PlainListItem(),
+  accordion: PlainAccordion(),
+  skeleton: PlainSkeleton(),
+  topBar: PlainTopBar(),
+  pagedList: PlainPagedList(),
 );
 final skinB = skinA.copyWith(name: 'b');
 final themeT = CamoTheme(
