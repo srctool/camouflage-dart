@@ -27,6 +27,7 @@ void main() {
     ('structure', const StructureGallery()),
     ('dialogs', const DialogGallery()),
     ('menus', const MenuGallery()),
+    ('datadisplay', const DataDisplayGallery()),
   ]) {
     goldenTest(
       'fluent $name',

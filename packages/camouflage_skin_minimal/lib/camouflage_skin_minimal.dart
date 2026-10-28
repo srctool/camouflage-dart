@@ -9,6 +9,7 @@ import 'src/fade.dart';
 import 'src/flat.dart';
 import 'src/minimal_theme.dart';
 import 'src/renderer/minimal_actions.dart';
+import 'src/renderer/minimal_data_display.dart';
 import 'src/renderer/minimal_inputs.dart';
 import 'src/renderer/minimal_pickers.dart';
 import 'src/renderer/minimal_primitives.dart';
@@ -23,6 +24,8 @@ export 'src/renderer/minimal_actions.dart'
         MinimalButtonRenderer,
         MinimalIconButtonRenderer,
         MinimalProgressCircleRenderer;
+export 'src/renderer/minimal_data_display.dart'
+    show MinimalAvatarRenderer, MinimalBadgeRenderer, MinimalChipRenderer;
 export 'src/renderer/minimal_inputs.dart'
     show
         MinimalCheckboxRenderer,
@@ -85,6 +88,9 @@ const CamoSkin minimalSkin = CamoSkin(
   topBar: MinimalTopBarRenderer(),
   pagedList: MinimalPagedListRenderer(),
   dialog: MinimalDialogRenderer(),
+  chip: MinimalChipRenderer(),
+  badge: MinimalBadgeRenderer(),
+  avatar: MinimalAvatarRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [minimalSkin] and [minimalLight] or [minimalDark].

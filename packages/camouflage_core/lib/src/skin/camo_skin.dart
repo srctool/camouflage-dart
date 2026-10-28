@@ -1,32 +1,35 @@
 import 'package:flutter/foundation.dart';
 
+import '../accordion/camo_accordion.dart';
+import '../avatar/camo_avatar.dart';
+import '../badge/camo_badge.dart';
 import '../bottom_sheet/camo_bottom_sheet.dart';
+import '../button/camo_button.dart';
+import '../card/camo_card.dart';
+import '../checkbox/camo_checkbox.dart';
+import '../chip/camo_chip.dart';
 import '../datepicker/camo_calendar.dart';
 import '../dialog/camo_dialog.dart';
-import '../menu/camo_menu.dart';
-import '../timepicker/camo_time_picker.dart';
-import '../card/camo_card.dart';
-import '../list/camo_list_item.dart';
-import '../accordion/camo_accordion.dart';
-import '../skeleton/camo_skeleton.dart';
-import '../topbar/camo_top_bar.dart';
-import '../paged_list/camo_paged_list.dart';
-import '../button/camo_button.dart';
-import '../checkbox/camo_checkbox.dart';
 import '../divider/camo_divider.dart';
 import '../icon/camo_icon.dart';
 import '../icon_button/camo_icon_button.dart';
+import '../list/camo_list_item.dart';
+import '../menu/camo_menu.dart';
+import '../paged_list/camo_paged_list.dart';
 import '../progress/camo_progress.dart';
 import '../radio/camo_radio.dart';
 import '../search/camo_search_field.dart';
 import '../segmented/camo_segmented_control.dart';
+import '../skeleton/camo_skeleton.dart';
 import '../slider/camo_slider.dart';
 import '../stepper/camo_stepper.dart';
 import '../surface/camo_surface.dart';
 import '../switch/camo_switch.dart';
-import '../textfield/camo_text_field.dart';
 import '../text/camo_text.dart';
+import '../textfield/camo_text_field.dart';
+import '../timepicker/camo_time_picker.dart';
 import '../tooltip/camo_tooltip.dart';
+import '../topbar/camo_top_bar.dart';
 import 'contract.dart';
 
 /// A design language: how each component is built, how it reacts to touch and what its surfaces are made of.
@@ -69,6 +72,9 @@ class CamoSkin {
     required this.topBar,
     required this.pagedList,
     required this.dialog,
+    required this.chip,
+    required this.badge,
+    required this.avatar,
   });
 
   /// For debugging and tests, e.g. `'minimal'`.
@@ -161,6 +167,15 @@ class CamoSkin {
   /// Dialogs.
   final CamoDialogRenderer dialog;
 
+  /// Chips.
+  final CamoChipRenderer chip;
+
+  /// Badges.
+  final CamoBadgeRenderer badge;
+
+  /// Avatars.
+  final CamoAvatarRenderer avatar;
+
   /// A copy with the given fields replaced; the others stay `identical`.
   CamoSkin copyWith({
     String? name,
@@ -193,6 +208,9 @@ class CamoSkin {
     CamoTopBarRenderer? topBar,
     CamoPagedListRenderer? pagedList,
     CamoDialogRenderer? dialog,
+    CamoChipRenderer? chip,
+    CamoBadgeRenderer? badge,
+    CamoAvatarRenderer? avatar,
   }) => CamoSkin(
     name: name ?? this.name,
     surfaceTreatment: surfaceTreatment ?? this.surfaceTreatment,
@@ -224,6 +242,9 @@ class CamoSkin {
     topBar: topBar ?? this.topBar,
     pagedList: pagedList ?? this.pagedList,
     dialog: dialog ?? this.dialog,
+    chip: chip ?? this.chip,
+    badge: badge ?? this.badge,
+    avatar: avatar ?? this.avatar,
   );
 
   @override
@@ -258,7 +279,10 @@ class CamoSkin {
       other.skeleton == skeleton &&
       other.topBar == topBar &&
       other.pagedList == pagedList &&
-      other.dialog == dialog;
+      other.dialog == dialog &&
+      other.chip == chip &&
+      other.badge == badge &&
+      other.avatar == avatar;
 
   @override
   int get hashCode => Object.hashAll([
@@ -292,6 +316,9 @@ class CamoSkin {
     topBar,
     pagedList,
     dialog,
+    chip,
+    badge,
+    avatar,
   ]);
 
   @override
