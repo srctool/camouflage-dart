@@ -1,7 +1,6 @@
 import 'package:camouflage_core/camouflage_core.dart';
 import 'package:camouflage_core/src/datepicker/camo_dates.dart'
     show typedDigits;
-import 'package:camouflage_core/src/overlay/camo_overlay_routes.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -331,8 +330,8 @@ void main() {
         ),
       );
       Future<void> open({required bool dismissible}) async {
-        showCamoSheet<void>(
-          opener,
+        showCamoBottomSheet<void>(
+          context: opener,
           dismissible: dismissible,
           builder: (_) => const CamoBottomSheet(
             title: 'Filters',

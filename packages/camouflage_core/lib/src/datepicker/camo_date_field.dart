@@ -39,8 +39,8 @@ Future<T?> openFieldPicker<T>(
       MediaQuery.sizeOf(anchor).width >= autoPopupMinWidth,
   };
   if (popup) return showCamoAnchoredPopup<T>(anchor, builder: builder);
-  return showCamoSheet<T>(
-    anchor,
+  return showCamoBottomSheet<T>(
+    context: anchor,
     builder: (context) => CamoBottomSheet(
       title: title,
       child: SingleChildScrollView(child: Center(child: builder(context))),

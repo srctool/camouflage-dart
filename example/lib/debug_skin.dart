@@ -41,6 +41,7 @@ const CamoSkin debugSkin = CamoSkin(
   skeleton: DebugSkeletonRenderer(),
   topBar: DebugTopBarRenderer(),
   pagedList: DebugPagedListRenderer(),
+  dialog: DebugDialogRenderer(),
 );
 
 /// Fills the container and nothing else: no depth, no border.

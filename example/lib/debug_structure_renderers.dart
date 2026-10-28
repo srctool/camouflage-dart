@@ -347,3 +347,61 @@ class DebugPagedListRenderer implements CamoPagedListRenderer {
     ],
   );
 }
+
+/// Debug dialogs: a column of texts and a row of actions, outlined.
+class DebugDialogRenderer implements CamoDialogRenderer {
+  /// Creates the renderer.
+  const DebugDialogRenderer();
+
+  @override
+  CamoDialogStyle defaults(CamoTheme theme) => CamoDialogStyle(
+    shape: BorderRadius.zero,
+    minWidth: 280,
+    maxWidth: 560,
+    padding: const EdgeInsetsDirectional.all(24),
+    titleStyle: theme.typography.titleLarge,
+    messageStyle: theme.typography.bodyMedium,
+    titleAlign: CamoTitleAlign.start,
+    actionsLayout: DialogActionsLayout.end,
+    actionGap: 8,
+    sectionGap: 16,
+    showCloseButton: false,
+    closeIcon: const IconSource.builder(_box),
+    elevation: ElevationLevel.level0,
+    scrimAlpha: 0.32,
+    stackedScrim: StackedScrim.each,
+    colors: DialogColors(
+      container: theme.colors.surface,
+      title: theme.colors.onSurface,
+      message: theme.colors.onSurfaceVariant,
+    ),
+  );
+
+  @override
+  Widget render(
+    BuildContext context,
+    DialogState state,
+    DialogSlots slots,
+    CamoTheme theme,
+    CamoDialogStyle style,
+  ) => DecoratedBox(
+    decoration: BoxDecoration(
+      color: style.colors.container,
+      border: Border.all(color: theme.colors.outline),
+    ),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (state.title != null) Text(state.title!),
+        Text(state.message),
+        ?slots.content,
+        Row(children: [?slots.dismiss, slots.confirm]),
+      ],
+    ),
+  );
+}
+
+Widget _box(double size, Color? color) => SizedBox.square(
+  dimension: size,
+  child: ColoredBox(color: color ?? const Color(0xFF000000)),
+);

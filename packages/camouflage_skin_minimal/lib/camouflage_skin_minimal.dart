@@ -35,6 +35,7 @@ export 'src/renderer/minimal_pickers.dart'
     show
         MinimalBottomSheetRenderer,
         MinimalDatePickerRenderer,
+        MinimalDialogRenderer,
         MinimalMenuRenderer,
         MinimalTimePickerRenderer;
 export 'src/renderer/minimal_primitives.dart';
@@ -83,6 +84,7 @@ const CamoSkin minimalSkin = CamoSkin(
   skeleton: MinimalSkeletonRenderer(),
   topBar: MinimalTopBarRenderer(),
   pagedList: MinimalPagedListRenderer(),
+  dialog: MinimalDialogRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [minimalSkin] and [minimalLight] or [minimalDark].

@@ -128,4 +128,33 @@ void main() {
       measure: (size) => size.width == 36,
     );
   });
+
+  testWidgets('the close button shows only when dismissible and asked', (
+    tester,
+  ) async {
+    var dismissed = 0;
+    Widget dialog(bool dismissible) => camoTestApp(
+      skin: skin,
+      theme: theme,
+      child: ProvideComponentThemes(
+        components: const CamoComponentThemes(
+          dialog: CamoDialogTheme(showCloseButton: true),
+        ),
+        child: CamoDialogFrame(
+          dismissible: dismissible,
+          onDismissRequest: () => dismissed++,
+          child: CamoDialog(
+            title: 'Done',
+            message: 'Saved.',
+            confirm: CamoButton(text: 'OK', onPressed: () {}),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpWidget(dialog(true));
+    await tester.tap(find.bySemanticsLabel('Close'));
+    expect(dismissed, 1);
+    await tester.pumpWidget(dialog(false));
+    expect(find.bySemanticsLabel('Close'), findsNothing);
+  });
 }

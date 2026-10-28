@@ -12,6 +12,7 @@ import 'checkout.dart';
 import 'dates_and_times.dart';
 import 'forms.dart';
 import 'selection.dart';
+import 'overlays.dart';
 import 'structure.dart';
 import 'debug_skin.dart';
 
@@ -25,29 +26,41 @@ const _debugSeed = Color(0xFF0B57D0);
 const _promoSeed = Color(0xFFE8710A);
 const _fakeRequest = Duration(seconds: 2);
 
-/// The three skins the example switches between, each with its own starter theme.
+/// The skins the example switches between, each with its own starter theme.
 enum SampleSkin {
   /// Camouflage's own dialect.
-  minimal('Minimal', minimalSkin),
+  minimal('Minimal'),
 
   /// Fluent 2.
-  fluent('Fluent', fluentSkinDefault),
+  fluent('Fluent'),
+
+  /// Fluent 2 with Acrylic flyouts and dialogs.
+  fluentAcrylic('Fluent Acrylic'),
 
   /// The reference renderers.
-  debug('Debug', debugSkin);
+  debug('Debug');
 
-  const SampleSkin(this.label, this.skin);
+  const SampleSkin(this.label);
 
   /// The switcher's label.
   final String label;
 
   /// The skin.
-  final CamoSkin skin;
+  CamoSkin get skin => switch (this) {
+    SampleSkin.minimal => minimalSkin,
+    SampleSkin.fluent => fluentSkinDefault,
+    SampleSkin.fluentAcrylic => _acrylic,
+    SampleSkin.debug => debugSkin,
+  };
+
+  /// Whether it's a Fluent skin (they take the brand color as Fluent's own).
+  bool get isFluent =>
+      this == SampleSkin.fluent || this == SampleSkin.fluentAcrylic;
 
   /// The skin's starter theme.
   CamoTheme theme(Brightness b) => switch (this) {
     SampleSkin.minimal => minimalTheme(brightness: b),
-    SampleSkin.fluent => fluentTheme(brightness: b),
+    SampleSkin.fluent || SampleSkin.fluentAcrylic => fluentTheme(brightness: b),
     SampleSkin.debug => CamoTheme(
       colors: CamoColors.fromSeed(primary: _debugSeed, brightness: b),
       typography: CamoTypography.system(),
@@ -60,7 +73,7 @@ enum SampleSkin {
 /// every state, not only the roles.
 CamoTheme sampleTheme(SampleSkin skin, Brand brand, Brightness brightness) {
   final seed = brand.tokens?.brand[600];
-  final base = skin == SampleSkin.fluent && seed != null
+  final base = skin.isFluent && seed != null
       ? fluentTheme(brand: seed, brightness: brightness)
       : skin.theme(brightness);
   return brand.on(base, brightness);
@@ -165,6 +178,7 @@ class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
                 child: LoadingProfile(),
               ),
               const _Section(title: 'Paged list', child: Products()),
+              const _Section(title: 'Overlays', child: OverlayDemo()),
               CamouflageProvider(
                 theme: sampleTheme(_skin, _brand, brightness).copyWith(
                   colors: CamoColors.fromSeed(
@@ -491,3 +505,5 @@ class _Progress extends StatelessWidget {
     ],
   );
 }
+
+final CamoSkin _acrylic = fluentSkin(surface: FluentSurface.acrylic);

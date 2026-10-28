@@ -5,6 +5,7 @@ import '../icon/camo_icon.dart';
 import '../provider/camouflage.dart';
 import '../skin/positions.dart';
 import '../theme/camo_theme.dart';
+import '../overlay/scrim_hole.dart';
 
 /// How a sheet shows on a wide window: still a bottom sheet (capped at `maxWidth`), or a centered card.
 enum WidePresentation {
@@ -360,7 +361,29 @@ class _CamoSheetFrameState extends State<CamoSheetFrame>
     vsync: this,
   );
 
-  double get _height => _sheetKey.currentContext?.size?.height ?? 1;
+  // From the render box, not the element: it's read while the sheet animates in, during builds.
+  double get _height {
+    final box = _sheetKey.currentContext?.findRenderObject();
+    return box is RenderBox && box.hasSize && box.size.height > 0
+        ? box.size.height
+        : 1;
+  }
+
+  ScrimHole? _hole;
+
+  void _moved() => _hole?.moved.bump();
+
+  @override
+  void initState() {
+    super.initState();
+    _drag.addListener(_moved);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _hole = ScrimHole.maybeOf(context);
+  }
 
   void _dismiss() {
     if (widget.dismissible) widget.onDismissRequest();
@@ -400,8 +423,13 @@ class _CamoSheetFrameState extends State<CamoSheetFrame>
         style.widePresentation == WidePresentation.centered &&
         media.size.width > style.maxWidth + theme.spacing.xxl * 2;
     final canDrag = widget.dragToDismiss && widget.dismissible && !centered;
+    // In a Camouflage route the frame slides the sheet in (or fades a centered one); the route only fades the scrim.
+    final route = _hole == null ? null : ModalRoute.of(context)?.animation;
+    final enter = route == null
+        ? null
+        : CurvedAnimation(parent: route, curve: theme.motion.easingEmphasized);
     final sheet = AnimatedBuilder(
-      animation: _drag,
+      animation: Listenable.merge([_drag, ?enter]),
       builder: (context, child) => Transform.translate(
         offset: Offset(0, centered ? 0 : _drag.value),
         child: _SheetFrameScope(
@@ -409,10 +437,23 @@ class _CamoSheetFrameState extends State<CamoSheetFrame>
           dismissible: widget.dismissible,
           onDismissRequest: _dismiss,
           centered: centered,
-          child: child!,
+          child: enter == null
+              ? child!
+              : centered
+              ? FadeTransition(opacity: enter, child: child)
+              // Slid by its own height, so nothing is measured while building.
+              : FractionalTranslation(
+                  translation: Offset(0, 1 - enter.value),
+                  child: child,
+                ),
         ),
       ),
-      child: KeyedSubtree(key: _sheetKey, child: widget.child),
+      child: KeyedSubtree(
+        key: _sheetKey,
+        child: _hole == null
+            ? widget.child
+            : ScrimHoleBox(box: _hole!.box, child: widget.child),
+      ),
     );
     return CallbackShortcuts(
       bindings: {const SingleActivator(LogicalKeyboardKey.escape): _dismiss},
