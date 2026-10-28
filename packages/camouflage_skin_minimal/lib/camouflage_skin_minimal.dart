@@ -12,6 +12,7 @@ import 'src/renderer/minimal_actions.dart';
 import 'src/renderer/minimal_inputs.dart';
 import 'src/renderer/minimal_pickers.dart';
 import 'src/renderer/minimal_primitives.dart';
+import 'src/renderer/minimal_structure.dart';
 import 'src/renderer/minimal_text.dart';
 
 export 'src/fade.dart';
@@ -37,6 +38,14 @@ export 'src/renderer/minimal_pickers.dart'
         MinimalMenuRenderer,
         MinimalTimePickerRenderer;
 export 'src/renderer/minimal_primitives.dart';
+export 'src/renderer/minimal_structure.dart'
+    show
+        MinimalAccordionRenderer,
+        MinimalCardRenderer,
+        MinimalListItemRenderer,
+        MinimalPagedListRenderer,
+        MinimalSkeletonRenderer,
+        MinimalTopBarRenderer;
 export 'src/renderer/minimal_text.dart'
     show MinimalSearchFieldRenderer, MinimalTextFieldRenderer;
 
@@ -68,6 +77,12 @@ const CamoSkin minimalSkin = CamoSkin(
   bottomSheet: MinimalBottomSheetRenderer(),
   datePicker: MinimalDatePickerRenderer(),
   timePicker: MinimalTimePickerRenderer(),
+  card: MinimalCardRenderer(),
+  listItem: MinimalListItemRenderer(),
+  accordion: MinimalAccordionRenderer(),
+  skeleton: MinimalSkeletonRenderer(),
+  topBar: MinimalTopBarRenderer(),
+  pagedList: MinimalPagedListRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [minimalSkin] and [minimalLight] or [minimalDark].

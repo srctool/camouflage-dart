@@ -556,3 +556,182 @@ class PickerGallery extends StatelessWidget {
     );
   }
 }
+
+/// The M6 structure components: a resting and a scrolled top bar, cards in every appearance (a status panel and
+/// a selected card too), a list section, an accordion group with one section open, skeletons, and a paged list's
+/// empty state and next-page retry row. Skeletons are captured at the start of their cycle.
+class StructureGallery extends StatelessWidget {
+  /// Creates the gallery.
+  const StructureGallery({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    void ignore(Object? _) {}
+    const icon = CamoIcon(galleryIcon);
+    Widget card(String text, {Appearance? a, Tone tone = Tone.defaultTone}) =>
+        Expanded(
+          child: CamoCard(
+            appearance: a,
+            tone: tone,
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: CamoText(text),
+            ),
+          ),
+        );
+    return SizedBox(
+      width: 400,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 12,
+        children: [
+          CamoTopBar(
+            title: 'Settings',
+            insets: EdgeInsets.zero,
+            navigation: CamoIconButton(
+              icon: icon,
+              semanticLabel: 'Back',
+              onPressed: () {},
+            ),
+            actions: [
+              CamoIconButton(
+                icon: icon,
+                semanticLabel: 'Search',
+                onPressed: () {},
+              ),
+            ],
+          ),
+          const CamoTopBar(
+            title: 'Inbox',
+            scrollOffset: 8,
+            insets: EdgeInsets.zero,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              spacing: 12,
+              children: [
+                Row(
+                  spacing: 8,
+                  children: [
+                    for (final a in [
+                      Appearance.solid,
+                      Appearance.soft,
+                      Appearance.raised,
+                      Appearance.outline,
+                    ])
+                      card(a.name, a: a),
+                  ],
+                ),
+                Row(
+                  spacing: 8,
+                  children: [
+                    card('Low stock', a: Appearance.soft, tone: Tone.warning),
+                    card('Payment failed', tone: Tone.error),
+                    Expanded(
+                      child: CamoCard(
+                        onPressed: () {},
+                        selected: true,
+                        child: const Padding(
+                          padding: EdgeInsets.all(12),
+                          child: CamoText('Pro plan'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          CamoListSection(
+            title: 'Network',
+            footer: 'Changes apply right away.',
+            children: [
+              CamoListItem(
+                headline: 'Wi-Fi',
+                leading: icon,
+                trailing: const CamoSwitch(checked: true, onChanged: null),
+                onPressed: () {},
+              ),
+              CamoListItem(
+                headline: 'Bluetooth',
+                supporting: '2 devices',
+                leading: icon,
+                onPressed: () {},
+              ),
+              CamoListItem(
+                headline: 'VPN',
+                overline: 'Work',
+                supporting: 'Connected since 09:00',
+                leading: icon,
+                selected: true,
+                onPressed: () {},
+              ),
+            ],
+          ),
+          CamoAccordionGroup<String>(
+            expanded: const {'ship'},
+            onExpandedChanged: ignore,
+            items: const [
+              CamoAccordionItem(
+                key: 'ship',
+                title: 'Shipping',
+                subtitle: '2 to 4 days',
+                child: CamoText('Free over 50.'),
+              ),
+              CamoAccordionItem(
+                key: 'returns',
+                title: 'Returns',
+                child: CamoText('30 days.'),
+              ),
+            ],
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              spacing: 8,
+              children: [
+                Row(
+                  spacing: 12,
+                  children: [
+                    CamoSkeleton.circle(size: 40),
+                    Expanded(child: CamoSkeleton.text(lines: 2)),
+                  ],
+                ),
+                CamoSkeleton(height: 80),
+              ],
+            ),
+          ),
+          const CamoSkeleton.listItem(),
+          SizedBox(
+            height: 140,
+            child: CamoPagedList<String>(
+              state: const CamoPagedListState(),
+              itemKey: (it) => it,
+              onLoadMore: () {},
+              onRetry: () {},
+              itemBuilder: (context, value, _) => CamoListItem(headline: value),
+            ),
+          ),
+          SizedBox(
+            height: 200,
+            child: CamoPagedList<String>(
+              state: const CamoPagedListState(
+                items: ['Order 1041', 'Order 1042'],
+                error: PagedError(
+                  message: "Couldn't load more",
+                  scope: PagedErrorScope.nextPage,
+                ),
+              ),
+              itemKey: (it) => it,
+              onLoadMore: () {},
+              onRetry: () {},
+              itemBuilder: (context, value, _) => CamoListItem(headline: value),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

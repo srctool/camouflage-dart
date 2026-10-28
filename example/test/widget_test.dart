@@ -2,6 +2,14 @@ import 'package:camouflage_example/main.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+// The paged list's fake API answers a page a second and asks for the next after each frame: a frame a
+// second until its five pages are in, so no request is left pending when the tree goes.
+Future<void> settleProducts(WidgetTester tester) async {
+  for (var i = 0; i < 8; i++) {
+    await tester.pump(const Duration(seconds: 1));
+  }
+}
+
 void main() {
   testWidgets('the example switches skins through the root provider', (
     tester,
@@ -17,6 +25,7 @@ void main() {
     await tester.tap(find.text('[outline] Fluent'));
     await tester.pump(const Duration(milliseconds: 400));
     expect(find.text('solid'), findsNWidgets(4));
+    await settleProducts(tester);
   });
 
   testWidgets('the example starts in dark mode when the platform is dark', (
@@ -29,5 +38,6 @@ void main() {
     await tester.pumpWidget(const CamouflageExampleApp());
     await tester.pump();
     expect(find.text('Light'), findsOneWidget);
+    await settleProducts(tester);
   });
 }

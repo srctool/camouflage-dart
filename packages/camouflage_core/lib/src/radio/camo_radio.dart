@@ -10,6 +10,7 @@ import '../util/camo_behavior.dart';
 import '../util/camo_error_semantics.dart';
 import '../util/camo_roving_focus.dart';
 import '../util/camo_touch_target.dart';
+import '../util/camo_row_toggle.dart';
 
 /// Every color a radio uses.
 @immutable
@@ -360,7 +361,14 @@ class _RadioState extends State<_Radio> {
         style,
       ),
     );
-    if (onChanged == null) return visual;
+    if (onChanged == null) {
+      return reportRowToggle(
+        context,
+        checked: widget.selected,
+        radio: true,
+        child: visual,
+      );
+    }
     return CamoBehavior(
       controller: _interaction,
       enabled: enabled,

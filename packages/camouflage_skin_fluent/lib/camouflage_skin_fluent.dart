@@ -11,6 +11,7 @@ import 'src/renderer/fluent_actions.dart';
 import 'src/renderer/fluent_inputs.dart';
 import 'src/renderer/fluent_pickers.dart';
 import 'src/renderer/fluent_primitives.dart';
+import 'src/renderer/fluent_structure.dart';
 import 'src/renderer/fluent_text.dart';
 import 'src/subtle.dart';
 
@@ -27,6 +28,14 @@ export 'src/renderer/fluent_pickers.dart'
         FluentMenuRenderer,
         FluentTimePickerRenderer;
 export 'src/renderer/fluent_primitives.dart';
+export 'src/renderer/fluent_structure.dart'
+    show
+        FluentAccordionRenderer,
+        FluentCardRenderer,
+        FluentListItemRenderer,
+        FluentPagedListRenderer,
+        FluentSkeletonRenderer,
+        FluentTopBarRenderer;
 export 'src/renderer/fluent_text.dart';
 export 'src/subtle.dart';
 
@@ -65,6 +74,12 @@ const CamoSkin fluentSkinDefault = CamoSkin(
   bottomSheet: FluentBottomSheetRenderer(),
   datePicker: FluentDatePickerRenderer(),
   timePicker: FluentTimePickerRenderer(),
+  card: FluentCardRenderer(),
+  listItem: FluentListItemRenderer(),
+  accordion: FluentAccordionRenderer(),
+  skeleton: FluentSkeletonRenderer(),
+  topBar: FluentTopBarRenderer(),
+  pagedList: FluentPagedListRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [fluentSkinDefault] and [fluentTheme].
