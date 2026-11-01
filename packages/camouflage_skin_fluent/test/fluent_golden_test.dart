@@ -8,10 +8,17 @@ import 'package:flutter/widgets.dart';
 // (Testing §3). Update with `flutter test --update-goldens --tags golden`.
 void main() {
   final themes = {
-    'light': fluentTheme(),
-    'dark': fluentTheme(brightness: Brightness.dark),
+    // Pinned to medium: `flutter test` runs as Android, where the default density follows touch input.
+    'light': fluentTheme(density: FluentDensity.medium),
+    'dark': fluentTheme(
+      brightness: Brightness.dark,
+      density: FluentDensity.medium,
+    ),
     'small': fluentTheme(density: FluentDensity.small),
-    'brand': fluentTheme(brand: const Color(0xFF8A3FFC)),
+    'brand': fluentTheme(
+      brand: const Color(0xFF8A3FFC),
+      density: FluentDensity.medium,
+    ),
   };
 
   Widget scenario(CamoTheme theme, Widget child) =>
@@ -50,45 +57,67 @@ void main() {
     );
   }
 
-  // Acrylic: a panel at flyout depth over stripes, blurring them.
-  goldenTest(
-    'fluent acrylic',
-    fileName: 'acrylic_fluent',
-    builder: () => GoldenTestScenario(
-      name: 'light',
-      child: CamouflagePreview(
-        skin: fluentSkin(surface: FluentSurface.acrylic),
-        theme: fluentTheme(),
-        child: SizedBox(
-          width: 360,
-          height: 200,
-          child: Stack(
-            children: [
-              Column(
+  // Acrylic: a panel at flyout depth over stripes, blurring them, and its fallback chain (ADR-42): the noise over
+  // a solid fill without a backdrop blur, the solid surface with Reduce Transparency.
+  const caps = CamoCapabilities(
+    backdropBlur: true,
+    runtimeShaders: true,
+    windowMaterial: false,
+    reduceTransparency: false,
+  );
+  for (final (name, capabilities) in [
+    ('acrylic_fluent', caps),
+    ('acrylic_noblur_fluent', caps.copyWith(backdropBlur: false)),
+    ('acrylic_reduced_fluent', caps.copyWith(reduceTransparency: true)),
+  ]) {
+    goldenTest(
+      'fluent $name',
+      fileName: name,
+      builder: () => GoldenTestScenario(
+        name: 'light',
+        child: CamouflageProvider(
+          skin: fluentSkin(surface: FluentSurface.acrylic),
+          theme: fluentTheme(density: FluentDensity.medium),
+          environment: CamoEnvironment(
+            windowSize: WindowSizeClass.medium,
+            input: InputMode.pointer,
+            platform: CamoPlatform.windows,
+            capabilities: capabilities,
+          ),
+          child: ColoredBox(
+            color: const Color(0xFFFFFFFF),
+            child: SizedBox(
+              width: 360,
+              height: 200,
+              child: Stack(
                 children: [
-                  for (var i = 0; i < 8; i++)
-                    Expanded(
-                      child: ColoredBox(
-                        color: i.isEven
-                            ? const Color(0xFF0F6CBD)
-                            : const Color(0xFFF7630C),
-                        child: const SizedBox.expand(),
+                  Column(
+                    children: [
+                      for (var i = 0; i < 8; i++)
+                        Expanded(
+                          child: ColoredBox(
+                            color: i.isEven
+                                ? const Color(0xFF0F6CBD)
+                                : const Color(0xFFF7630C),
+                            child: const SizedBox.expand(),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const Center(
+                    child: CamoMenuPanel(
+                      child: Padding(
+                        padding: EdgeInsets.all(24),
+                        child: CamoText('Acrylic'),
                       ),
                     ),
+                  ),
                 ],
               ),
-              const Center(
-                child: CamoMenuPanel(
-                  child: Padding(
-                    padding: EdgeInsets.all(24),
-                    child: CamoText('Acrylic'),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }

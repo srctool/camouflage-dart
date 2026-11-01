@@ -14,7 +14,8 @@ const _noiseSeed = 7;
 
 /// Fluent's Acrylic surface: frosted glass for flyouts, menus and dialogs (elevation `level4` and up). It blurs
 /// what's painted behind it (30 dp), adds a luminosity tint of the surface color and a light noise, inside
-/// Fluent's shadow. Lower containers (cards) stay [FluentSolid].
+/// Fluent's shadow. Lower containers (cards) stay [FluentSolid]. Its fallback chain (ADR-42): without a backdrop
+/// blur (`CamoCapabilities.backdropBlur`), the noise over a solid fill; with Reduce Transparency, [FluentSolid].
 class FluentAcrylic implements SurfaceTreatment {
   /// Creates the treatment.
   const FluentAcrylic();
@@ -27,13 +28,27 @@ class FluentAcrylic implements SurfaceTreatment {
     required double elevation,
     required CamoTheme theme,
   }) {
-    if (elevation < theme.elevation.level4) {
+    final capabilities = theme.environment?.capabilities;
+    if (elevation < theme.elevation.level4 ||
+        (capabilities?.reduceTransparency ?? false)) {
       return const FluentSolid().decorate(
         color: color,
         shape: shape,
         elevation: elevation,
         theme: theme,
         child: child,
+      );
+    }
+    if (!(capabilities?.backdropBlur ?? true)) {
+      return const FluentSolid().decorate(
+        color: color,
+        shape: shape,
+        elevation: elevation,
+        theme: theme,
+        child: CustomPaint(
+          painter: _Glass(const Color(0x00000000)),
+          child: child,
+        ),
       );
     }
     // The shadow alone, around a clear box; the glass goes inside it.

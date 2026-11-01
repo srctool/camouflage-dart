@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../environment/camo_environment.dart';
 import '../skin/camo_skin.dart';
 import '../skin/content_style.dart';
 import '../theme/camo_colors.dart';
@@ -16,14 +17,22 @@ class CamouflageScope extends InheritedWidget {
     super.key,
     required this.skin,
     required this.theme,
+    this.sourceTheme,
+    this.environment,
     required super.child,
   });
 
   /// The effective skin.
   final CamoSkin? skin;
 
-  /// The effective theme, with reduced motion applied.
+  /// The effective theme: adapted for [environment], with reduced motion applied.
   final CamoTheme? theme;
+
+  /// The theme as the provider got it, before its rules ran; nested providers adapt it for their environment.
+  final CamoTheme? sourceTheme;
+
+  /// The environment of this subtree.
+  final CamoEnvironment? environment;
 
   /// The nearest scope, or `null` without a provider.
   static CamouflageScope? maybeOf(BuildContext context) =>
@@ -31,7 +40,10 @@ class CamouflageScope extends InheritedWidget {
 
   @override
   bool updateShouldNotify(CamouflageScope old) =>
-      skin != old.skin || theme != old.theme;
+      skin != old.skin ||
+      theme != old.theme ||
+      sourceTheme != old.sourceTheme ||
+      environment != old.environment;
 }
 
 /// The nearest `CamouflageProvider`'s values. Every accessor fails fast when there's no provider.
@@ -88,6 +100,11 @@ abstract final class Camouflage {
   /// The nearest scope, or `null` without a provider.
   static CamouflageScope? maybeOf(BuildContext context) =>
       CamouflageScope.maybeOf(context);
+
+  /// The environment of the nearest provider (ADR-41); outside one, the one the root would compute.
+  static CamoEnvironment environmentOf(BuildContext context) =>
+      maybeOf(context)?.environment ??
+      systemEnvironmentOf(context, const CamoBreakpoints());
 
   /// The skin, or `null` without a provider. For family packages only; `Camo*` widgets fail fast.
   static CamoSkin? maybeSkinOf(BuildContext context) => maybeOf(context)?.skin;

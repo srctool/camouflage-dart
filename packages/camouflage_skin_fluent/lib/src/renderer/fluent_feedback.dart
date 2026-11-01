@@ -229,7 +229,10 @@ class FluentSnackbarRenderer implements CamoSnackbarRenderer {
       actionStyle: type.bodyMedium.copyWith(fontWeight: FontWeight.w600),
       elevation: ElevationLevel.level4,
       position: SnackbarPosition.bottom,
-      alignment: SnackbarAlignment.end,
+      // Bottom-end on wider windows, centered on a phone (ADR-41).
+      alignment: theme.environment?.windowSize == WindowSizeClass.compact
+          ? SnackbarAlignment.center
+          : SnackbarAlignment.end,
       showDismiss: false,
       showToneIcon: true,
       durationShort: const Duration(seconds: 4),
