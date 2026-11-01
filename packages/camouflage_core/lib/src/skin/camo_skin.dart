@@ -12,6 +12,7 @@ import '../chip/camo_chip.dart';
 import '../datepicker/camo_calendar.dart';
 import '../dialog/camo_dialog.dart';
 import '../divider/camo_divider.dart';
+import '../fab/camo_fab.dart';
 import '../icon/camo_icon.dart';
 import '../icon_button/camo_icon_button.dart';
 import '../list/camo_list_item.dart';
@@ -27,6 +28,7 @@ import '../snackbar/camo_snackbar.dart';
 import '../stepper/camo_stepper.dart';
 import '../surface/camo_surface.dart';
 import '../switch/camo_switch.dart';
+import '../tabs/camo_tabs.dart';
 import '../text/camo_text.dart';
 import '../textfield/camo_text_field.dart';
 import '../timepicker/camo_time_picker.dart';
@@ -80,6 +82,8 @@ class CamoSkin {
     required this.avatar,
     required this.snackbar,
     required this.banner,
+    required this.tabs,
+    required this.fab,
   });
 
   /// For debugging and tests, e.g. `'minimal'`.
@@ -190,6 +194,12 @@ class CamoSkin {
   /// Banners.
   final CamoBannerRenderer banner;
 
+  /// Tab bars.
+  final CamoTabsRenderer tabs;
+
+  /// FABs.
+  final CamoFabRenderer fab;
+
   /// A copy with the given fields replaced; the others stay `identical`.
   CamoSkin copyWith({
     String? name,
@@ -228,6 +238,8 @@ class CamoSkin {
     CamoAvatarRenderer? avatar,
     CamoSnackbarRenderer? snackbar,
     CamoBannerRenderer? banner,
+    CamoTabsRenderer? tabs,
+    CamoFabRenderer? fab,
   }) => CamoSkin(
     name: name ?? this.name,
     surfaceTreatment: surfaceTreatment ?? this.surfaceTreatment,
@@ -265,6 +277,8 @@ class CamoSkin {
     avatar: avatar ?? this.avatar,
     snackbar: snackbar ?? this.snackbar,
     banner: banner ?? this.banner,
+    tabs: tabs ?? this.tabs,
+    fab: fab ?? this.fab,
   );
 
   @override
@@ -305,7 +319,9 @@ class CamoSkin {
       other.badge == badge &&
       other.avatar == avatar &&
       other.snackbar == snackbar &&
-      other.banner == banner;
+      other.banner == banner &&
+      other.tabs == tabs &&
+      other.fab == fab;
 
   @override
   int get hashCode => Object.hashAll([
@@ -345,6 +361,8 @@ class CamoSkin {
     avatar,
     snackbar,
     banner,
+    tabs,
+    fab,
   ]);
 
   @override

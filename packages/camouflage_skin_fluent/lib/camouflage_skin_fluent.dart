@@ -12,6 +12,7 @@ import 'src/renderer/fluent_actions.dart';
 import 'src/renderer/fluent_data_display.dart';
 import 'src/renderer/fluent_feedback.dart';
 import 'src/renderer/fluent_inputs.dart';
+import 'src/renderer/fluent_navigation.dart';
 import 'src/renderer/fluent_pickers.dart';
 import 'src/renderer/fluent_primitives.dart';
 import 'src/renderer/fluent_structure.dart';
@@ -32,6 +33,8 @@ export 'src/renderer/fluent_feedback.dart'
         FluentProgressBarRenderer,
         FluentSnackbarRenderer;
 export 'src/renderer/fluent_inputs.dart';
+export 'src/renderer/fluent_navigation.dart'
+    show FluentFabRenderer, FluentTabsRenderer;
 export 'src/renderer/fluent_pickers.dart'
     show
         FluentBottomSheetRenderer,
@@ -107,6 +110,8 @@ const CamoSkin fluentSkinDefault = CamoSkin(
   avatar: FluentAvatarRenderer(),
   snackbar: FluentSnackbarRenderer(),
   banner: FluentBannerRenderer(),
+  tabs: FluentTabsRenderer(),
+  fab: FluentFabRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [fluentSkinDefault] and [fluentTheme].

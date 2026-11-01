@@ -19,6 +19,7 @@ export 'src/datepicker/camo_dates.dart'
 export 'src/dialog/camo_dialog.dart';
 export 'src/divider/camo_divider.dart';
 export 'src/environment/camo_environment.dart';
+export 'src/fab/camo_fab.dart';
 export 'src/icon/camo_icon.dart';
 export 'src/icon_button/camo_icon_button.dart';
 export 'src/list/camo_list_item.dart' hide dividedColumn, listDivider;
@@ -58,6 +59,7 @@ export 'src/skin/interaction.dart';
 export 'src/skin/positions.dart';
 export 'src/surface/camo_surface.dart';
 export 'src/switch/camo_switch.dart';
+export 'src/tabs/camo_tabs.dart';
 export 'src/text/camo_text.dart';
 export 'src/textfield/camo_formats.dart';
 export 'src/textfield/camo_selection.dart';

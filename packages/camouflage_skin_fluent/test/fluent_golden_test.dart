@@ -36,6 +36,7 @@ void main() {
     ('menus', const MenuGallery()),
     ('datadisplay', const DataDisplayGallery()),
     ('feedback', const FeedbackGallery()),
+    ('navigation', const NavigationGallery()),
   ]) {
     goldenTest(
       'fluent $name',

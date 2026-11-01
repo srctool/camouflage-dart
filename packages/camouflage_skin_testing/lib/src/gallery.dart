@@ -1158,3 +1158,134 @@ class FeedbackGallery extends StatelessWidget {
     );
   }
 }
+
+const _galleryTabs = [
+  CamoTab('a', label: 'Overview'),
+  CamoTab('b', label: 'Reviews'),
+  CamoTab('c', label: 'Specs'),
+];
+
+/// The M8 tabs and FAB: a prominent and a quiet tab bar, one with icons and a badge, a scrollable one, and FABs
+/// in each appearance and tone, plain and extended.
+class NavigationGallery extends StatelessWidget {
+  /// Creates the gallery.
+  const NavigationGallery({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Widget icon() => const CamoIcon(galleryIcon);
+    Widget bar(Widget tabs) => SizedBox(width: 440, child: tabs);
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 12,
+        children: [
+          bar(
+            CamoTabs<String>(
+              selected: 'b',
+              onChanged: (_) {},
+              tabs: _galleryTabs,
+            ),
+          ),
+          bar(
+            CamoTabs<String>(
+              selected: 'a',
+              onChanged: (_) {},
+              tabs: _galleryTabs,
+              appearance: Appearance.ghost,
+            ),
+          ),
+          bar(
+            CamoTabs<String>(
+              selected: 'b',
+              onChanged: (_) {},
+              tabs: [
+                CamoTab('a', label: 'Home', icon: icon()),
+                CamoTab(
+                  'b',
+                  label: 'Inbox',
+                  icon: icon(),
+                  badge: const CamoBadge(count: 3),
+                ),
+                CamoTab('c', label: 'Off', icon: icon(), enabled: false),
+              ],
+            ),
+          ),
+          bar(
+            CamoTabs<String>(
+              selected: 'Cameras',
+              onChanged: (_) {},
+              scrollable: true,
+              tabs: [
+                for (final t in [
+                  'Phones',
+                  'Laptops',
+                  'Audio',
+                  'Cameras',
+                  'Wearables',
+                  'Gaming',
+                ])
+                  CamoTab(t, label: t),
+              ],
+            ),
+          ),
+          Row(
+            spacing: 12,
+            children: [
+              for (final a in [
+                Appearance.soft,
+                Appearance.solid,
+                Appearance.raised,
+              ])
+                CamoFab(
+                  icon: icon(),
+                  semanticLabel: a.name,
+                  onPressed: () {},
+                  appearance: a,
+                ),
+              CamoFab(
+                icon: icon(),
+                semanticLabel: 'Error',
+                onPressed: () {},
+                tone: Tone.error,
+              ),
+              CamoFab(
+                icon: icon(),
+                semanticLabel: 'Success',
+                onPressed: () {},
+                appearance: Appearance.solid,
+                tone: Tone.success,
+              ),
+            ],
+          ),
+          Row(
+            spacing: 12,
+            children: [
+              CamoFab(
+                icon: icon(),
+                semanticLabel: 'Compose',
+                onPressed: () {},
+                text: 'Compose',
+              ),
+              CamoFab(
+                icon: icon(),
+                semanticLabel: 'Compose',
+                onPressed: () {},
+                text: 'Compose',
+                appearance: Appearance.solid,
+              ),
+              CamoFab(
+                icon: icon(),
+                semanticLabel: 'Compose',
+                onPressed: () {},
+                text: 'Compose',
+                expanded: false,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
