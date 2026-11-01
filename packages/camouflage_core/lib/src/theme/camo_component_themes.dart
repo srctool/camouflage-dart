@@ -12,6 +12,7 @@ import '../chip/camo_chip.dart';
 import '../datepicker/camo_calendar.dart';
 import '../dialog/camo_dialog.dart';
 import '../divider/camo_divider.dart';
+import '../fab/camo_fab.dart';
 import '../icon/camo_icon.dart';
 import '../icon_button/camo_icon_button.dart';
 import '../list/camo_list_item.dart';
@@ -28,6 +29,7 @@ import '../snackbar/camo_snackbar.dart';
 import '../stepper/camo_stepper.dart';
 import '../surface/camo_surface.dart';
 import '../switch/camo_switch.dart';
+import '../tabs/camo_tabs.dart';
 import '../textfield/camo_text_field.dart';
 import '../timepicker/camo_time_picker.dart';
 import '../tooltip/camo_tooltip.dart';
@@ -71,6 +73,8 @@ class CamoComponentThemes {
     this.avatar,
     this.snackbar,
     this.banner,
+    this.tabs,
+    this.fab,
   });
 
   /// Icons outside any component.
@@ -169,6 +173,12 @@ class CamoComponentThemes {
   /// Banners.
   final CamoBannerTheme? banner;
 
+  /// Tab bars.
+  final CamoTabsTheme? tabs;
+
+  /// FABs.
+  final CamoFabTheme? fab;
+
   /// A copy with the given fields replaced.
   CamoComponentThemes copyWith({
     CamoIconTheme? icon,
@@ -203,6 +213,8 @@ class CamoComponentThemes {
     CamoAvatarTheme? avatar,
     CamoSnackbarTheme? snackbar,
     CamoBannerTheme? banner,
+    CamoTabsTheme? tabs,
+    CamoFabTheme? fab,
   }) => CamoComponentThemes(
     icon: icon ?? this.icon,
     surface: surface ?? this.surface,
@@ -236,6 +248,8 @@ class CamoComponentThemes {
     avatar: avatar ?? this.avatar,
     snackbar: snackbar ?? this.snackbar,
     banner: banner ?? this.banner,
+    tabs: tabs ?? this.tabs,
+    fab: fab ?? this.fab,
   );
 
   @override
@@ -272,7 +286,9 @@ class CamoComponentThemes {
       other.badge == badge &&
       other.avatar == avatar &&
       other.snackbar == snackbar &&
-      other.banner == banner;
+      other.banner == banner &&
+      other.tabs == tabs &&
+      other.fab == fab;
 
   @override
   int get hashCode => Object.hashAll([
@@ -308,5 +324,7 @@ class CamoComponentThemes {
     avatar,
     snackbar,
     banner,
+    tabs,
+    fab,
   ]);
 }

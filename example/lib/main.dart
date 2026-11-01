@@ -14,6 +14,7 @@ import 'dates_and_times.dart';
 import 'documents.dart';
 import 'forms.dart';
 import 'inbox.dart';
+import 'navigation.dart';
 import 'selection.dart';
 import 'overlays.dart';
 import 'structure.dart';
@@ -193,6 +194,10 @@ class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
               const _Section(
                 title: 'Inbox: progress, snackbars and banners',
                 child: InboxScreen(),
+              ),
+              const _Section(
+                title: 'Tabs and the floating action button',
+                child: NavigationDemo(),
               ),
               CamouflageProvider(
                 theme: sampleTheme(_skin, _brand, brightness).copyWith(

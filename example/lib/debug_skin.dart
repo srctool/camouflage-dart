@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'debug_data_display_renderers.dart';
 import 'debug_feedback_renderers.dart';
 import 'debug_input_renderers.dart';
+import 'debug_navigation_renderers.dart';
 import 'debug_picker_renderers.dart';
 import 'debug_renderers.dart';
 import 'debug_structure_renderers.dart';
@@ -50,6 +51,8 @@ const CamoSkin debugSkin = CamoSkin(
   avatar: DebugAvatarRenderer(),
   snackbar: DebugSnackbarRenderer(),
   banner: DebugBannerRenderer(),
+  tabs: DebugTabsRenderer(),
+  fab: DebugFabRenderer(),
 );
 
 /// Fills the container and nothing else: no depth, no border.
