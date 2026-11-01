@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../environment/camo_environment.dart';
 import 'camo_colors.dart';
 import 'camo_component_themes.dart';
 import 'camo_scales.dart';
@@ -9,6 +10,10 @@ import 'theme_validator.dart';
 
 /// Everything a skin draws with: colors, typography, component overrides, shapes, spacing, elevation, motion
 /// and the brand's own token sets. Light and dark are two instances; there's no `isDark` flag.
+///
+/// [breakpoints] classify the window; [adaptation] holds the theme's adaptive rules (add them with `adapt`).
+/// The provider applies the rules and sets [environment] on the theme widgets read (ADR-41), so a skin's
+/// `defaults(theme)` can follow the platform's conventions; a theme you build has no environment.
 @immutable
 class CamoTheme {
   /// Creates a theme. Only [colors] and [typography] have no defaults.
@@ -21,6 +26,9 @@ class CamoTheme {
     this.elevation = const CamoElevation(),
     this.motion = const CamoMotion(),
     this.tokenSets = const [],
+    this.breakpoints = const CamoBreakpoints(),
+    this.adaptation,
+    this.environment,
   });
 
   /// The 42 color roles.
@@ -47,6 +55,15 @@ class CamoTheme {
   /// The brand's own typed token sets (ADR-32).
   final List<CamoTokenSet> tokenSets;
 
+  /// Where each window size class starts.
+  final CamoBreakpoints breakpoints;
+
+  /// The theme's adaptive rules, or `null`.
+  final ThemeAdaptation? adaptation;
+
+  /// The environment the provider adapted this theme for, or `null` for a theme you build.
+  final CamoEnvironment? environment;
+
   /// The token set of type [T], or `null` if this theme doesn't include it.
   T? tokens<T extends CamoTokenSet<T>>() =>
       tokenSets.whereType<T>().firstOrNull;
@@ -64,6 +81,9 @@ class CamoTheme {
     CamoElevation? elevation,
     CamoMotion? motion,
     List<CamoTokenSet>? tokenSets,
+    CamoBreakpoints? breakpoints,
+    ThemeAdaptation? adaptation,
+    CamoEnvironment? environment,
   }) {
     return CamoTheme(
       colors: colors ?? this.colors,
@@ -74,6 +94,9 @@ class CamoTheme {
       elevation: elevation ?? this.elevation,
       motion: motion ?? this.motion,
       tokenSets: tokenSets ?? this.tokenSets,
+      breakpoints: breakpoints ?? this.breakpoints,
+      adaptation: adaptation ?? this.adaptation,
+      environment: environment ?? this.environment,
     );
   }
 
@@ -91,6 +114,9 @@ class CamoTheme {
       elevation: CamoElevation.lerp(a.elevation, b.elevation, t),
       motion: CamoMotion.lerp(a.motion, b.motion, t),
       tokenSets: _lerpTokenSets(a.tokenSets, b.tokenSets, t),
+      breakpoints: t < 0.5 ? a.breakpoints : b.breakpoints,
+      adaptation: t < 0.5 ? a.adaptation : b.adaptation,
+      environment: t < 0.5 ? a.environment : b.environment,
     );
   }
 
@@ -124,7 +150,10 @@ class CamoTheme {
       other.spacing == spacing &&
       other.elevation == elevation &&
       other.motion == motion &&
-      listEquals(other.tokenSets, tokenSets);
+      listEquals(other.tokenSets, tokenSets) &&
+      other.breakpoints == breakpoints &&
+      other.adaptation == adaptation &&
+      other.environment == environment;
 
   @override
   int get hashCode => Object.hash(
@@ -136,5 +165,8 @@ class CamoTheme {
     elevation,
     motion,
     Object.hashAll(tokenSets),
+    breakpoints,
+    adaptation,
+    environment,
   );
 }

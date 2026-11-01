@@ -9,6 +9,22 @@ Widget _app(Widget child, {bool disableAnimations = false}) => MediaQuery(
   child: Directionality(textDirection: TextDirection.ltr, child: child),
 );
 
+// The theme without the environment the provider attached (ADR-41), to compare with the one passed in.
+CamoTheme? _asWritten(CamoTheme? t) => t == null
+    ? null
+    : CamoTheme(
+        colors: t.colors,
+        typography: t.typography,
+        components: t.components,
+        shapes: t.shapes,
+        spacing: t.spacing,
+        elevation: t.elevation,
+        motion: t.motion,
+        tokenSets: t.tokenSets,
+        breakpoints: t.breakpoints,
+        adaptation: t.adaptation,
+      );
+
 void main() {
   // Base Provider and Scoping §3.1: what the outer and inner providers set, read inside the inner one.
   Future<(CamoSkin?, CamoTheme?)> inside(
@@ -21,7 +37,8 @@ void main() {
     final read = Builder(
       builder: (context) {
         skin = Camouflage.maybeSkinOf(context);
-        theme = Camouflage.maybeThemeOf(context);
+        // The provider attaches its environment (ADR-41); compare the theme as written.
+        theme = _asWritten(Camouflage.maybeThemeOf(context));
         return const SizedBox();
       },
     );
@@ -248,7 +265,7 @@ void main() {
                   route: (builder) =>
                       PageRouteBuilder(pageBuilder: (c, _, _) => builder(c)),
                   builder: (routeContext) {
-                    inRoute = Camouflage.themeOf(routeContext);
+                    inRoute = _asWritten(Camouflage.themeOf(routeContext));
                     return const SizedBox();
                   },
                 ),
@@ -261,7 +278,7 @@ void main() {
     );
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
-    expect(inRoute, same(themeU));
+    expect(inRoute, themeU);
   });
 
   test('copyWith keeps the other fields identical', () {

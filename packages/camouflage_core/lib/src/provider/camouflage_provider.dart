@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../environment/camo_environment.dart';
 import '../skin/camo_skin.dart';
 import '../skin/content_style.dart';
 import '../snackbar/camo_messenger.dart' show installMessenger;
@@ -9,15 +10,18 @@ import 'camouflage.dart';
 /// Puts a skin and a theme into the tree for every `Camo*` widget below. A `null` argument inherits the
 /// value from the provider above, so nested providers can override just the skin or just the theme.
 ///
-/// It applies reduced motion (`MediaQuery.disableAnimations`) to the theme once, and resets the content
-/// color and icon style for its subtree. A provider with nothing to provide doesn't throw: the first
-/// widget that needs the value does, by name.
+/// The root provider computes the [environment] (window size, input, platform, capabilities; ADR-41) and
+/// installs the app's `CamoMessenger`; any provider can set its own. Each provider applies its theme's adaptive
+/// rules for the environment and reduced motion (`MediaQuery.disableAnimations`) once, and resets the content
+/// color and icon style for its subtree. A provider with nothing to provide doesn't throw: the first widget
+/// that needs the value does, by name.
 class CamouflageProvider extends StatelessWidget {
   /// Creates a provider for [child].
   const CamouflageProvider({
     super.key,
     this.skin,
     this.theme,
+    this.environment,
     required this.child,
   });
 
@@ -27,6 +31,9 @@ class CamouflageProvider extends StatelessWidget {
   /// The theme for the subtree, or `null` to inherit it.
   final CamoTheme? theme;
 
+  /// The environment for the subtree, or `null` to inherit it (the root computes it).
+  final CamoEnvironment? environment;
+
   /// The subtree.
   final Widget child;
 
@@ -34,11 +41,20 @@ class CamouflageProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     final parent = CamouflageScope.maybeOf(context);
     final effectiveSkin = skin ?? parent?.skin;
-    final baseTheme = theme ?? parent?.theme;
+    // The theme as written, before its rules ran: nested providers adapt it again for their environment.
+    final sourceTheme = theme ?? parent?.sourceTheme ?? parent?.theme;
+    final effectiveEnvironment =
+        environment ??
+        parent?.environment ??
+        systemEnvironmentOf(
+          context,
+          sourceTheme?.breakpoints ?? const CamoBreakpoints(),
+        );
+    final adapted = sourceTheme?.forEnvironment(effectiveEnvironment);
     final reduceMotion = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
-    final effectiveTheme = baseTheme != null && reduceMotion
-        ? baseTheme.copyWith(motion: baseTheme.motion.reduced())
-        : baseTheme;
+    final effectiveTheme = adapted != null && reduceMotion
+        ? adapted.copyWith(motion: adapted.motion.reduced())
+        : adapted;
     // The root icon style is the icon component theme: the skin's defaults, then the theme's overrides.
     final rootIcon = effectiveSkin == null || effectiveTheme == null
         ? null
@@ -50,6 +66,8 @@ class CamouflageProvider extends StatelessWidget {
     return CamouflageScope(
       skin: effectiveSkin,
       theme: effectiveTheme,
+      sourceTheme: sourceTheme,
+      environment: effectiveEnvironment,
       child: rootIcon == null
           ? content
           : CamoContentStyle(

@@ -19,23 +19,61 @@ enum FluentDensity {
 /// Fluent 2's starter theme: the brand ramp for the `primary` family, Fluent's neutral ramp for surfaces and
 /// text, the danger, success and warning palettes for status (info is the brand), Fluent's type ramp, radii and
 /// motion, plus [FluentTokens] for the hover and press steps. [density] sets the controls' sizes through the
-/// component themes. [fontFamily] `null` is the platform font (Segoe UI on Windows); fonts are never bundled.
+/// component themes; `null` follows the input (ADR-41): `medium` with a pointer, `touch` with fingers.
+/// [fontFamily] `null` is the platform font (Segoe UI on Windows); fonts are never bundled.
 CamoTheme fluentTheme({
   Color brand = fluentBrandBlue,
   Brightness brightness = Brightness.light,
-  FluentDensity density = FluentDensity.medium,
+  FluentDensity? density,
   String? fontFamily,
 }) {
   final ramp = BrandRamp.of(brand);
   final dark = brightness == Brightness.dark;
   final typography = _typography(fontFamily);
-  return CamoTheme(
+  final theme = CamoTheme(
     colors: dark ? _dark(ramp) : _light(ramp),
     typography: typography,
-    components: _density(density, typography),
+    components: _density(density ?? FluentDensity.medium, typography),
     shapes: _shapes,
     motion: _motion,
     tokenSets: [dark ? _darkTokens(ramp) : _lightTokens(ramp)],
+  );
+  if (density != null) return theme;
+  return theme.adapt(
+    (t, env) => env.input == InputMode.touch
+        ? t.copyWith(
+            components: _withDensity(
+              t.components,
+              FluentDensity.touch,
+              typography,
+            ),
+          )
+        : t,
+  );
+}
+
+// The density's button and icon button sizes over [c], keeping every other override.
+CamoComponentThemes _withDensity(
+  CamoComponentThemes c,
+  FluentDensity density,
+  CamoTypography type,
+) {
+  final sizes = _density(density, type);
+  final b = sizes.button!;
+  final i = sizes.iconButton!;
+  return c.copyWith(
+    button: (c.button ?? const CamoButtonTheme()).copyWith(
+      height: b.height,
+      minWidth: b.minWidth,
+      padding: b.padding,
+      paddingWithIcon: b.paddingWithIcon,
+      textStyle: b.textStyle,
+      iconSize: b.iconSize,
+    ),
+    iconButton: (c.iconButton ?? const CamoIconButtonTheme()).copyWith(
+      containerSize: i.containerSize,
+      iconSize: i.iconSize,
+    ),
   );
 }
 
