@@ -13,6 +13,7 @@ import 'src/renderer/minimal_data_display.dart';
 import 'src/renderer/minimal_feedback.dart';
 import 'src/renderer/minimal_inputs.dart';
 import 'src/renderer/minimal_navigation.dart';
+import 'src/renderer/minimal_navigation_chrome.dart';
 import 'src/renderer/minimal_pickers.dart';
 import 'src/renderer/minimal_primitives.dart';
 import 'src/renderer/minimal_structure.dart';
@@ -43,6 +44,11 @@ export 'src/renderer/minimal_inputs.dart'
         MinimalSwitchRenderer;
 export 'src/renderer/minimal_navigation.dart'
     show MinimalFabRenderer, MinimalTabsRenderer;
+export 'src/renderer/minimal_navigation_chrome.dart'
+    show
+        MinimalNavigationBarRenderer,
+        MinimalNavigationDrawerRenderer,
+        MinimalNavigationRailRenderer;
 export 'src/renderer/minimal_pickers.dart'
     show
         MinimalBottomSheetRenderer,
@@ -105,6 +111,9 @@ const CamoSkin minimalSkin = CamoSkin(
   banner: MinimalBannerRenderer(),
   tabs: MinimalTabsRenderer(),
   fab: MinimalFabRenderer(),
+  navigationBar: MinimalNavigationBarRenderer(),
+  navigationRail: MinimalNavigationRailRenderer(),
+  navigationDrawer: MinimalNavigationDrawerRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [minimalSkin] and [minimalLight] or [minimalDark].

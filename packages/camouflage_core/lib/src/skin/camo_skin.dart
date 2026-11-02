@@ -17,6 +17,7 @@ import '../icon/camo_icon.dart';
 import '../icon_button/camo_icon_button.dart';
 import '../list/camo_list_item.dart';
 import '../menu/camo_menu.dart';
+import '../navigation/camo_navigation.dart';
 import '../paged_list/camo_paged_list.dart';
 import '../progress/camo_progress.dart';
 import '../radio/camo_radio.dart';
@@ -84,6 +85,9 @@ class CamoSkin {
     required this.banner,
     required this.tabs,
     required this.fab,
+    required this.navigationBar,
+    required this.navigationRail,
+    required this.navigationDrawer,
   });
 
   /// For debugging and tests, e.g. `'minimal'`.
@@ -200,6 +204,15 @@ class CamoSkin {
   /// FABs.
   final CamoFabRenderer fab;
 
+  /// Navigation bars.
+  final CamoNavigationBarRenderer navigationBar;
+
+  /// Navigation rails.
+  final CamoNavigationRailRenderer navigationRail;
+
+  /// Navigation drawers.
+  final CamoNavigationDrawerRenderer navigationDrawer;
+
   /// A copy with the given fields replaced; the others stay `identical`.
   CamoSkin copyWith({
     String? name,
@@ -240,6 +253,9 @@ class CamoSkin {
     CamoBannerRenderer? banner,
     CamoTabsRenderer? tabs,
     CamoFabRenderer? fab,
+    CamoNavigationBarRenderer? navigationBar,
+    CamoNavigationRailRenderer? navigationRail,
+    CamoNavigationDrawerRenderer? navigationDrawer,
   }) => CamoSkin(
     name: name ?? this.name,
     surfaceTreatment: surfaceTreatment ?? this.surfaceTreatment,
@@ -279,6 +295,9 @@ class CamoSkin {
     banner: banner ?? this.banner,
     tabs: tabs ?? this.tabs,
     fab: fab ?? this.fab,
+    navigationBar: navigationBar ?? this.navigationBar,
+    navigationRail: navigationRail ?? this.navigationRail,
+    navigationDrawer: navigationDrawer ?? this.navigationDrawer,
   );
 
   @override
@@ -321,7 +340,10 @@ class CamoSkin {
       other.snackbar == snackbar &&
       other.banner == banner &&
       other.tabs == tabs &&
-      other.fab == fab;
+      other.fab == fab &&
+      other.navigationBar == navigationBar &&
+      other.navigationRail == navigationRail &&
+      other.navigationDrawer == navigationDrawer;
 
   @override
   int get hashCode => Object.hashAll([
@@ -363,6 +385,9 @@ class CamoSkin {
     banner,
     tabs,
     fab,
+    navigationBar,
+    navigationRail,
+    navigationDrawer,
   ]);
 
   @override

@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'data_display_test_renderers.dart';
 import 'feedback_test_renderers.dart';
 import 'input_test_renderers.dart';
+import 'nav_chrome_test_renderers.dart';
 import 'navigation_test_renderers.dart';
 import 'overlay_test_renderers.dart';
 import 'structure_test_renderers.dart';
@@ -378,6 +379,9 @@ const skinA = CamoSkin(
   banner: PlainBanner(),
   tabs: PlainTabs(),
   fab: PlainFab(),
+  navigationBar: PlainNavigationBar(),
+  navigationRail: PlainNavigationRail(),
+  navigationDrawer: PlainNavigationDrawer(),
 );
 final skinB = skinA.copyWith(name: 'b');
 final themeT = CamoTheme(

@@ -17,6 +17,7 @@ import '../icon/camo_icon.dart';
 import '../icon_button/camo_icon_button.dart';
 import '../list/camo_list_item.dart';
 import '../menu/camo_menu.dart';
+import '../navigation/camo_navigation.dart';
 import '../paged_list/camo_paged_list.dart';
 import '../progress/camo_progress.dart';
 import '../radio/camo_radio.dart';
@@ -75,6 +76,9 @@ class CamoComponentThemes {
     this.banner,
     this.tabs,
     this.fab,
+    this.navigationBar,
+    this.navigationRail,
+    this.navigationDrawer,
   });
 
   /// Icons outside any component.
@@ -179,6 +183,15 @@ class CamoComponentThemes {
   /// FABs.
   final CamoFabTheme? fab;
 
+  /// Navigation bars.
+  final CamoNavigationBarTheme? navigationBar;
+
+  /// Navigation rails.
+  final CamoNavigationRailTheme? navigationRail;
+
+  /// Navigation drawers.
+  final CamoNavigationDrawerTheme? navigationDrawer;
+
   /// A copy with the given fields replaced.
   CamoComponentThemes copyWith({
     CamoIconTheme? icon,
@@ -215,6 +228,9 @@ class CamoComponentThemes {
     CamoBannerTheme? banner,
     CamoTabsTheme? tabs,
     CamoFabTheme? fab,
+    CamoNavigationBarTheme? navigationBar,
+    CamoNavigationRailTheme? navigationRail,
+    CamoNavigationDrawerTheme? navigationDrawer,
   }) => CamoComponentThemes(
     icon: icon ?? this.icon,
     surface: surface ?? this.surface,
@@ -250,6 +266,9 @@ class CamoComponentThemes {
     banner: banner ?? this.banner,
     tabs: tabs ?? this.tabs,
     fab: fab ?? this.fab,
+    navigationBar: navigationBar ?? this.navigationBar,
+    navigationRail: navigationRail ?? this.navigationRail,
+    navigationDrawer: navigationDrawer ?? this.navigationDrawer,
   );
 
   @override
@@ -288,7 +307,10 @@ class CamoComponentThemes {
       other.snackbar == snackbar &&
       other.banner == banner &&
       other.tabs == tabs &&
-      other.fab == fab;
+      other.fab == fab &&
+      other.navigationBar == navigationBar &&
+      other.navigationRail == navigationRail &&
+      other.navigationDrawer == navigationDrawer;
 
   @override
   int get hashCode => Object.hashAll([
@@ -326,5 +348,8 @@ class CamoComponentThemes {
     banner,
     tabs,
     fab,
+    navigationBar,
+    navigationRail,
+    navigationDrawer,
   ]);
 }
