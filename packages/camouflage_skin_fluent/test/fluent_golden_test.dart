@@ -37,6 +37,7 @@ void main() {
     ('datadisplay', const DataDisplayGallery()),
     ('feedback', const FeedbackGallery()),
     ('navigation', const NavigationGallery()),
+    ('navchrome', const NavigationChromeGallery()),
   ]) {
     goldenTest(
       'fluent $name',

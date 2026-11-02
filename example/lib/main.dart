@@ -15,6 +15,7 @@ import 'documents.dart';
 import 'forms.dart';
 import 'inbox.dart';
 import 'navigation.dart';
+import 'navigation_shell.dart';
 import 'selection.dart';
 import 'overlays.dart';
 import 'structure.dart';
@@ -198,6 +199,10 @@ class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
               const _Section(
                 title: 'Tabs and the floating action button',
                 child: NavigationDemo(),
+              ),
+              const _Section(
+                title: 'Navigation: bar, rail and drawer by window size',
+                child: NavigationShellDemo(),
               ),
               CamouflageProvider(
                 theme: sampleTheme(_skin, _brand, brightness).copyWith(

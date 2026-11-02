@@ -6,6 +6,7 @@ import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
 import 'src/fluent_acrylic.dart';
+import 'src/fluent_mica.dart';
 import 'src/fluent_solid.dart';
 import 'src/fluent_theme.dart';
 import 'src/renderer/fluent_actions.dart';
@@ -13,6 +14,7 @@ import 'src/renderer/fluent_data_display.dart';
 import 'src/renderer/fluent_feedback.dart';
 import 'src/renderer/fluent_inputs.dart';
 import 'src/renderer/fluent_navigation.dart';
+import 'src/renderer/fluent_navigation_chrome.dart';
 import 'src/renderer/fluent_pickers.dart';
 import 'src/renderer/fluent_primitives.dart';
 import 'src/renderer/fluent_structure.dart';
@@ -20,6 +22,7 @@ import 'src/renderer/fluent_text.dart';
 import 'src/subtle.dart';
 
 export 'src/fluent_acrylic.dart';
+export 'src/fluent_mica.dart';
 export 'src/fluent_palette.dart' show fluentBrandBlue;
 export 'src/fluent_solid.dart';
 export 'src/fluent_theme.dart';
@@ -35,6 +38,11 @@ export 'src/renderer/fluent_feedback.dart'
 export 'src/renderer/fluent_inputs.dart';
 export 'src/renderer/fluent_navigation.dart'
     show FluentFabRenderer, FluentTabsRenderer;
+export 'src/renderer/fluent_navigation_chrome.dart'
+    show
+        FluentNavigationBarRenderer,
+        FluentNavigationDrawerRenderer,
+        FluentNavigationRailRenderer;
 export 'src/renderer/fluent_pickers.dart'
     show
         FluentBottomSheetRenderer,
@@ -54,13 +62,17 @@ export 'src/renderer/fluent_structure.dart'
 export 'src/renderer/fluent_text.dart';
 export 'src/subtle.dart';
 
-/// The surface treatments Fluent offers. `mica` joins with M8.
+/// The surface treatments Fluent offers. `mica` lets the Windows 11 window backdrop show through the base layers
+/// and the navigation chrome, and is `solid` elsewhere (`FluentMica`).
 enum FluentSurface {
   /// Fills and Fluent's shadows.
   solid,
 
   /// Frosted glass for flyouts, menus and dialogs; other containers stay solid.
   acrylic,
+
+  /// The window's Mica backdrop behind the base layers, where the platform has one.
+  mica,
 }
 
 /// The Fluent skin with the given [surface]. Each component's renderer joins in its milestone.
@@ -69,6 +81,9 @@ CamoSkin fluentSkin({FluentSurface surface = FluentSurface.solid}) =>
       FluentSurface.solid => fluentSkinDefault,
       FluentSurface.acrylic => fluentSkinDefault.copyWith(
         surfaceTreatment: const FluentAcrylic(),
+      ),
+      FluentSurface.mica => fluentSkinDefault.copyWith(
+        surfaceTreatment: const FluentMica(),
       ),
     };
 
@@ -112,6 +127,9 @@ const CamoSkin fluentSkinDefault = CamoSkin(
   banner: FluentBannerRenderer(),
   tabs: FluentTabsRenderer(),
   fab: FluentFabRenderer(),
+  navigationBar: FluentNavigationBarRenderer(),
+  navigationRail: FluentNavigationRailRenderer(),
+  navigationDrawer: FluentNavigationDrawerRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [fluentSkinDefault] and [fluentTheme].

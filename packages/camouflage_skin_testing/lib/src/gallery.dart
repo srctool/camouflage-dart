@@ -1289,3 +1289,74 @@ class NavigationGallery extends StatelessWidget {
     );
   }
 }
+
+/// The M8 navigation chrome: a bottom bar with a badge, a rail with a header, and a drawer with sections, each
+/// with the second destination selected.
+class NavigationChromeGallery extends StatelessWidget {
+  /// Creates the gallery.
+  const NavigationChromeGallery({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    List<CamoNavItem<String>> items({required bool badge}) => [
+      for (final (i, label) in ['Home', 'Inbox', 'Search', 'Profile'].indexed)
+        CamoNavItem<String>(
+          value: label,
+          label: label,
+          icon: const CamoIcon(galleryIcon),
+          badge: badge && i == 1 ? const CamoBadge(count: 3) : null,
+          enabled: label != 'Profile',
+        ),
+    ];
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 16,
+        children: [
+          SizedBox(
+            width: 440,
+            child: CamoNavigationBar<String>(
+              items: items(badge: true),
+              selected: 'Inbox',
+              onChanged: (_) {},
+            ),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 16,
+            children: [
+              SizedBox(
+                height: 300,
+                child: CamoNavigationRail<String>(
+                  items: items(badge: true),
+                  selected: 'Inbox',
+                  onChanged: (_) {},
+                  header: CamoFab(
+                    icon: const CamoIcon(galleryIcon),
+                    semanticLabel: 'Compose',
+                    onPressed: () {},
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 300,
+                child: CamoNavigationDrawer<String>(
+                  sections: [
+                    CamoNavSection(items: items(badge: true).take(2).toList()),
+                    CamoNavSection(
+                      title: 'Library',
+                      items: items(badge: false).skip(2).toList(),
+                    ),
+                  ],
+                  selected: 'Inbox',
+                  onChanged: (_) {},
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}

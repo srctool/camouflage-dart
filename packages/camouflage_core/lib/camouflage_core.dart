@@ -24,6 +24,7 @@ export 'src/icon/camo_icon.dart';
 export 'src/icon_button/camo_icon_button.dart';
 export 'src/list/camo_list_item.dart' hide dividedColumn, listDivider;
 export 'src/menu/camo_menu.dart';
+export 'src/navigation/camo_navigation.dart';
 export 'src/menu/camo_menu_anchor.dart'
     hide MenuEntries, openedByKeyboard, runAfterFrame;
 export 'src/overlay/camo_overlay_routes.dart'
