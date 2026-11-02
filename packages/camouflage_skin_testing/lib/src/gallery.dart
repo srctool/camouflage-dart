@@ -1443,3 +1443,119 @@ class PanelsGallery extends StatelessWidget {
     );
   }
 }
+
+/// The M9 button groups, split buttons and toolbars: connected and spaced groups with commands and toggles, a
+/// split button and a menu button, and a docked and a floating toolbar that overflow.
+class ActionsGallery extends StatelessWidget {
+  /// Creates the gallery.
+  const ActionsGallery({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    CamoGroupButton groupButton(String label, [bool? selected]) =>
+        CamoGroupButton(
+          id: label,
+          text: label,
+          selected: selected,
+          onPressed: () {},
+        );
+    CamoToolbarAction action(String label, [bool? selected]) =>
+        CamoToolbarAction(
+          id: label,
+          label: label,
+          icon: CamoText(label.substring(0, 1)),
+          selected: selected,
+          onPressed: () {},
+        );
+    final actions = [
+      action('Bold', true),
+      action('Italic', false),
+      action('Underline'),
+      action('Link'),
+      action('Quote'),
+      action('Code'),
+    ];
+    const menu = [
+      CamoMenuItem(text: 'Save as', onPressed: _noop),
+      CamoMenuItem(text: 'Save a copy', onPressed: _noop),
+    ];
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 16,
+        children: [
+          Row(
+            spacing: 24,
+            children: [
+              CamoButtonGroup(
+                buttons: [
+                  groupButton('Cut'),
+                  groupButton('Copy'),
+                  groupButton('Paste'),
+                ],
+              ),
+              CamoButtonGroup(
+                connected: false,
+                buttons: [
+                  groupButton('Bold', true),
+                  groupButton('Italic', false),
+                  groupButton('Underline', false),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            spacing: 24,
+            children: [
+              CamoSplitButton(text: 'Save', onPressed: () {}, menu: menu),
+              CamoSplitButton(
+                text: 'Save',
+                onPressed: () {},
+                menu: menu,
+                appearance: Appearance.outline,
+              ),
+              const CamoSplitButton(
+                text: 'Sort',
+                onPressed: null,
+                menu: menu,
+                appearance: Appearance.soft,
+              ),
+              CamoSplitButton(
+                text: 'Save',
+                onPressed: () {},
+                menu: menu,
+                enabled: false,
+              ),
+            ],
+          ),
+          // A toolbar measures its room as it lays out, so the gallery gives it a size (no intrinsic sizing).
+          SizedBox(
+            width: 560,
+            height: 56,
+            child: CamoToolbar(actions: actions, semanticLabel: 'Formatting'),
+          ),
+          SizedBox(
+            width: 260,
+            height: 80,
+            child: CamoToolbar(
+              actions: actions,
+              placement: ToolbarPlacement.floating,
+            ),
+          ),
+          SizedBox(
+            width: 560,
+            height: 80,
+            child: CamoToolbar(
+              actions: actions.take(3).toList(),
+              placement: ToolbarPlacement.floating,
+              trailing: CamoButton(text: 'Send', onPressed: () {}),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+void _noop() {}

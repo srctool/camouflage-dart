@@ -6,6 +6,7 @@ import '../badge/camo_badge.dart';
 import '../banner/camo_banner.dart';
 import '../bottom_sheet/camo_bottom_sheet.dart';
 import '../button/camo_button.dart';
+import '../button_group/camo_button_group.dart';
 import '../card/camo_card.dart';
 import '../checkbox/camo_checkbox.dart';
 import '../chip/camo_chip.dart';
@@ -18,16 +19,17 @@ import '../icon_button/camo_icon_button.dart';
 import '../list/camo_list_item.dart';
 import '../menu/camo_menu.dart';
 import '../navigation/camo_navigation.dart';
-import '../popover/camo_popover.dart';
-import '../sidesheet/camo_side_sheet.dart';
 import '../paged_list/camo_paged_list.dart';
+import '../popover/camo_popover.dart';
 import '../progress/camo_progress.dart';
 import '../radio/camo_radio.dart';
 import '../search/camo_search_field.dart';
 import '../segmented/camo_segmented_control.dart';
+import '../sidesheet/camo_side_sheet.dart';
 import '../skeleton/camo_skeleton.dart';
 import '../slider/camo_slider.dart';
 import '../snackbar/camo_snackbar.dart';
+import '../split_button/camo_split_button.dart';
 import '../stepper/camo_stepper.dart';
 import '../surface/camo_surface.dart';
 import '../switch/camo_switch.dart';
@@ -35,6 +37,7 @@ import '../tabs/camo_tabs.dart';
 import '../text/camo_text.dart';
 import '../textfield/camo_text_field.dart';
 import '../timepicker/camo_time_picker.dart';
+import '../toolbar/camo_toolbar.dart';
 import '../tooltip/camo_tooltip.dart';
 import '../topbar/camo_top_bar.dart';
 import 'contract.dart';
@@ -92,6 +95,9 @@ class CamoSkin {
     required this.navigationDrawer,
     required this.popover,
     required this.sideSheet,
+    required this.buttonGroup,
+    required this.splitButton,
+    required this.toolbar,
   });
 
   /// For debugging and tests, e.g. `'minimal'`.
@@ -223,6 +229,15 @@ class CamoSkin {
   /// Side sheets.
   final CamoSideSheetRenderer sideSheet;
 
+  /// Button groups.
+  final CamoButtonGroupRenderer buttonGroup;
+
+  /// Split buttons.
+  final CamoSplitButtonRenderer splitButton;
+
+  /// Toolbars.
+  final CamoToolbarRenderer toolbar;
+
   /// A copy with the given fields replaced; the others stay `identical`.
   CamoSkin copyWith({
     String? name,
@@ -268,6 +283,9 @@ class CamoSkin {
     CamoNavigationDrawerRenderer? navigationDrawer,
     CamoPopoverRenderer? popover,
     CamoSideSheetRenderer? sideSheet,
+    CamoButtonGroupRenderer? buttonGroup,
+    CamoSplitButtonRenderer? splitButton,
+    CamoToolbarRenderer? toolbar,
   }) => CamoSkin(
     name: name ?? this.name,
     surfaceTreatment: surfaceTreatment ?? this.surfaceTreatment,
@@ -312,6 +330,9 @@ class CamoSkin {
     navigationDrawer: navigationDrawer ?? this.navigationDrawer,
     popover: popover ?? this.popover,
     sideSheet: sideSheet ?? this.sideSheet,
+    buttonGroup: buttonGroup ?? this.buttonGroup,
+    splitButton: splitButton ?? this.splitButton,
+    toolbar: toolbar ?? this.toolbar,
   );
 
   @override
@@ -359,7 +380,10 @@ class CamoSkin {
       other.navigationRail == navigationRail &&
       other.navigationDrawer == navigationDrawer &&
       other.popover == popover &&
-      other.sideSheet == sideSheet;
+      other.sideSheet == sideSheet &&
+      other.buttonGroup == buttonGroup &&
+      other.splitButton == splitButton &&
+      other.toolbar == toolbar;
 
   @override
   int get hashCode => Object.hashAll([
@@ -406,6 +430,9 @@ class CamoSkin {
     navigationDrawer,
     popover,
     sideSheet,
+    buttonGroup,
+    splitButton,
+    toolbar,
   ]);
 
   @override
