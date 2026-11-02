@@ -6,6 +6,7 @@ import 'debug_feedback_renderers.dart';
 import 'debug_input_renderers.dart';
 import 'debug_navigation_chrome_renderers.dart';
 import 'debug_action_renderers.dart';
+import 'debug_data_renderers.dart';
 import 'debug_panel_renderers.dart';
 import 'debug_navigation_renderers.dart';
 import 'debug_picker_renderers.dart';
@@ -64,6 +65,11 @@ const CamoSkin debugSkin = CamoSkin(
   buttonGroup: DebugButtonGroup(),
   splitButton: DebugSplitButton(),
   toolbar: DebugToolbar(),
+  image: DebugImage(),
+  rating: DebugRating(),
+  pagination: DebugPagination(),
+  breadcrumb: DebugBreadcrumb(),
+  progressSteps: DebugProgressSteps(),
 );
 
 /// Fills the container and nothing else: no depth, no border.
