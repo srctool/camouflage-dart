@@ -38,6 +38,7 @@ void main() {
     ('feedback', const FeedbackGallery()),
     ('navigation', const NavigationGallery()),
     ('navchrome', const NavigationChromeGallery()),
+    ('panels', const PanelsGallery()),
   ]) {
     goldenTest(
       'fluent $name',

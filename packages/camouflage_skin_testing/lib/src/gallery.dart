@@ -1360,3 +1360,86 @@ class NavigationChromeGallery extends StatelessWidget {
     );
   }
 }
+
+/// The M9 popover and side sheet: popovers drawn by the renderer as they open (below, above, to the end side,
+/// with and without actions) and a standard side sheet with a title, close button, content and actions.
+class PanelsGallery extends StatelessWidget {
+  /// Creates the gallery.
+  const PanelsGallery({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final skin = Camouflage.skinOf(context);
+    final theme = Camouflage.themeOf(context);
+    final style = skin.popover.defaults(theme).merge(theme.components.popover);
+    Widget popover(PopoverPlacement placement, {required bool actions}) =>
+        SizedBox(
+          width: 340,
+          child: skin.popover.render(
+            context,
+            PopoverState(placement: placement, arrowOffset: 48),
+            PopoverSlots(
+              title: 'Share this file',
+              child: const CamoText('Anyone with the link can view it.'),
+              actions: actions
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      spacing: 8,
+                      children: [
+                        CamoButton(
+                          text: 'Cancel',
+                          onPressed: () {},
+                          appearance: Appearance.ghost,
+                        ),
+                        CamoButton(text: 'Copy link', onPressed: () {}),
+                      ],
+                    )
+                  : null,
+            ),
+            theme,
+            style,
+          ),
+        );
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 16,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 24,
+            children: [
+              popover(PopoverPlacement.bottom, actions: true),
+              popover(PopoverPlacement.top, actions: false),
+            ],
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 24,
+            children: [
+              popover(PopoverPlacement.end, actions: false),
+              SizedBox(
+                height: 260,
+                child: CamoSideSheet(
+                  title: 'Properties',
+                  onClose: () {},
+                  actions: CamoButton(text: 'Apply', onPressed: () {}),
+                  child: const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 12,
+                    children: [
+                      CamoText('Size'),
+                      CamoText('Position'),
+                      CamoText('Appearance'),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}

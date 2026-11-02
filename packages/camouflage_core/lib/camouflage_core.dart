@@ -25,6 +25,7 @@ export 'src/icon_button/camo_icon_button.dart';
 export 'src/list/camo_list_item.dart' hide dividedColumn, listDivider;
 export 'src/menu/camo_menu.dart';
 export 'src/navigation/camo_navigation.dart';
+export 'src/popover/camo_popover.dart' hide placePopover;
 export 'src/menu/camo_menu_anchor.dart'
     hide MenuEntries, openedByKeyboard, runAfterFrame;
 export 'src/overlay/camo_overlay_routes.dart'
@@ -41,6 +42,7 @@ export 'src/radio/camo_radio.dart';
 export 'src/search/camo_search_field.dart';
 export 'src/select/camo_select.dart' hide fold;
 export 'src/segmented/camo_segmented_control.dart';
+export 'src/sidesheet/camo_side_sheet.dart';
 export 'src/skeleton/camo_skeleton.dart';
 export 'src/slider/camo_slider.dart';
 export 'src/snackbar/camo_messenger.dart' hide installMessenger;

@@ -1,8 +1,8 @@
 import 'package:flutter/semantics.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import '../environment/camo_environment.dart';
+import '../overlay/camo_side_frame.dart';
 import '../provider/camouflage.dart';
 import '../skin/interaction.dart';
 import '../skin/positions.dart';
@@ -1416,7 +1416,7 @@ class CamoNavigationDrawer<T> extends StatelessWidget {
 /// scrim. Its visibility is state ([open]), not a route: a menu button opens it and a selection closes it. A
 /// scrim tap, back, Esc and a drag toward the start edge all call [onDismissRequest]; focus moves in and stays
 /// in. [child] is a [CamoNavigationDrawer]. Place it where an `Overlay` is above it (inside a `WidgetsApp`).
-class CamoModalDrawer extends StatefulWidget {
+class CamoModalDrawer extends StatelessWidget {
   /// Creates a modal drawer.
   const CamoModalDrawer({
     super.key,
@@ -1435,133 +1435,19 @@ class CamoModalDrawer extends StatefulWidget {
   final Widget child;
 
   @override
-  State<CamoModalDrawer> createState() => _CamoModalDrawerState();
-}
-
-class _CamoModalDrawerState extends State<CamoModalDrawer>
-    with SingleTickerProviderStateMixin {
-  final _portal = OverlayPortalController();
-  late final _controller = AnimationController(vsync: this);
-  var _duration = const Duration(milliseconds: 200);
-  Curve _curve = Curves.easeInOut;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller.addStatusListener((status) {
-      if (status == AnimationStatus.dismissed && _portal.isShowing) {
-        _portal.hide();
-      }
-    });
-    if (widget.open) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _show());
-    }
-  }
-
-  @override
-  void didUpdateWidget(CamoModalDrawer old) {
-    super.didUpdateWidget(old);
-    if (widget.open != old.open) {
-      if (widget.open) {
-        // The portal can't be shown while the tree is building.
-        WidgetsBinding.instance.addPostFrameCallback((_) => _show());
-      } else {
-        _controller.animateBack(0, duration: _duration, curve: _curve);
-      }
-    }
-  }
-
-  void _show() {
-    if (!mounted) return;
-    _portal.show();
-    _controller.animateTo(1, duration: _duration, curve: _curve);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final skin = Camouflage.skinOf(context, component: 'CamoModalDrawer');
     final theme = Camouflage.themeOf(context, component: 'CamoModalDrawer');
     final style = skin.navigationDrawer
         .defaults(theme)
         .merge(theme.components.navigationDrawer);
-    _duration = theme.motion.durationMedium;
-    _curve = theme.motion.easingEmphasized;
-    final rtl = Directionality.of(context) == TextDirection.rtl;
-    return PopScope(
-      canPop: !widget.open,
-      onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) widget.onDismissRequest();
-      },
-      child: OverlayPortal(
-        controller: _portal,
-        overlayChildBuilder: (context) => CallbackShortcuts(
-          bindings: {
-            const SingleActivator(LogicalKeyboardKey.escape):
-                widget.onDismissRequest,
-          },
-          child: FocusScope(
-            autofocus: true,
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final width = style.width < constraints.maxWidth * 0.8
-                    ? style.width
-                    : constraints.maxWidth * 0.8;
-                return AnimatedBuilder(
-                  animation: _controller,
-                  builder: (context, child) {
-                    final t = _controller.value;
-                    return Stack(
-                      children: [
-                        Positioned.fill(
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: widget.onDismissRequest,
-                            child: ColoredBox(
-                              color: theme.colors.scrim.withValues(
-                                alpha: style.scrimAlpha * t,
-                              ),
-                            ),
-                          ),
-                        ),
-                        PositionedDirectional(
-                          start: -width * (1 - t),
-                          top: 0,
-                          bottom: 0,
-                          width: width,
-                          child: GestureDetector(
-                            onHorizontalDragUpdate: (d) => _controller.value +=
-                                (rtl ? d.delta.dx : -d.delta.dx) / width,
-                            onHorizontalDragEnd: (d) {
-                              final v = (rtl ? 1 : -1) * d.primaryVelocity!;
-                              if (_controller.value < 0.6 || v > 1200) {
-                                widget.onDismissRequest();
-                              } else {
-                                _controller.animateTo(1);
-                              }
-                            },
-                            child: child,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                  child: _DrawerScope(
-                    onNavigate: widget.onDismissRequest,
-                    child: widget.child,
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-        child: const SizedBox.shrink(),
-      ),
+    return CamoSideFrame(
+      edge: SideEdge.start,
+      open: open,
+      onDismissRequest: onDismissRequest,
+      width: style.width,
+      scrimAlpha: style.scrimAlpha,
+      child: _DrawerScope(onNavigate: onDismissRequest, child: child),
     );
   }
 }
