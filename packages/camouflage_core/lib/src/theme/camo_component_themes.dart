@@ -18,6 +18,8 @@ import '../icon_button/camo_icon_button.dart';
 import '../list/camo_list_item.dart';
 import '../menu/camo_menu.dart';
 import '../navigation/camo_navigation.dart';
+import '../popover/camo_popover.dart';
+import '../sidesheet/camo_side_sheet.dart';
 import '../paged_list/camo_paged_list.dart';
 import '../progress/camo_progress.dart';
 import '../radio/camo_radio.dart';
@@ -79,6 +81,8 @@ class CamoComponentThemes {
     this.navigationBar,
     this.navigationRail,
     this.navigationDrawer,
+    this.popover,
+    this.sideSheet,
   });
 
   /// Icons outside any component.
@@ -192,6 +196,12 @@ class CamoComponentThemes {
   /// Navigation drawers.
   final CamoNavigationDrawerTheme? navigationDrawer;
 
+  /// Popovers.
+  final CamoPopoverTheme? popover;
+
+  /// Side sheets.
+  final CamoSideSheetTheme? sideSheet;
+
   /// A copy with the given fields replaced.
   CamoComponentThemes copyWith({
     CamoIconTheme? icon,
@@ -231,6 +241,8 @@ class CamoComponentThemes {
     CamoNavigationBarTheme? navigationBar,
     CamoNavigationRailTheme? navigationRail,
     CamoNavigationDrawerTheme? navigationDrawer,
+    CamoPopoverTheme? popover,
+    CamoSideSheetTheme? sideSheet,
   }) => CamoComponentThemes(
     icon: icon ?? this.icon,
     surface: surface ?? this.surface,
@@ -269,6 +281,8 @@ class CamoComponentThemes {
     navigationBar: navigationBar ?? this.navigationBar,
     navigationRail: navigationRail ?? this.navigationRail,
     navigationDrawer: navigationDrawer ?? this.navigationDrawer,
+    popover: popover ?? this.popover,
+    sideSheet: sideSheet ?? this.sideSheet,
   );
 
   @override
@@ -310,7 +324,9 @@ class CamoComponentThemes {
       other.fab == fab &&
       other.navigationBar == navigationBar &&
       other.navigationRail == navigationRail &&
-      other.navigationDrawer == navigationDrawer;
+      other.navigationDrawer == navigationDrawer &&
+      other.popover == popover &&
+      other.sideSheet == sideSheet;
 
   @override
   int get hashCode => Object.hashAll([
@@ -351,5 +367,7 @@ class CamoComponentThemes {
     navigationBar,
     navigationRail,
     navigationDrawer,
+    popover,
+    sideSheet,
   ]);
 }
