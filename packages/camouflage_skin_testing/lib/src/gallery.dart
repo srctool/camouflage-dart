@@ -1559,3 +1559,128 @@ class ActionsGallery extends StatelessWidget {
 }
 
 void _noop() {}
+
+/// The M10 small data components: images (loading, failed, loaded), ratings, the three forms of pagination,
+/// breadcrumbs (full and collapsed) and progress steps (horizontal with an error, and vertical).
+class SmallDataGallery extends StatelessWidget {
+  /// Creates the gallery.
+  const SmallDataGallery({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final trail = [
+      for (final name in ['Home', 'Projects', 'Camouflage', 'Design', 'Notes'])
+        CamoBreadcrumbItem(id: name, label: name, onPressed: _noop),
+    ];
+    CamoStep step(String label, [StepStatus? status]) =>
+        CamoStep(id: label, label: label, status: status, onPressed: _noop);
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 16,
+        children: [
+          const Row(
+            spacing: 16,
+            children: [
+              SizedBox.square(
+                dimension: 72,
+                child: CamoImage(
+                  source: ImageSource.loading(),
+                  semanticLabel: 'Loading',
+                ),
+              ),
+              SizedBox.square(
+                dimension: 72,
+                child: CamoImage(
+                  source: ImageSource.failed(),
+                  semanticLabel: 'Failed',
+                ),
+              ),
+              SizedBox.square(
+                dimension: 72,
+                child: CamoImage(
+                  source: ImageSource.loaded(
+                    ColoredBox(color: Color(0xFF6D8FB5)),
+                  ),
+                  semanticLabel: 'Loaded',
+                ),
+              ),
+            ],
+          ),
+          Row(
+            spacing: 24,
+            children: [
+              const CamoRating(value: 3.5, label: 'Read only'),
+              CamoRating(
+                value: 2,
+                label: 'Interactive',
+                size: RatingSize.large,
+                onChanged: (_) {},
+              ),
+              CamoRating(
+                value: 2.5,
+                label: 'Half',
+                step: RatingStep.half,
+                size: RatingSize.small,
+                onChanged: (_) {},
+              ),
+              CamoRating(
+                value: 4,
+                label: 'Disabled',
+                enabled: false,
+                onChanged: (_) {},
+              ),
+            ],
+          ),
+          CamoPagination(pageCount: 12, page: 5, onPageChanged: (_) {}),
+          Row(
+            spacing: 24,
+            children: [
+              CamoPagination(
+                pageCount: 12,
+                page: 5,
+                variant: PaginationVariant.compact,
+                onPageChanged: (_) {},
+              ),
+              CamoPagination(
+                pageCount: 5,
+                page: 1,
+                variant: PaginationVariant.dots,
+                onPageChanged: (_) {},
+              ),
+            ],
+          ),
+          // The breadcrumb and the steps measure their room as they lay out, so they get a width.
+          SizedBox(width: 640, height: 48, child: CamoBreadcrumb(items: trail)),
+          SizedBox(width: 220, height: 48, child: CamoBreadcrumb(items: trail)),
+          SizedBox(
+            width: 520,
+            child: CamoProgressSteps(
+              current: 2,
+              steps: [
+                step('Account'),
+                step('Shipping'),
+                step('Payment', StepStatus.error),
+                step('Review'),
+              ],
+            ),
+          ),
+          CamoProgressSteps(
+            current: 1,
+            orientation: StepsOrientation.vertical,
+            steps: [
+              for (final n in ['Account', 'Shipping', 'Review'])
+                CamoStep(
+                  id: n,
+                  label: n,
+                  description: '$n details',
+                  onPressed: _noop,
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}

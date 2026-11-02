@@ -18,6 +18,7 @@ import 'navigation.dart';
 import 'navigation_shell.dart';
 import 'editor.dart';
 import 'panels.dart';
+import 'small_data.dart';
 import 'selection.dart';
 import 'overlays.dart';
 import 'structure.dart';
@@ -213,6 +214,10 @@ class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
               const _Section(
                 title: 'Editor: toolbars, button groups and a split button',
                 child: EditorDemo(),
+              ),
+              const _Section(
+                title: 'Rating, pages, path and steps',
+                child: SmallDataDemo(),
               ),
               CamouflageProvider(
                 theme: sampleTheme(_skin, _brand, brightness).copyWith(

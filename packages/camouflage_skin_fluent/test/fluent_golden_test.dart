@@ -40,6 +40,7 @@ void main() {
     ('navchrome', const NavigationChromeGallery()),
     ('panels', const PanelsGallery()),
     ('actions', const ActionsGallery()),
+    ('smalldata', const SmallDataGallery()),
   ]) {
     goldenTest(
       'fluent $name',

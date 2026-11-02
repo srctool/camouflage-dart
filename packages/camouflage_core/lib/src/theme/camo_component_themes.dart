@@ -5,6 +5,7 @@ import '../avatar/camo_avatar.dart';
 import '../badge/camo_badge.dart';
 import '../banner/camo_banner.dart';
 import '../bottom_sheet/camo_bottom_sheet.dart';
+import '../breadcrumb/camo_breadcrumb.dart';
 import '../button/camo_button.dart';
 import '../button_group/camo_button_group.dart';
 import '../card/camo_card.dart';
@@ -16,13 +17,17 @@ import '../divider/camo_divider.dart';
 import '../fab/camo_fab.dart';
 import '../icon/camo_icon.dart';
 import '../icon_button/camo_icon_button.dart';
+import '../image/camo_image.dart';
 import '../list/camo_list_item.dart';
 import '../menu/camo_menu.dart';
 import '../navigation/camo_navigation.dart';
 import '../paged_list/camo_paged_list.dart';
+import '../pagination/camo_pagination.dart';
 import '../popover/camo_popover.dart';
 import '../progress/camo_progress.dart';
+import '../progress_steps/camo_progress_steps.dart';
 import '../radio/camo_radio.dart';
+import '../rating/camo_rating.dart';
 import '../search/camo_search_field.dart';
 import '../segmented/camo_segmented_control.dart';
 import '../select/camo_select.dart';
@@ -89,6 +94,11 @@ class CamoComponentThemes {
     this.buttonGroup,
     this.splitButton,
     this.toolbar,
+    this.image,
+    this.rating,
+    this.pagination,
+    this.breadcrumb,
+    this.progressSteps,
   });
 
   /// Icons outside any component.
@@ -217,6 +227,21 @@ class CamoComponentThemes {
   /// Toolbars.
   final CamoToolbarTheme? toolbar;
 
+  /// Images.
+  final CamoImageTheme? image;
+
+  /// Ratings.
+  final CamoRatingTheme? rating;
+
+  /// Pagination.
+  final CamoPaginationTheme? pagination;
+
+  /// Breadcrumbs.
+  final CamoBreadcrumbTheme? breadcrumb;
+
+  /// Progress steps.
+  final CamoStepsTheme? progressSteps;
+
   /// A copy with the given fields replaced.
   CamoComponentThemes copyWith({
     CamoIconTheme? icon,
@@ -261,6 +286,11 @@ class CamoComponentThemes {
     CamoButtonGroupTheme? buttonGroup,
     CamoSplitButtonTheme? splitButton,
     CamoToolbarTheme? toolbar,
+    CamoImageTheme? image,
+    CamoRatingTheme? rating,
+    CamoPaginationTheme? pagination,
+    CamoBreadcrumbTheme? breadcrumb,
+    CamoStepsTheme? progressSteps,
   }) => CamoComponentThemes(
     icon: icon ?? this.icon,
     surface: surface ?? this.surface,
@@ -304,6 +334,11 @@ class CamoComponentThemes {
     buttonGroup: buttonGroup ?? this.buttonGroup,
     splitButton: splitButton ?? this.splitButton,
     toolbar: toolbar ?? this.toolbar,
+    image: image ?? this.image,
+    rating: rating ?? this.rating,
+    pagination: pagination ?? this.pagination,
+    breadcrumb: breadcrumb ?? this.breadcrumb,
+    progressSteps: progressSteps ?? this.progressSteps,
   );
 
   @override
@@ -350,7 +385,12 @@ class CamoComponentThemes {
       other.sideSheet == sideSheet &&
       other.buttonGroup == buttonGroup &&
       other.splitButton == splitButton &&
-      other.toolbar == toolbar;
+      other.toolbar == toolbar &&
+      other.image == image &&
+      other.rating == rating &&
+      other.pagination == pagination &&
+      other.breadcrumb == breadcrumb &&
+      other.progressSteps == progressSteps;
 
   @override
   int get hashCode => Object.hashAll([
@@ -396,5 +436,10 @@ class CamoComponentThemes {
     buttonGroup,
     splitButton,
     toolbar,
+    image,
+    rating,
+    pagination,
+    breadcrumb,
+    progressSteps,
   ]);
 }
