@@ -16,6 +16,7 @@ import 'src/renderer/fluent_inputs.dart';
 import 'src/renderer/fluent_navigation.dart';
 import 'src/renderer/fluent_groups.dart';
 import 'src/renderer/fluent_indicators.dart';
+import 'src/renderer/fluent_lists.dart';
 import 'src/renderer/fluent_navigation_chrome.dart';
 import 'src/renderer/fluent_panels.dart';
 import 'src/renderer/fluent_pickers.dart';
@@ -41,6 +42,8 @@ export 'src/renderer/fluent_feedback.dart'
 export 'src/renderer/fluent_inputs.dart';
 export 'src/renderer/fluent_navigation.dart'
     show FluentFabRenderer, FluentTabsRenderer;
+export 'src/renderer/fluent_lists.dart'
+    show FluentDataTableRenderer, FluentTreeRenderer;
 export 'src/renderer/fluent_indicators.dart'
     show
         FluentBreadcrumbRenderer,
@@ -157,6 +160,8 @@ const CamoSkin fluentSkinDefault = CamoSkin(
   pagination: FluentPaginationRenderer(),
   breadcrumb: FluentBreadcrumbRenderer(),
   progressSteps: FluentProgressStepsRenderer(),
+  dataTable: FluentDataTableRenderer(),
+  tree: FluentTreeRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [fluentSkinDefault] and [fluentTheme].

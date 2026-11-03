@@ -11,6 +11,7 @@ import '../button_group/camo_button_group.dart';
 import '../card/camo_card.dart';
 import '../checkbox/camo_checkbox.dart';
 import '../chip/camo_chip.dart';
+import '../data_table/camo_data_table.dart';
 import '../datepicker/camo_calendar.dart';
 import '../dialog/camo_dialog.dart';
 import '../divider/camo_divider.dart';
@@ -45,6 +46,7 @@ import '../timepicker/camo_time_picker.dart';
 import '../toolbar/camo_toolbar.dart';
 import '../tooltip/camo_tooltip.dart';
 import '../topbar/camo_top_bar.dart';
+import '../tree/camo_tree.dart';
 import 'contract.dart';
 
 /// A design language: how each component is built, how it reacts to touch and what its surfaces are made of.
@@ -108,6 +110,8 @@ class CamoSkin {
     required this.pagination,
     required this.breadcrumb,
     required this.progressSteps,
+    required this.dataTable,
+    required this.tree,
   });
 
   /// For debugging and tests, e.g. `'minimal'`.
@@ -263,6 +267,12 @@ class CamoSkin {
   /// Progress steps.
   final CamoProgressStepsRenderer progressSteps;
 
+  /// Data tables.
+  final CamoDataTableRenderer dataTable;
+
+  /// Trees.
+  final CamoTreeRenderer tree;
+
   /// A copy with the given fields replaced; the others stay `identical`.
   CamoSkin copyWith({
     String? name,
@@ -316,6 +326,8 @@ class CamoSkin {
     CamoPaginationRenderer? pagination,
     CamoBreadcrumbRenderer? breadcrumb,
     CamoProgressStepsRenderer? progressSteps,
+    CamoDataTableRenderer? dataTable,
+    CamoTreeRenderer? tree,
   }) => CamoSkin(
     name: name ?? this.name,
     surfaceTreatment: surfaceTreatment ?? this.surfaceTreatment,
@@ -368,6 +380,8 @@ class CamoSkin {
     pagination: pagination ?? this.pagination,
     breadcrumb: breadcrumb ?? this.breadcrumb,
     progressSteps: progressSteps ?? this.progressSteps,
+    dataTable: dataTable ?? this.dataTable,
+    tree: tree ?? this.tree,
   );
 
   @override
@@ -423,7 +437,9 @@ class CamoSkin {
       other.rating == rating &&
       other.pagination == pagination &&
       other.breadcrumb == breadcrumb &&
-      other.progressSteps == progressSteps;
+      other.progressSteps == progressSteps &&
+      other.dataTable == dataTable &&
+      other.tree == tree;
 
   @override
   int get hashCode => Object.hashAll([
@@ -478,6 +494,8 @@ class CamoSkin {
     pagination,
     breadcrumb,
     progressSteps,
+    dataTable,
+    tree,
   ]);
 
   @override

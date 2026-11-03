@@ -11,6 +11,7 @@ import '../button_group/camo_button_group.dart';
 import '../card/camo_card.dart';
 import '../checkbox/camo_checkbox.dart';
 import '../chip/camo_chip.dart';
+import '../data_table/camo_data_table.dart';
 import '../datepicker/camo_calendar.dart';
 import '../dialog/camo_dialog.dart';
 import '../divider/camo_divider.dart';
@@ -45,6 +46,7 @@ import '../timepicker/camo_time_picker.dart';
 import '../toolbar/camo_toolbar.dart';
 import '../tooltip/camo_tooltip.dart';
 import '../topbar/camo_top_bar.dart';
+import '../tree/camo_tree.dart';
 
 /// Per-component overrides: one nullable `CamoXTheme` per component, `null` meaning the skin's default.
 /// Each component adds its field here in its own milestone (ADR-39).
@@ -99,6 +101,8 @@ class CamoComponentThemes {
     this.pagination,
     this.breadcrumb,
     this.progressSteps,
+    this.dataTable,
+    this.tree,
   });
 
   /// Icons outside any component.
@@ -242,6 +246,12 @@ class CamoComponentThemes {
   /// Progress steps.
   final CamoStepsTheme? progressSteps;
 
+  /// Data tables.
+  final CamoTableTheme? dataTable;
+
+  /// Trees.
+  final CamoTreeTheme? tree;
+
   /// A copy with the given fields replaced.
   CamoComponentThemes copyWith({
     CamoIconTheme? icon,
@@ -291,6 +301,8 @@ class CamoComponentThemes {
     CamoPaginationTheme? pagination,
     CamoBreadcrumbTheme? breadcrumb,
     CamoStepsTheme? progressSteps,
+    CamoTableTheme? dataTable,
+    CamoTreeTheme? tree,
   }) => CamoComponentThemes(
     icon: icon ?? this.icon,
     surface: surface ?? this.surface,
@@ -339,6 +351,8 @@ class CamoComponentThemes {
     pagination: pagination ?? this.pagination,
     breadcrumb: breadcrumb ?? this.breadcrumb,
     progressSteps: progressSteps ?? this.progressSteps,
+    dataTable: dataTable ?? this.dataTable,
+    tree: tree ?? this.tree,
   );
 
   @override
@@ -390,7 +404,9 @@ class CamoComponentThemes {
       other.rating == rating &&
       other.pagination == pagination &&
       other.breadcrumb == breadcrumb &&
-      other.progressSteps == progressSteps;
+      other.progressSteps == progressSteps &&
+      other.dataTable == dataTable &&
+      other.tree == tree;
 
   @override
   int get hashCode => Object.hashAll([
@@ -441,5 +457,7 @@ class CamoComponentThemes {
     pagination,
     breadcrumb,
     progressSteps,
+    dataTable,
+    tree,
   ]);
 }

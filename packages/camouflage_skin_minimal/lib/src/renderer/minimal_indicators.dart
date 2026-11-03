@@ -784,3 +784,23 @@ Widget alertGlyph(double size, Color? color) =>
         paint,
       );
     }, stroke: 2.5);
+
+/// An arrow pointing up.
+Widget arrowUpGlyph(double size, Color? color) =>
+    _glyph(size, color, (canvas, paint) {
+      canvas.drawPath(
+        _poly([
+          [12, 19],
+          [12, 5],
+        ]),
+        paint,
+      );
+      canvas.drawPath(
+        _poly([
+          [6, 11],
+          [12, 5],
+          [18, 11],
+        ]),
+        paint,
+      );
+    }, stroke: 2.5);

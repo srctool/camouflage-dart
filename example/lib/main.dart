@@ -17,6 +17,7 @@ import 'inbox.dart';
 import 'navigation.dart';
 import 'navigation_shell.dart';
 import 'editor.dart';
+import 'lists.dart';
 import 'panels.dart';
 import 'small_data.dart';
 import 'selection.dart';
@@ -219,6 +220,7 @@ class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
                 title: 'Rating, pages, path and steps',
                 child: SmallDataDemo(),
               ),
+              const _Section(title: 'Table and tree', child: ListsDemo()),
               CamouflageProvider(
                 theme: sampleTheme(_skin, _brand, brightness).copyWith(
                   colors: CamoColors.fromSeed(
