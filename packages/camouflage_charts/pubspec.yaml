@@ -1,0 +1,24 @@
+name: camouflage_charts
+description: "Charts without a chart library: line, bar, pie and sparkline, styled by theme tokens and a preset per skin."
+version: 0.1.0-dev.1
+repository: https://github.com/srctool/camouflage-dart
+issue_tracker: https://github.com/srctool/camouflage-dart/issues
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+  flutter: ">=3.47.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  camouflage_core: ^0.1.0-dev.1
+
+dev_dependencies:
+  alchemist: ^0.14.1                     # screenshot goldens (CI goldens on Linux)
+  camouflage_skin_fluent: ^0.1.0-dev.1    # test-only, same layer (ADR-27)
+  camouflage_skin_minimal: ^0.1.0-dev.1   # test-only, same layer (ADR-27)
+  camouflage_skin_testing: ^0.1.0-dev.1   # test-only, same layer (ADR-27)
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
