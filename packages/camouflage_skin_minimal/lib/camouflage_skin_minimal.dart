@@ -13,6 +13,7 @@ import 'src/renderer/minimal_data_display.dart';
 import 'src/renderer/minimal_feedback.dart';
 import 'src/renderer/minimal_inputs.dart';
 import 'src/renderer/minimal_navigation.dart';
+import 'src/renderer/minimal_collections.dart';
 import 'src/renderer/minimal_groups.dart';
 import 'src/renderer/minimal_indicators.dart';
 import 'src/renderer/minimal_lists.dart';
@@ -57,6 +58,8 @@ export 'src/renderer/minimal_indicators.dart'
         MinimalPaginationRenderer,
         MinimalProgressStepsRenderer,
         MinimalRatingRenderer;
+export 'src/renderer/minimal_collections.dart'
+    show MinimalCarouselRenderer, MinimalFileUploaderRenderer;
 export 'src/renderer/minimal_groups.dart'
     show
         MinimalButtonGroupRenderer,
@@ -146,6 +149,8 @@ const CamoSkin minimalSkin = CamoSkin(
   progressSteps: MinimalProgressStepsRenderer(),
   dataTable: MinimalDataTableRenderer(),
   tree: MinimalTreeRenderer(),
+  carousel: MinimalCarouselRenderer(),
+  fileUploader: MinimalFileUploaderRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [minimalSkin] and [minimalLight] or [minimalDark].

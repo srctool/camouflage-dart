@@ -1787,3 +1787,69 @@ class ListsGallery extends StatelessWidget {
     );
   }
 }
+
+/// The M10 carousel (with buttons and dots) and file uploader (a zone, an uploading, a failed and a finished file).
+class CollectionsGallery extends StatelessWidget {
+  /// Creates the gallery.
+  const CollectionsGallery({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    const colors = [Color(0xFF6D8FB5), Color(0xFFB58F6D), Color(0xFF8FB56D)];
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        spacing: 16,
+        children: [
+          SizedBox(
+            width: 600,
+            height: 170,
+            child: CamoCarousel<Color>(
+              items: colors,
+              itemKey: (c) => c,
+              semanticLabel: 'Gallery',
+              showButtons: true,
+              itemBuilder: (context, color) => ColoredBox(
+                color: color,
+                child: const Align(
+                  alignment: Alignment.topLeft,
+                  child: CamoText('Slide'),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 600,
+            child: CamoFileUploader(
+              semanticLabel: 'Upload files',
+              hint: 'PNG or PDF, up to 5 MB',
+              onPick: () {},
+              onRemove: (_) {},
+              onRetry: (_) {},
+              files: const [
+                UploadFile(
+                  id: 'a',
+                  name: 'portrait.png',
+                  sizeBytes: 1048576,
+                  progress: 0.45,
+                ),
+                UploadFile(
+                  id: 'b',
+                  name: 'resume.pdf',
+                  sizeBytes: 2048,
+                  status: UploadStatus.failed('Too large'),
+                ),
+                UploadFile(
+                  id: 'c',
+                  name: 'notes.txt',
+                  sizeBytes: 12,
+                  status: UploadStatus.done(),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
