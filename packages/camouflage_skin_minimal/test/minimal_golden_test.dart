@@ -33,13 +33,16 @@ void main() {
     ('panels', const PanelsGallery()),
     ('actions', const ActionsGallery()),
     ('smalldata', const SmallDataGallery()),
+    ('lists', const ListsGallery()),
   ]) {
     goldenTest(
       'minimal $name',
       fileName: '${name}_minimal',
       constraints: const BoxConstraints(maxWidth: 1000),
-      // Skeletons animate forever, so the structure scene can't settle: one frame, at the start of the cycle.
-      pumpBeforeTest: name == 'structure' ? pumpOnce : onlyPumpAndSettle,
+      // Skeletons and spinners animate forever, so those scenes can't settle: one frame, at the start of the cycle.
+      pumpBeforeTest: name == 'structure' || name == 'lists'
+          ? pumpOnce
+          : onlyPumpAndSettle,
       builder: () => GoldenTestGroup(
         columns: 1,
         children: [

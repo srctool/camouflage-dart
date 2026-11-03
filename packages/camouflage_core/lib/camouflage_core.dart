@@ -54,6 +54,8 @@ export 'src/pagination/camo_pagination.dart'
 export 'src/breadcrumb/camo_breadcrumb.dart'
     hide CollapsePlan, kCamoMinTouchTargetWidth, planBreadcrumb;
 export 'src/progress_steps/camo_progress_steps.dart';
+export 'src/data_table/camo_data_table.dart';
+export 'src/tree/camo_tree.dart';
 export 'src/skeleton/camo_skeleton.dart';
 export 'src/slider/camo_slider.dart';
 export 'src/snackbar/camo_messenger.dart' hide installMessenger;

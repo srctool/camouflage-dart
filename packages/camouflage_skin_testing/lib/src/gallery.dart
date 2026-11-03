@@ -1684,3 +1684,106 @@ class SmallDataGallery extends StatelessWidget {
     );
   }
 }
+
+class _Member {
+  const _Member(this.id, this.name, this.role, this.age);
+
+  final int id;
+  final String name;
+  final String role;
+  final int age;
+}
+
+/// The M10 data table and tree: a sorted, partly selected table with a right-aligned column, and a tree with two
+/// levels open, a selected node and a node still loading its children.
+class ListsGallery extends StatelessWidget {
+  /// Creates the gallery.
+  const ListsGallery({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    const members = [
+      _Member(1, 'Ada Lovelace', 'Mathematician', 36),
+      _Member(2, 'Grace Hopper', 'Admiral', 85),
+      _Member(3, 'Linus Torvalds', 'Maintainer', 55),
+      _Member(4, 'Margaret Hamilton', 'Engineer', 88),
+    ];
+    final columns = <CamoColumn<_Member>>[
+      CamoColumn(
+        id: 'name',
+        header: 'Name',
+        sortable: true,
+        cell: (context, m) => CamoText(m.name),
+      ),
+      CamoColumn(
+        id: 'role',
+        header: 'Role',
+        width: const ColumnWidth.weight(0.8),
+        cell: (context, m) => CamoText(m.role),
+      ),
+      CamoColumn(
+        id: 'age',
+        header: 'Age',
+        width: const ColumnWidth.fixed(72),
+        align: ColumnAlign.end,
+        sortable: true,
+        cell: (context, m) => CamoText('${m.age}'),
+      ),
+    ];
+    const tree = [
+      CamoTreeNode<String>(
+        id: 'docs',
+        value: 'Documents',
+        children: [
+          CamoTreeNode<String>(id: 'cv', value: 'CV.pdf'),
+          CamoTreeNode<String>(
+            id: 'notes',
+            value: 'Notes',
+            children: [CamoTreeNode<String>(id: 'n1', value: 'Ideas.md')],
+          ),
+        ],
+      ),
+      CamoTreeNode<String>(
+        id: 'remote',
+        value: 'Shared drive',
+        hasChildren: true,
+      ),
+      CamoTreeNode<String>(id: 'readme', value: 'README.md'),
+    ];
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        spacing: 16,
+        children: [
+          SizedBox(
+            width: 600,
+            height: 230,
+            child: CamoDataTable<_Member>(
+              columns: columns,
+              rows: members,
+              rowKey: (m) => m.id,
+              semanticLabel: 'Members',
+              sort: const TableSort('name'),
+              onSortChanged: (_) {},
+              selection: const {2},
+              onSelectionChanged: (_) {},
+            ),
+          ),
+          SizedBox(
+            width: 600,
+            height: 220,
+            child: CamoTree<String>(
+              roots: tree,
+              expanded: const {'docs', 'notes', 'remote'},
+              onExpandedChanged: (_) {},
+              selected: const {'cv'},
+              onSelectedChanged: (_) {},
+              label: (v) => v,
+              semanticLabel: 'Files',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

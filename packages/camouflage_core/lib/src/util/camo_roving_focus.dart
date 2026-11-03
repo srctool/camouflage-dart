@@ -76,6 +76,7 @@ class CamoRovingFocusItem extends StatefulWidget {
     required this.selected,
     required this.onSelect,
     required this.builder,
+    this.onKey,
   });
 
   /// The item's place in the group.
@@ -92,6 +93,11 @@ class CamoRovingFocusItem extends StatefulWidget {
 
   /// Builds the item with its focus node.
   final Widget Function(BuildContext context, FocusNode focusNode) builder;
+
+  /// Looks at a key first: [move] moves focus by that many enabled items from this one (what a tree does for
+  /// "go to the parent"). Return `handled` to keep the group's arrow keys from seeing it.
+  final KeyEventResult Function(KeyEvent event, bool Function(int step) move)?
+  onKey;
 
   @override
   State<CamoRovingFocusItem> createState() => _CamoRovingFocusItemState();
@@ -146,6 +152,11 @@ class _CamoRovingFocusItemState extends State<CamoRovingFocusItem> {
     if (event is! KeyDownEvent && event is! KeyRepeatEvent) {
       return KeyEventResult.ignored;
     }
+    final custom = widget.onKey?.call(
+      event,
+      (step) => _group?.move(widget.index, step) ?? false,
+    );
+    if (custom == KeyEventResult.handled) return custom!;
     final rtl = Directionality.of(context) == TextDirection.rtl;
     final key = event.logicalKey;
     final int step;

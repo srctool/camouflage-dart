@@ -7,6 +7,7 @@ import 'input_test_renderers.dart';
 import 'nav_chrome_test_renderers.dart';
 import 'action_test_renderers.dart';
 import 'data_test_renderers.dart';
+import 'list_test_renderers.dart';
 import 'panel_test_renderers.dart';
 import 'navigation_test_renderers.dart';
 import 'overlay_test_renderers.dart';
@@ -395,6 +396,8 @@ const skinA = CamoSkin(
   pagination: PlainPagination(),
   breadcrumb: PlainBreadcrumb(),
   progressSteps: PlainProgressSteps(),
+  dataTable: PlainDataTable(),
+  tree: PlainTree(),
 );
 final skinB = skinA.copyWith(name: 'b');
 final themeT = CamoTheme(
