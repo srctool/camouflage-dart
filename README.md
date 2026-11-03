@@ -23,6 +23,7 @@ Dart implementation of Camouflage (part of the SRC Tool). This repository is als
 |---|---|
 | `camouflage_core` | the components, `CamoTheme` and the Skin contract; visually neutral, no Material |
 | `camouflage_skin_minimal` | the Minimal skin and `minimalTheme` |
+| `camouflage_charts` | charts without a chart library: sparkline now, line, bar and pie (M11) |
 | `camouflage_skin_testing` | test-only checks for any skin (M3) |
 | `example` | the example app for Android, iOS, web, macOS, Windows and Linux, built on `WidgetsApp` |
 
