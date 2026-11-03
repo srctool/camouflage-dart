@@ -14,6 +14,7 @@ import 'src/renderer/fluent_data_display.dart';
 import 'src/renderer/fluent_feedback.dart';
 import 'src/renderer/fluent_inputs.dart';
 import 'src/renderer/fluent_navigation.dart';
+import 'src/renderer/fluent_collections.dart';
 import 'src/renderer/fluent_groups.dart';
 import 'src/renderer/fluent_indicators.dart';
 import 'src/renderer/fluent_lists.dart';
@@ -51,6 +52,8 @@ export 'src/renderer/fluent_indicators.dart'
         FluentPaginationRenderer,
         FluentProgressStepsRenderer,
         FluentRatingRenderer;
+export 'src/renderer/fluent_collections.dart'
+    show FluentCarouselRenderer, FluentFileUploaderRenderer;
 export 'src/renderer/fluent_groups.dart'
     show
         FluentButtonGroupRenderer,
@@ -162,6 +165,8 @@ const CamoSkin fluentSkinDefault = CamoSkin(
   progressSteps: FluentProgressStepsRenderer(),
   dataTable: FluentDataTableRenderer(),
   tree: FluentTreeRenderer(),
+  carousel: FluentCarouselRenderer(),
+  fileUploader: FluentFileUploaderRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [fluentSkinDefault] and [fluentTheme].

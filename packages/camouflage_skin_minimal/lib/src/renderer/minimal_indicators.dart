@@ -804,3 +804,80 @@ Widget arrowUpGlyph(double size, Color? color) =>
         paint,
       );
     }, stroke: 2.5);
+
+/// An upload tray with an arrow.
+Widget uploadGlyph(double size, Color? color) =>
+    _glyph(size, color, (canvas, paint) {
+      canvas.drawPath(
+        _poly([
+          [12, 15],
+          [12, 4],
+        ]),
+        paint,
+      );
+      canvas.drawPath(
+        _poly([
+          [7, 9],
+          [12, 4],
+          [17, 9],
+        ]),
+        paint,
+      );
+      canvas.drawPath(
+        _poly([
+          [4, 15],
+          [4, 19],
+          [20, 19],
+          [20, 15],
+        ]),
+        paint,
+      );
+    });
+
+/// A cross.
+Widget closeGlyph(double size, Color? color) =>
+    _glyph(size, color, (canvas, paint) {
+      canvas.drawPath(
+        _poly([
+          [6, 6],
+          [18, 18],
+        ]),
+        paint,
+      );
+      canvas.drawPath(
+        _poly([
+          [18, 6],
+          [6, 18],
+        ]),
+        paint,
+      );
+    });
+
+/// A circular arrow.
+Widget retryGlyph(double size, Color? color) =>
+    _glyph(size, color, (canvas, paint) {
+      canvas.drawPath(
+        _poly([
+          [17.75, 7.18],
+          [19.39, 10.70],
+          [19.05, 14.57],
+          [16.82, 17.75],
+          [13.30, 19.39],
+          [9.43, 19.05],
+          [6.25, 16.82],
+          [4.61, 13.30],
+          [4.95, 9.43],
+          [7.18, 6.25],
+          [10.70, 4.61],
+        ]),
+        paint,
+      );
+      canvas.drawPath(
+        _poly([
+          [17.75, 3.68],
+          [17.75, 7.18],
+          [21.75, 7.68],
+        ]),
+        paint,
+      );
+    });

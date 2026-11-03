@@ -34,6 +34,7 @@ void main() {
     ('actions', const ActionsGallery()),
     ('smalldata', const SmallDataGallery()),
     ('lists', const ListsGallery()),
+    ('collections', const CollectionsGallery()),
   ]) {
     goldenTest(
       'minimal $name',

@@ -9,6 +9,7 @@ import '../breadcrumb/camo_breadcrumb.dart';
 import '../button/camo_button.dart';
 import '../button_group/camo_button_group.dart';
 import '../card/camo_card.dart';
+import '../carousel/camo_carousel.dart';
 import '../checkbox/camo_checkbox.dart';
 import '../chip/camo_chip.dart';
 import '../data_table/camo_data_table.dart';
@@ -16,6 +17,7 @@ import '../datepicker/camo_calendar.dart';
 import '../dialog/camo_dialog.dart';
 import '../divider/camo_divider.dart';
 import '../fab/camo_fab.dart';
+import '../file_uploader/camo_file_uploader.dart';
 import '../icon/camo_icon.dart';
 import '../icon_button/camo_icon_button.dart';
 import '../image/camo_image.dart';
@@ -103,6 +105,8 @@ class CamoComponentThemes {
     this.progressSteps,
     this.dataTable,
     this.tree,
+    this.carousel,
+    this.fileUploader,
   });
 
   /// Icons outside any component.
@@ -252,6 +256,12 @@ class CamoComponentThemes {
   /// Trees.
   final CamoTreeTheme? tree;
 
+  /// Carousels.
+  final CamoCarouselTheme? carousel;
+
+  /// File uploaders.
+  final CamoUploaderTheme? fileUploader;
+
   /// A copy with the given fields replaced.
   CamoComponentThemes copyWith({
     CamoIconTheme? icon,
@@ -303,6 +313,8 @@ class CamoComponentThemes {
     CamoStepsTheme? progressSteps,
     CamoTableTheme? dataTable,
     CamoTreeTheme? tree,
+    CamoCarouselTheme? carousel,
+    CamoUploaderTheme? fileUploader,
   }) => CamoComponentThemes(
     icon: icon ?? this.icon,
     surface: surface ?? this.surface,
@@ -353,6 +365,8 @@ class CamoComponentThemes {
     progressSteps: progressSteps ?? this.progressSteps,
     dataTable: dataTable ?? this.dataTable,
     tree: tree ?? this.tree,
+    carousel: carousel ?? this.carousel,
+    fileUploader: fileUploader ?? this.fileUploader,
   );
 
   @override
@@ -406,7 +420,9 @@ class CamoComponentThemes {
       other.breadcrumb == breadcrumb &&
       other.progressSteps == progressSteps &&
       other.dataTable == dataTable &&
-      other.tree == tree;
+      other.tree == tree &&
+      other.carousel == carousel &&
+      other.fileUploader == fileUploader;
 
   @override
   int get hashCode => Object.hashAll([
@@ -459,5 +475,7 @@ class CamoComponentThemes {
     progressSteps,
     dataTable,
     tree,
+    carousel,
+    fileUploader,
   ]);
 }
