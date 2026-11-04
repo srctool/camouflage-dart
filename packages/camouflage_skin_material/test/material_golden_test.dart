@@ -1,0 +1,60 @@
+import 'package:alchemist/alchemist.dart';
+import 'package:camouflage_core/camouflage_core.dart';
+import 'package:camouflage_skin_material/camouflage_skin_material.dart';
+import 'package:camouflage_skin_testing/camouflage_skin_testing.dart';
+import 'package:flutter/widgets.dart';
+
+// Screenshot goldens: light and dark for every component so far, plus one brand theme (an accent), light only
+// (Testing §3). Update with `flutter test --update-goldens --tags golden`.
+void main() {
+  final themes = {
+    'light': materialBaselineLight,
+    'dark': materialBaselineDark,
+    'brand': materialTheme(seed: const Color(0xFF0B57D0)),
+  };
+
+  Widget scenario(CamoTheme theme, Widget child) =>
+      CamouflagePreview(skin: materialSkin, theme: theme, child: child);
+
+  for (final (name, gallery) in [
+    ('button', const ButtonGallery()),
+    ('iconbutton', const IconButtonGallery()),
+    ('primitives', const PrimitiveGallery()),
+    ('inputs', const InputGallery()),
+    ('textinputs', const TextInputGallery()),
+    ('pickers', const PickerGallery()),
+    ('structure', const StructureGallery()),
+    ('dialogs', const DialogGallery()),
+    ('menus', const MenuGallery()),
+    ('datadisplay', const DataDisplayGallery()),
+    ('feedback', const FeedbackGallery()),
+    ('navigation', const NavigationGallery()),
+    ('navchrome', const NavigationChromeGallery()),
+    ('panels', const PanelsGallery()),
+    ('actions', const ActionsGallery()),
+    ('smalldata', const SmallDataGallery()),
+    ('lists', const ListsGallery()),
+    ('collections', const CollectionsGallery()),
+  ]) {
+    goldenTest(
+      'material $name',
+      fileName: '${name}_material',
+      constraints: const BoxConstraints(maxWidth: 1000),
+      // Skeletons and spinners animate forever, so those scenes can't settle: one frame, at the start of the cycle.
+      pumpBeforeTest: name == 'structure' || name == 'lists'
+          ? pumpOnce
+          : onlyPumpAndSettle,
+      builder: () => GoldenTestGroup(
+        columns: 1,
+        children: [
+          for (final MapEntry(:key, :value) in themes.entries)
+            GoldenTestScenario(
+              name: key,
+              constraints: const BoxConstraints(maxWidth: 1000),
+              child: scenario(value, gallery),
+            ),
+        ],
+      ),
+    );
+  }
+}
