@@ -106,6 +106,13 @@ const _months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 const _sales = ChartSeries(name: 'Sales', values: [12, 18, 15, 24, 21, 30]);
 const _costs = ChartSeries(name: 'Costs', values: [8, 10, null, 14, 13, 16]);
 
+const _traffic = [
+  PieSlice(label: 'Search', value: 45),
+  PieSlice(label: 'Social', value: 30),
+  PieSlice(label: 'Mail', value: 20),
+  PieSlice(label: 'Other', value: 5),
+];
+
 class _CartesianGallery extends StatelessWidget {
   const _CartesianGallery();
 
@@ -149,6 +156,31 @@ class _CartesianGallery extends StatelessWidget {
             orientation: BarOrientation.horizontal,
             mode: BarMode.stacked,
             plotHeight: 130,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 10,
+            children: [
+              SizedBox(
+                width: 222,
+                child: CamoPieChart(
+                  slices: _traffic,
+                  title: 'Pie',
+                  selected: 0,
+                  plotHeight: 150,
+                ),
+              ),
+              SizedBox(
+                width: 222,
+                child: CamoPieChart(
+                  slices: _traffic,
+                  title: 'Donut',
+                  donut: true,
+                  center: CamoText('100'),
+                  plotHeight: 150,
+                ),
+              ),
+            ],
           ),
         ],
       ),
