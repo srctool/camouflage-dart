@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'bar_geometry.dart';
 import 'chart_style.dart';
 import 'line_geometry.dart';
+import 'pie_geometry.dart';
 import 'sparkline_geometry.dart';
 
 /// What a sparkline draws: its [values], [kind], the [range] they scale to, the [highlight] and the draw-in
@@ -144,6 +145,57 @@ class BarChartSpec {
   final double progress;
 }
 
+/// One slice of a pie: its [start] angle and [sweep] in degrees (clockwise from 3 o'clock) and its [color].
+class PieSliceMark {
+  /// Creates a slice mark.
+  const PieSliceMark(this.start, this.sweep, this.color);
+
+  /// The start angle in degrees.
+  final double start;
+
+  /// The sweep in degrees.
+  final double sweep;
+
+  /// The slice's color.
+  final Color color;
+}
+
+/// What a pie chart draws around [center]: the [slices] between [innerRadius] (`0` for a pie) and [outerRadius],
+/// the [selected] slice moved out, the [active] one (pointer or focus) highlighted, with the draw-in [progress].
+class PieChartSpec {
+  /// Creates a pie chart spec.
+  const PieChartSpec({
+    required this.center,
+    required this.outerRadius,
+    required this.innerRadius,
+    required this.slices,
+    required this.selected,
+    required this.active,
+    required this.progress,
+  });
+
+  /// The circle's center.
+  final Offset center;
+
+  /// The outer radius.
+  final double outerRadius;
+
+  /// The hole's radius, `0` for a pie.
+  final double innerRadius;
+
+  /// The slices.
+  final List<PieSliceMark> slices;
+
+  /// The selected slice, which moves out.
+  final int? selected;
+
+  /// The slice under the pointer or focus.
+  final int? active;
+
+  /// How far the draw-in has come, 0 to 1.
+  final double progress;
+}
+
 /// Draws chart marks. The default draws lines, areas and bars from the [ResolvedChartStyle]; supply your own
 /// through [CamoChartsProvider] to take over the drawing completely (the frame, legend and tables stay).
 ///
@@ -175,6 +227,14 @@ abstract class ChartRenderer {
     BarChartSpec spec,
     ResolvedChartStyle style,
   ) => const DefaultChartRenderer().paintBarChart(canvas, size, spec, style);
+
+  /// Draws the slices of a pie or donut chart into [canvas], the whole chart box.
+  void paintPieChart(
+    Canvas canvas,
+    Size size,
+    PieChartSpec spec,
+    ResolvedChartStyle style,
+  ) => const DefaultChartRenderer().paintPieChart(canvas, size, spec, style);
 }
 
 /// Makes [renderer] the drawing for every chart below it.
@@ -462,5 +522,50 @@ class DefaultChartRenderer extends ChartRenderer {
         bottomRight: corner,
       ),
     };
+  }
+
+  @override
+  void paintPieChart(
+    Canvas canvas,
+    Size size,
+    PieChartSpec spec,
+    ResolvedChartStyle style,
+  ) {
+    final middle = (spec.outerRadius + spec.innerRadius) / 2;
+    final drawn = spec.slices.where((s) => s.sweep > 0).length;
+    final gap = drawn > 1 && middle > 0
+        ? style.sliceGap / middle * 180 / math.pi
+        : 0.0;
+    for (var i = 0; i < spec.slices.length; i++) {
+      final slice = spec.slices[i];
+      final sweep = slice.sweep * spec.progress - gap;
+      if (slice.sweep <= 0 || sweep <= 0) continue;
+      final out = i == spec.selected ? style.selectedOffset : 0.0;
+      final center = polar(spec.center, out, slice.start + slice.sweep / 2);
+      final dim = spec.active != null && spec.active != i;
+      final color = dim ? slice.color.withValues(alpha: 0.55) : slice.color;
+      final start = (slice.start + gap / 2) * math.pi / 180;
+      final radians = sweep * math.pi / 180;
+      if (spec.innerRadius <= 0) {
+        canvas.drawArc(
+          Rect.fromCircle(center: center, radius: spec.outerRadius),
+          start,
+          radians,
+          true,
+          Paint()..color = color,
+        );
+      } else {
+        canvas.drawArc(
+          Rect.fromCircle(center: center, radius: middle),
+          start,
+          radians,
+          false,
+          Paint()
+            ..color = color
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = spec.outerRadius - spec.innerRadius,
+        );
+      }
+    }
   }
 }

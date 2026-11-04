@@ -17,6 +17,7 @@ import 'inbox.dart';
 import 'navigation.dart';
 import 'navigation_shell.dart';
 import 'admin.dart';
+import 'charts.dart';
 import 'editor.dart';
 import 'lists.dart';
 import 'panels.dart';
@@ -225,6 +226,10 @@ class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
               const _Section(
                 title: 'Admin: folder, upload and review',
                 child: AdminDemo(),
+              ),
+              const _Section(
+                title: 'Dashboard: line, bar and donut charts',
+                child: ChartsDemo(),
               ),
               CamouflageProvider(
                 theme: sampleTheme(_skin, _brand, brightness).copyWith(

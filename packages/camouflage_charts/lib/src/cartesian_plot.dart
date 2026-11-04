@@ -74,6 +74,9 @@ enum LabelSide {
 
   /// Above the anchor, centered on it.
   above,
+
+  /// Centered on the anchor.
+  center,
 }
 
 /// An axis label: [text] next to the pixel position [anchor].
@@ -122,8 +125,8 @@ class PlotEnv {
   /// The height of one line of label text.
   late final double labelHeight;
 
-  TextPainter _paint(String text) => TextPainter(
-    text: TextSpan(text: text, style: style),
+  TextPainter _paint(String text, [TextStyle? override]) => TextPainter(
+    text: TextSpan(text: text, style: override ?? style),
     textDirection: rtl ? TextDirection.rtl : TextDirection.ltr,
     textScaler: textScaler,
     maxLines: 1,
@@ -170,10 +173,13 @@ class PlotEnv {
       ),
   ];
 
-  /// Draws [labels] on [canvas].
-  void paintLabels(Canvas canvas, List<AxisLabel> labels) {
+  /// Draws [labels] on [canvas], in [color] when given.
+  void paintLabels(Canvas canvas, List<AxisLabel> labels, {Color? color}) {
     for (final label in labels) {
-      final text = _paint(label.text);
+      final text = _paint(
+        label.text,
+        color == null ? null : style.copyWith(color: color),
+      );
       final w = text.width;
       final h = text.height;
       final a = label.anchor;
@@ -182,6 +188,7 @@ class PlotEnv {
         LabelSide.after => Offset(a.dx, a.dy - h / 2),
         LabelSide.below => Offset(a.dx - w / 2, a.dy),
         LabelSide.above => Offset(a.dx - w / 2, a.dy - h),
+        LabelSide.center => Offset(a.dx - w / 2, a.dy - h / 2),
       };
       text.paint(canvas, topLeft);
     }
@@ -362,13 +369,22 @@ class _TooltipLayout extends SingleChildLayoutDelegate {
 
 /// The (category, series) a key moves to: Left and Right walk categories, Up and Down series, Home and End jump.
 (int, int)? walkTarget(
-  LogicalKeyboardKey key,
+  LogicalKeyboardKey pressed,
   (int, int) at,
   int categories,
-  int series,
-) {
+  int series, {
+  bool linear = false,
+}) {
   if (categories == 0 || series == 0) return null;
   final (category, current) = at;
+  // A pie walks one way: Down is Right and Up is Left.
+  final key = !linear
+      ? pressed
+      : pressed == LogicalKeyboardKey.arrowDown
+      ? LogicalKeyboardKey.arrowRight
+      : pressed == LogicalKeyboardKey.arrowUp
+      ? LogicalKeyboardKey.arrowLeft
+      : pressed;
   if (key == LogicalKeyboardKey.arrowRight) {
     return (math.min(category + 1, categories - 1), current);
   }
@@ -394,6 +410,9 @@ class PlotInputController extends ChangeNotifier {
   Offset? _pointer;
   (int, int)? _walk;
 
+  /// Where the pointer went down, until it goes up.
+  Offset? pressedAt;
+
   /// The pointer's position in the plot, or `null` when it is away.
   Offset? get pointer => _pointer;
   set pointer(Offset? value) {
@@ -416,13 +435,27 @@ class PlotInputController extends ChangeNotifier {
   }
 
   /// Moves the walk for an arrow, Home or End key.
-  KeyEventResult key(KeyEvent event, int categories, int series) {
+  KeyEventResult key(
+    KeyEvent event,
+    int categories,
+    int series, {
+    bool linear = false,
+    VoidCallback? onActivate,
+  }) {
     if (event is KeyUpEvent) return KeyEventResult.ignored;
+    final activate =
+        event.logicalKey == LogicalKeyboardKey.enter ||
+        event.logicalKey == LogicalKeyboardKey.space;
+    if (activate && onActivate != null) {
+      onActivate();
+      return KeyEventResult.handled;
+    }
     final next = walkTarget(
       event.logicalKey,
       _walk ?? (0, 0),
       categories,
       series,
+      linear: linear,
     );
     if (next == null) return KeyEventResult.ignored;
     _pointer = null;
@@ -449,7 +482,19 @@ class PlotInputRegion extends StatelessWidget {
     required this.series,
     required this.announce,
     required this.child,
+    this.linear = false,
+    this.onActivate,
+    this.onTap,
   });
+
+  /// Whether all four arrows walk the categories (a pie).
+  final bool linear;
+
+  /// Called for Enter or Space.
+  final VoidCallback? onActivate;
+
+  /// Called with the position of a tap.
+  final ValueChanged<Offset>? onTap;
 
   /// The shared state.
   final PlotInputController controller;
@@ -474,7 +519,13 @@ class PlotInputRegion extends StatelessWidget {
     child: Focus(
       focusNode: controller.focusNode,
       onFocusChange: controller.focusChanged,
-      onKeyEvent: (node, event) => controller.key(event, categories, series),
+      onKeyEvent: (node, event) => controller.key(
+        event,
+        categories,
+        series,
+        linear: linear,
+        onActivate: onActivate,
+      ),
       child: MouseRegion(
         onExit: (_) => controller.pointer = null,
         child: Listener(
@@ -482,9 +533,15 @@ class PlotInputRegion extends StatelessWidget {
           onPointerDown: (e) {
             controller.focusNode.requestFocus();
             controller.pointer = e.localPosition;
+            controller.pressedAt = e.localPosition;
           },
           onPointerMove: (e) => controller.pointer = e.localPosition,
           onPointerUp: (e) {
+            final pressed = controller.pressedAt;
+            controller.pressedAt = null;
+            if (pressed != null && (pressed - e.localPosition).distance < 18) {
+              onTap?.call(e.localPosition);
+            }
             if (e.kind == PointerDeviceKind.touch) controller.pointer = null;
           },
           child: child,

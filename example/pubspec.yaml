@@ -11,6 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  camouflage_charts: ^0.1.0-dev.1
   camouflage_core: ^0.1.0-dev.1
   camouflage_skin_minimal: ^0.1.0-dev.1
   camouflage_skin_fluent: ^0.1.0-dev.1
