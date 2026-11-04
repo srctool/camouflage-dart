@@ -102,6 +102,60 @@ class _ChartsGallery extends StatelessWidget {
   );
 }
 
+const _months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+const _sales = ChartSeries(name: 'Sales', values: [12, 18, 15, 24, 21, 30]);
+const _costs = ChartSeries(name: 'Costs', values: [8, 10, null, 14, 13, 16]);
+
+class _CartesianGallery extends StatelessWidget {
+  const _CartesianGallery();
+
+  @override
+  Widget build(BuildContext context) => const SizedBox(
+    width: 480,
+    child: Padding(
+      padding: EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 10,
+        children: [
+          CamoLineChart(
+            categories: _months,
+            series: [_sales, _costs],
+            title: 'Line',
+            markers: MarkerVisibility.always,
+            xAxis: ChartAxis(title: 'Month'),
+            yAxis: ChartAxis(title: 'Units'),
+            plotHeight: 130,
+          ),
+          CamoLineChart(
+            categories: _months,
+            series: [_sales, _costs],
+            title: 'Stacked area, smooth',
+            kind: LineKind.stackedArea,
+            curve: LineCurve.smooth,
+            plotHeight: 130,
+          ),
+          CamoBarChart(
+            categories: _months,
+            series: [_sales, _costs],
+            title: 'Grouped',
+            valueLabels: true,
+            plotHeight: 130,
+          ),
+          CamoBarChart(
+            categories: ['Jan', 'Feb', 'Mar'],
+            series: [_sales, _costs],
+            title: 'Stacked, horizontal',
+            orientation: BarOrientation.horizontal,
+            mode: BarMode.stacked,
+            plotHeight: 130,
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 CamoTheme _still(CamoTheme theme) => theme.copyWith(
   motion: const CamoMotion(
     durationShort: Duration.zero,
@@ -137,6 +191,29 @@ void main() {
               skin: value.$1,
               theme: _still(value.$2),
               child: const _ChartsGallery(),
+            ),
+          ),
+      ],
+    ),
+  );
+
+  goldenTest(
+    'cartesian charts',
+    fileName: 'cartesian',
+    constraints: const BoxConstraints(maxWidth: 1000),
+    // The legend chips don't animate, but the frame's skeleton-free scene still settles in one frame.
+    pumpBeforeTest: pumpOnce,
+    builder: () => GoldenTestGroup(
+      columns: 1,
+      children: [
+        for (final MapEntry(:key, :value) in scenes.entries)
+          GoldenTestScenario(
+            name: key,
+            constraints: const BoxConstraints(maxWidth: 1000),
+            child: CamouflagePreview(
+              skin: value.$1,
+              theme: _still(value.$2),
+              child: const _CartesianGallery(),
             ),
           ),
       ],

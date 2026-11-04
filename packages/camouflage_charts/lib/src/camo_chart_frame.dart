@@ -7,7 +7,8 @@ import 'chart_data.dart';
 /// plot ([child]) and, when [table] is given, a switch to the same data as a table ([showTable],
 /// [onShowTableChanged]).
 ///
-/// The plot is one image node whose text is "[title]. [summary]". While [loading] a skeleton of [plotHeight]
+/// The plot is one image node whose text is "[title]. [summary]"; the plot itself adds no semantics except the
+/// announcement of a focused point. While [loading] a skeleton of [plotHeight]
 /// stands in; with no data ([isEmpty]) the [empty] widget (or "No data") does.
 class CamoChartFrame extends StatelessWidget {
   /// Creates a chart frame.
@@ -80,7 +81,6 @@ class CamoChartFrame extends StatelessWidget {
         container: true,
         image: true,
         label: '$title. $summary',
-        excludeSemantics: true,
         child: child,
       );
     }
