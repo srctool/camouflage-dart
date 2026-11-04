@@ -178,7 +178,7 @@ void main() {
         const CamoChartFrame(
           title: 'Revenue',
           summary: 'Line chart, 2 series',
-          child: CamoText('plot'),
+          child: SizedBox(),
         ),
       ),
     );
@@ -295,7 +295,7 @@ void main() {
   });
 }
 
-class _Counting implements ChartRenderer {
+class _Counting extends ChartRenderer {
   int painted = 0;
   double lastProgress = -1;
 
