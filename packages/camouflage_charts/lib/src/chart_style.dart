@@ -276,6 +276,16 @@ abstract final class CamoCharts {
       donutThickness: 0.4,
       sliceGap: 2,
     ),
+    'carbon': const ChartStyle(
+      lineWidth: 1.5,
+      markerSize: 6,
+      areaOpacity: 0.3,
+      barRadius: 0,
+      barGap: 1,
+      gridDashed: true,
+      donutThickness: 0.35,
+      sliceGap: 1,
+    ),
     'material': const ChartStyle(
       lineWidth: 3,
       markerSize: 8,
