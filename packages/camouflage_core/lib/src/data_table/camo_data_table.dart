@@ -8,6 +8,7 @@ import '../skin/interaction.dart';
 import '../theme/camo_theme.dart';
 import '../util/camo_behavior.dart';
 import '../util/camo_roving_focus.dart';
+import '../util/camo_touch_target.dart';
 
 /// Every color a data table uses.
 @immutable
@@ -567,11 +568,14 @@ class CamoDataTable<T> extends StatelessWidget {
                   SizedBox(
                     width: _selectColumn,
                     child: Center(
-                      child: Semantics(
-                        label: 'Select all rows',
-                        child: CamoCheckbox(
-                          checked: allSelected,
-                          onChanged: (_) => toggleAll(),
+                      // The header can be shorter than 48; the semantics still cover the target.
+                      child: CamoTouchSemantics(
+                        child: Semantics(
+                          label: 'Select all rows',
+                          child: CamoCheckbox(
+                            checked: allSelected,
+                            onChanged: (_) => toggleAll(),
+                          ),
                         ),
                       ),
                     ),
