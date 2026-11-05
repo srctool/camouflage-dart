@@ -99,3 +99,54 @@ class _RenderTouchTarget extends RenderShiftedBox {
     );
   }
 }
+
+/// Makes the semantics of [child] cover at least [minSize], centered on it, without changing layout or painting:
+/// the merged node a screen reader's explore-by-touch finds is the platform-sized target even when the control is
+/// drawn smaller (the Kotlin `minimumTouchTarget` does the same for its touch bounds). The semantics of the
+/// descendants merge into this one node, so use it around one interactive control, not around a group.
+class CamoTouchSemantics extends SingleChildRenderObjectWidget {
+  /// Creates the wrapper around [child].
+  const CamoTouchSemantics({
+    super.key,
+    this.minSize = const Size.square(kCamoMinTouchTarget),
+    super.child,
+  });
+
+  /// The smallest semantic size.
+  final Size minSize;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _RenderTouchSemantics(minSize);
+
+  @override
+  void updateRenderObject(BuildContext context, RenderObject renderObject) {
+    (renderObject as _RenderTouchSemantics).minSize = minSize;
+  }
+}
+
+class _RenderTouchSemantics extends RenderProxyBox {
+  _RenderTouchSemantics(this._minSize);
+
+  Size _minSize;
+  set minSize(Size value) {
+    if (value == _minSize) return;
+    _minSize = value;
+    markNeedsSemanticsUpdate();
+  }
+
+  @override
+  Rect get semanticBounds {
+    final dx = math.max(0.0, (_minSize.width - size.width) / 2);
+    final dy = math.max(0.0, (_minSize.height - size.height) / 2);
+    return Rect.fromLTRB(-dx, -dy, size.width + dx, size.height + dy);
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    config
+      ..isSemanticBoundary = true
+      ..isMergingSemanticsOfDescendants = true;
+  }
+}

@@ -487,6 +487,7 @@ class _CamoStepperState extends State<CamoStepper> {
       onPointerUp: (_) => _stopRepeat(),
       onPointerCancel: (_) => _stopRepeat(),
       child: CamoBehavior(
+        touchSemantics: true,
         controller: controller,
         enabled: enabled,
         onActivate: () {

@@ -403,6 +403,7 @@ class _CamoIconButtonState extends State<CamoIconButton> {
       final a => a,
     };
     final Widget button = CamoBehavior(
+      touchSemantics: true,
       controller: _interaction,
       enabled: enabled,
       focusNode: widget.focusNode,

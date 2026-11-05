@@ -1,6 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import '../util/camo_touch_target.dart';
+
 import '../icon/camo_icon.dart';
 import '../provider/camouflage.dart';
 import '../skin/interaction.dart';
@@ -733,44 +735,49 @@ class _CamoFieldActionState extends State<CamoFieldAction> {
     final icon = Camouflage.iconStyleOf(context);
     final enabled = widget.onPressed != null;
     final side = icon.size + theme.spacing.s;
-    return FocusableActionDetector(
-      enabled: enabled,
-      mouseCursor: enabled ? SystemMouseCursors.click : MouseCursor.defer,
-      onFocusChange: (f) => _interaction.setFocused(
-        f,
-        byKeyboard:
-            f &&
-            FocusManager.instance.highlightMode ==
-                FocusHighlightMode.traditional,
-      ),
-      onShowHoverHighlight: _interaction.setHovered,
-      actions: {
-        ActivateIntent: CallbackAction<ActivateIntent>(
-          onInvoke: (_) => widget.onPressed?.call(),
+    return CamoTouchSemantics(
+      child: FocusableActionDetector(
+        enabled: enabled,
+        mouseCursor: enabled ? SystemMouseCursors.click : MouseCursor.defer,
+        onFocusChange: (f) => _interaction.setFocused(
+          f,
+          byKeyboard:
+              f &&
+              FocusManager.instance.highlightMode ==
+                  FocusHighlightMode.traditional,
         ),
-      },
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTapDown: enabled
-            ? (d) => _interaction.pressDown(d.localPosition)
-            : null,
-        onTapUp: enabled ? (_) => _interaction.pressEnd() : null,
-        onTapCancel: enabled ? _interaction.pressEnd : null,
-        onTap: widget.onPressed,
-        child: Semantics(
-          button: true,
-          enabled: enabled,
-          label: widget.semanticLabel,
-          excludeSemantics: true,
-          child: skin.feedback.wrap(
-            controller: _interaction,
-            contentColor: icon.color,
-            shape: BorderRadius.circular(side / 2),
-            theme: theme,
-            child: SizedBox.square(
-              dimension: side,
-              child: Center(
-                child: Opacity(opacity: enabled ? 1 : 0.38, child: widget.icon),
+        onShowHoverHighlight: _interaction.setHovered,
+        actions: {
+          ActivateIntent: CallbackAction<ActivateIntent>(
+            onInvoke: (_) => widget.onPressed?.call(),
+          ),
+        },
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTapDown: enabled
+              ? (d) => _interaction.pressDown(d.localPosition)
+              : null,
+          onTapUp: enabled ? (_) => _interaction.pressEnd() : null,
+          onTapCancel: enabled ? _interaction.pressEnd : null,
+          onTap: widget.onPressed,
+          child: Semantics(
+            button: true,
+            enabled: enabled,
+            label: widget.semanticLabel,
+            excludeSemantics: true,
+            child: skin.feedback.wrap(
+              controller: _interaction,
+              contentColor: icon.color,
+              shape: BorderRadius.circular(side / 2),
+              theme: theme,
+              child: SizedBox.square(
+                dimension: side,
+                child: Center(
+                  child: Opacity(
+                    opacity: enabled ? 1 : 0.38,
+                    child: widget.icon,
+                  ),
+                ),
               ),
             ),
           ),

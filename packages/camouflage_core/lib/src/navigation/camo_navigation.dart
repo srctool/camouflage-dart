@@ -788,6 +788,22 @@ class _CamoNavItemButtonState<T> extends State<CamoNavItemButton<T>> {
             );
           }(),
         };
+    // An item whose label isn't drawn is still named for screen readers (a drawn label names it by itself).
+    final labelHidden = switch (group?.host ?? _NavHost.bar) {
+      _NavHost.bar => !_showsLabel(
+        skin.navigationBar
+            .defaults(theme)
+            .merge(theme.components.navigationBar)
+            .showLabels,
+      ),
+      _NavHost.rail => !_showsLabel(
+        skin.navigationRail
+            .defaults(theme)
+            .merge(theme.components.navigationRail)
+            .showLabels,
+      ),
+      _NavHost.drawer => false,
+    };
     final drawer = context.dependOnInheritedWidgetOfExactType<_DrawerScope>();
     void press() {
       widget.onPressed();
@@ -804,10 +820,12 @@ class _CamoNavItemButtonState<T> extends State<CamoNavItemButton<T>> {
         enabled: enabled,
         focusNode: node,
         onActivate: press,
+        touchSemantics: true,
         semantics: (child) => Semantics(
           role: SemanticsRole.tab,
           enabled: enabled,
           selected: widget.selected,
+          label: labelHidden ? item.label : null,
           child: child,
         ),
         child: ListenableBuilder(listenable: _interaction, builder: visual),
