@@ -502,6 +502,7 @@ class _GroupButtonWidgetState extends State<_GroupButtonWidget> {
       selected: false,
       onSelect: () {},
       builder: (context, node) => CamoBehavior(
+        touchSemantics: true,
         controller: _interaction,
         enabled: enabled,
         focusNode: node,

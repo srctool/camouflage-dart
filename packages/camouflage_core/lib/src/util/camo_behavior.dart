@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 
+import 'camo_touch_target.dart';
+
 import '../skin/interaction.dart';
 
 /// The behavior a component wraps around its renderer's output: focus and keyboard activation (Enter, Space),
@@ -13,6 +15,7 @@ class CamoBehavior extends StatelessWidget {
     required this.enabled,
     required this.onActivate,
     required this.semantics,
+    this.touchSemantics = false,
     required this.child,
     this.focusNode,
   });
@@ -29,6 +32,10 @@ class CamoBehavior extends StatelessWidget {
   /// Wraps [child] in the component's semantics.
   final Widget Function(Widget child) semantics;
 
+  /// Whether the control's semantics cover at least the minimum touch target ([CamoTouchSemantics]), for a leaf
+  /// control drawn smaller than 48.
+  final bool touchSemantics;
+
   /// An optional focus node the app controls.
   final FocusNode? focusNode;
 
@@ -37,7 +44,7 @@ class CamoBehavior extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FocusableActionDetector(
+    final detector = FocusableActionDetector(
       enabled: enabled,
       focusNode: focusNode,
       mouseCursor: enabled ? SystemMouseCursors.click : MouseCursor.defer,
@@ -65,5 +72,6 @@ class CamoBehavior extends StatelessWidget {
         child: semantics(child),
       ),
     );
+    return touchSemantics ? CamoTouchSemantics(child: detector) : detector;
   }
 }

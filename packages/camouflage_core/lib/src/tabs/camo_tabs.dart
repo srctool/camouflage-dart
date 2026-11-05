@@ -896,6 +896,7 @@ class _CamoTabItemState<T> extends State<CamoTabItem<T>> {
         enabled: enabled,
         focusNode: node,
         onActivate: widget.onPressed,
+        touchSemantics: true,
         semantics: (child) => Semantics(
           role: SemanticsRole.tab,
           enabled: enabled,

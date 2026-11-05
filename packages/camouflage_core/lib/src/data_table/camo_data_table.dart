@@ -749,52 +749,60 @@ class _BodyRowState<T> extends State<_BodyRow<T>> {
       enabled: true,
       selected: selected,
       onSelect: () {},
-      builder: (context, node) => CamoBehavior(
-        controller: _interaction,
-        enabled: true,
-        focusNode: node,
-        onActivate: act,
-        semantics: (child) =>
-            Semantics(container: true, selected: selected, child: child),
-        child: ListenableBuilder(
-          listenable: _interaction,
-          builder: (context, _) => skin.dataTable.renderRow(
-            context,
-            RowState(
-              index: widget.index,
-              selected: selected,
-              striped: widget.index.isOdd,
-              interaction: _interaction.value,
-              controller: _interaction,
-            ),
-            theme,
-            style,
-            [
-              if (selection != null)
-                SizedBox(
-                  width: _selectColumn,
-                  child: Center(
-                    child: Semantics(
-                      label: 'Select row',
-                      child: CamoCheckbox(
-                        checked: selected,
-                        onChanged: (_) => widget.toggle(widget.rowKey),
+      builder: (context, node) => Semantics(
+        // Names the row's own tap node (selection); the cells keep their nodes.
+        label: 'Row ${widget.index + 1}',
+        child: CamoBehavior(
+          controller: _interaction,
+          enabled: true,
+          focusNode: node,
+          onActivate: act,
+          semantics: (child) => Semantics(
+            container: true,
+            selected: selected,
+            label: 'Row ${widget.index + 1}',
+            child: child,
+          ),
+          child: ListenableBuilder(
+            listenable: _interaction,
+            builder: (context, _) => skin.dataTable.renderRow(
+              context,
+              RowState(
+                index: widget.index,
+                selected: selected,
+                striped: widget.index.isOdd,
+                interaction: _interaction.value,
+                controller: _interaction,
+              ),
+              theme,
+              style,
+              [
+                if (selection != null)
+                  SizedBox(
+                    width: _selectColumn,
+                    child: Center(
+                      child: Semantics(
+                        label: 'Select row',
+                        child: CamoCheckbox(
+                          checked: selected,
+                          onChanged: (_) => widget.toggle(widget.rowKey),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              for (final column in widget.columns)
-                widget.sized(
-                  column.width,
-                  skin.dataTable.renderCell(
-                    context,
-                    column.align,
-                    theme,
-                    style,
-                    column.cell(context, widget.row),
+                for (final column in widget.columns)
+                  widget.sized(
+                    column.width,
+                    skin.dataTable.renderCell(
+                      context,
+                      column.align,
+                      theme,
+                      style,
+                      column.cell(context, widget.row),
+                    ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

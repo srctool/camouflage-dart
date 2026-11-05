@@ -509,6 +509,7 @@ class _CamoButtonState extends State<CamoButton> {
     final enabled = widget.onPressed != null;
     final loading = widget.loading && enabled;
     return CamoBehavior(
+      touchSemantics: true,
       controller: _interaction,
       enabled: enabled,
       focusNode: widget.focusNode,

@@ -344,6 +344,7 @@ class _CamoSplitButtonState extends State<CamoSplitButton> {
     bool? expanded,
     Widget child,
   ) => CamoBehavior(
+    touchSemantics: true,
     controller: controller,
     enabled: widget.enabled,
     onActivate: onActivate,

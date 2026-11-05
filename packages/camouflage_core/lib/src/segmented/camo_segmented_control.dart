@@ -476,6 +476,7 @@ class _CamoSegmentButtonState<T> extends State<CamoSegmentButton<T>> {
           enabled: enabled,
           focusNode: node,
           onActivate: widget.onPressed,
+          touchSemantics: true,
           semantics: (child) => Semantics(
             enabled: enabled,
             checked: widget.selected,

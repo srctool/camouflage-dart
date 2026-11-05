@@ -239,9 +239,22 @@ class InputGallery extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             spacing: 16,
             children: [
-              CamoCheckbox(checked: false, onChanged: ignore),
-              CamoCheckbox(checked: true, onChanged: ignore),
-              CamoCheckbox(checked: true, onChanged: ignore, enabled: false),
+              Semantics(
+                label: 'Unchecked',
+                child: CamoCheckbox(checked: false, onChanged: ignore),
+              ),
+              Semantics(
+                label: 'Checked',
+                child: CamoCheckbox(checked: true, onChanged: ignore),
+              ),
+              Semantics(
+                label: 'Checked, disabled',
+                child: CamoCheckbox(
+                  checked: true,
+                  onChanged: ignore,
+                  enabled: false,
+                ),
+              ),
               CamoCheckbox(
                 checked: true,
                 onChanged: ignore,

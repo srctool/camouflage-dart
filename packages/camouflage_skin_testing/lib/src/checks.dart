@@ -117,3 +117,37 @@ Future<void> assertNoLiterals<S>(
     reason: 'the renderer ignored a field of $oddStyle (size $size)',
   );
 }
+
+/// The accessibility guidelines every interactive element must meet (Testing §3.4): a tap target of 48 (Android)
+/// and 44 (iOS) logical pixels, and a label on every tappable. Pumps [child] under [skin] and [theme] at
+/// [textScale] and in [textDirection] on a tall window, with semantics on.
+Future<void> expectAccessibleScreen(
+  WidgetTester tester, {
+  required CamoSkin skin,
+  required CamoTheme theme,
+  required Widget child,
+  double textScale = 1,
+  TextDirection textDirection = TextDirection.ltr,
+}) async {
+  final semantics = tester.ensureSemantics();
+  tester.view.physicalSize = const Size(1000, 4000);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.reset);
+  try {
+    await tester.pumpWidget(
+      camoTestApp(
+        skin: skin,
+        theme: theme,
+        child: child,
+        textScale: textScale,
+        textDirection: textDirection,
+      ),
+    );
+    await tester.pump(const Duration(milliseconds: 500));
+    await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
+    await expectLater(tester, meetsGuideline(iOSTapTargetGuideline));
+    await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
+  } finally {
+    semantics.dispose();
+  }
+}
