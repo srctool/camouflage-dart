@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:camouflage_core/camouflage_core.dart';
+import 'package:camouflage_skin_cupertino/camouflage_skin_cupertino.dart';
 import 'package:camouflage_skin_fluent/camouflage_skin_fluent.dart';
 import 'package:camouflage_skin_material/camouflage_skin_material.dart';
 import 'package:camouflage_skin_minimal/camouflage_skin_minimal.dart';
@@ -52,6 +53,12 @@ enum SampleSkin {
   /// Material Design 3.
   material('Material'),
 
+  /// Apple's HIG with Classic blur materials.
+  cupertino('Cupertino'),
+
+  /// Apple's HIG with Liquid Glass.
+  cupertinoGlass('Cupertino Glass'),
+
   /// The reference renderers.
   debug('Debug');
 
@@ -66,6 +73,8 @@ enum SampleSkin {
     SampleSkin.fluent => fluentSkinDefault,
     SampleSkin.fluentAcrylic => _acrylic,
     SampleSkin.material => materialSkin,
+    SampleSkin.cupertino => cupertinoSkin,
+    SampleSkin.cupertinoGlass => _glass,
     SampleSkin.debug => debugSkin,
   };
 
@@ -78,6 +87,8 @@ enum SampleSkin {
     SampleSkin.minimal => minimalTheme(brightness: b),
     SampleSkin.fluent || SampleSkin.fluentAcrylic => fluentTheme(brightness: b),
     SampleSkin.material => materialTheme(brightness: b),
+    SampleSkin.cupertino ||
+    SampleSkin.cupertinoGlass => cupertinoTheme(brightness: b),
     SampleSkin.debug => CamoTheme(
       colors: CamoColors.fromSeed(primary: _debugSeed, brightness: b),
       typography: CamoTypography.system(),
@@ -94,6 +105,9 @@ CamoTheme sampleTheme(SampleSkin skin, Brand brand, Brightness brightness) {
       ? fluentTheme(brand: seed, brightness: brightness)
       : skin == SampleSkin.material && seed != null
       ? materialTheme(seed: seed, brightness: brightness)
+      : (skin == SampleSkin.cupertino || skin == SampleSkin.cupertinoGlass) &&
+            seed != null
+      ? cupertinoTheme(accent: seed, brightness: brightness)
       : skin.theme(brightness);
   return brand.on(base, brightness);
 }
@@ -567,3 +581,6 @@ class _Progress extends StatelessWidget {
 }
 
 final CamoSkin _acrylic = fluentSkin(surface: FluentSurface.acrylic);
+final CamoSkin _glass = cupertinoSkinWith(
+  surface: CupertinoSurface.liquidGlass,
+);

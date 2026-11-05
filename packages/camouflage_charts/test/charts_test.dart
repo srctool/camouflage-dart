@@ -1,5 +1,6 @@
 import 'package:camouflage_charts/camouflage_charts.dart';
 import 'package:camouflage_core/camouflage_core.dart';
+import 'package:camouflage_skin_cupertino/camouflage_skin_cupertino.dart';
 import 'package:camouflage_skin_fluent/camouflage_skin_fluent.dart';
 import 'package:camouflage_skin_material/camouflage_skin_material.dart';
 import 'package:camouflage_skin_minimal/camouflage_skin_minimal.dart';
@@ -78,6 +79,7 @@ void main() {
     late ResolvedChartStyle minimal;
     late ResolvedChartStyle fluent;
     late ResolvedChartStyle material;
+    late ResolvedChartStyle cupertino;
     await tester.pumpWidget(
       _app(_Capture((s) => minimal = s), skin: minimalSkin),
     );
@@ -86,6 +88,13 @@ void main() {
         _Capture((s) => material = s),
         skin: materialSkin,
         theme: materialBaselineLight,
+      ),
+    );
+    await tester.pumpWidget(
+      _app(
+        _Capture((s) => cupertino = s),
+        skin: cupertinoSkin,
+        theme: cupertinoLight,
       ),
     );
     await tester.pumpWidget(
@@ -102,6 +111,9 @@ void main() {
     expect(material.lineWidth, 3);
     expect(material.barRadius, 8);
     expect(material.donutThickness, 0.3);
+    expect(cupertino.lineWidth, 2);
+    expect(cupertino.barRadius, 4);
+    expect(cupertino.donutThickness, 0.4);
   });
 
   testWidgets('tokens, then parameters, override presets', (tester) async {

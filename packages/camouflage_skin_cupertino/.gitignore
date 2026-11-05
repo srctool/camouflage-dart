@@ -1,0 +1,4 @@
+test/goldens/macos/
+test/goldens/linux/
+test/goldens/windows/
+test/failures/
