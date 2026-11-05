@@ -17,6 +17,7 @@ dependencies:
 dev_dependencies:
   alchemist: ^0.14.1                     # screenshot goldens (CI goldens on Linux)
   camouflage_skin_cupertino: ^0.1.0-dev.1 # test-only, same layer (ADR-27)
+  camouflage_skin_carbon: ^0.1.0-dev.1 # test-only, same layer (ADR-27)
   camouflage_skin_fluent: ^0.1.0-dev.1    # test-only, same layer (ADR-27)
   camouflage_skin_material: ^0.1.0-dev.1  # test-only, same layer (ADR-27)
   camouflage_skin_minimal: ^0.1.0-dev.1   # test-only, same layer (ADR-27)

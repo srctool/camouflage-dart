@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:camouflage_core/camouflage_core.dart';
+import 'package:camouflage_skin_carbon/camouflage_skin_carbon.dart';
 import 'package:camouflage_skin_cupertino/camouflage_skin_cupertino.dart';
 import 'package:camouflage_skin_fluent/camouflage_skin_fluent.dart';
 import 'package:camouflage_skin_material/camouflage_skin_material.dart';
@@ -59,6 +60,9 @@ enum SampleSkin {
   /// Apple's HIG with Liquid Glass.
   cupertinoGlass('Cupertino Glass'),
 
+  /// IBM Carbon: square, layered, flat.
+  carbon('Carbon'),
+
   /// The reference renderers.
   debug('Debug');
 
@@ -75,6 +79,7 @@ enum SampleSkin {
     SampleSkin.material => materialSkin,
     SampleSkin.cupertino => cupertinoSkin,
     SampleSkin.cupertinoGlass => _glass,
+    SampleSkin.carbon => carbonSkin,
     SampleSkin.debug => debugSkin,
   };
 
@@ -89,12 +94,17 @@ enum SampleSkin {
     SampleSkin.material => materialTheme(brightness: b),
     SampleSkin.cupertino ||
     SampleSkin.cupertinoGlass => cupertinoTheme(brightness: b),
+    SampleSkin.carbon => carbonTheme(family: _carbonFamily(b)),
     SampleSkin.debug => CamoTheme(
       colors: CamoColors.fromSeed(primary: _debugSeed, brightness: b),
       typography: CamoTypography.system(),
     ),
   };
 }
+
+// Carbon's light theme is White, its dark one G100.
+CarbonThemeFamily _carbonFamily(Brightness b) =>
+    b == Brightness.dark ? CarbonThemeFamily.g100 : CarbonThemeFamily.white;
 
 /// A brand on a skin's starter theme, light or dark: everything the example can switch. A skin with its own
 /// token set takes the brand color too (Fluent derives its hover and pressed steps from it), so the brand reaches
@@ -108,6 +118,8 @@ CamoTheme sampleTheme(SampleSkin skin, Brand brand, Brightness brightness) {
       : (skin == SampleSkin.cupertino || skin == SampleSkin.cupertinoGlass) &&
             seed != null
       ? cupertinoTheme(accent: seed, brightness: brightness)
+      : skin == SampleSkin.carbon && seed != null
+      ? carbonTheme(family: _carbonFamily(brightness), accent: seed)
       : skin.theme(brightness);
   return brand.on(base, brightness);
 }

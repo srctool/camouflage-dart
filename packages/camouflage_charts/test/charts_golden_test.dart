@@ -1,6 +1,7 @@
 import 'package:alchemist/alchemist.dart';
 import 'package:camouflage_charts/camouflage_charts.dart';
 import 'package:camouflage_core/camouflage_core.dart';
+import 'package:camouflage_skin_carbon/camouflage_skin_carbon.dart';
 import 'package:camouflage_skin_cupertino/camouflage_skin_cupertino.dart';
 import 'package:camouflage_skin_fluent/camouflage_skin_fluent.dart';
 import 'package:camouflage_skin_material/camouflage_skin_material.dart';
@@ -211,6 +212,8 @@ void main() {
     'material dark': (materialSkin, materialBaselineDark),
     'cupertino light': (cupertinoSkin, cupertinoLight),
     'cupertino dark': (cupertinoSkin, cupertinoDark),
+    'carbon light': (carbonSkin, carbonLight),
+    'carbon dark': (carbonSkin, carbonDark),
   };
   goldenTest(
     'charts',
