@@ -1,6 +1,7 @@
 import 'package:camouflage_charts/camouflage_charts.dart';
 import 'package:camouflage_core/camouflage_core.dart';
 import 'package:camouflage_skin_fluent/camouflage_skin_fluent.dart';
+import 'package:camouflage_skin_material/camouflage_skin_material.dart';
 import 'package:camouflage_skin_minimal/camouflage_skin_minimal.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -76,8 +77,16 @@ void main() {
   testWidgets("the skin's preset shapes the style", (tester) async {
     late ResolvedChartStyle minimal;
     late ResolvedChartStyle fluent;
+    late ResolvedChartStyle material;
     await tester.pumpWidget(
       _app(_Capture((s) => minimal = s), skin: minimalSkin),
+    );
+    await tester.pumpWidget(
+      _app(
+        _Capture((s) => material = s),
+        skin: materialSkin,
+        theme: materialBaselineLight,
+      ),
     );
     await tester.pumpWidget(
       _app(
@@ -90,6 +99,9 @@ void main() {
     expect(fluent.lineWidth, 2);
     expect(fluent.gridDashed, isTrue);
     expect(minimal.gridDashed, isFalse);
+    expect(material.lineWidth, 3);
+    expect(material.barRadius, 8);
+    expect(material.donutThickness, 0.3);
   });
 
   testWidgets('tokens, then parameters, override presets', (tester) async {

@@ -1,0 +1,23 @@
+name: camouflage_skin_material
+description: "The Material 3 skin: Paper surfaces, Ripple feedback and M3 proportions, drawn on widgets with material_ui for the ink."
+version: 0.1.0-dev.1
+repository: https://github.com/srctool/camouflage-dart
+issue_tracker: https://github.com/srctool/camouflage-dart/issues
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+  flutter: ">=3.47.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  camouflage_core: ^0.1.0-dev.1
+  material_ui: ^1.0.0                     # the ink ripple only; this is the one package allowed to depend on it
+
+dev_dependencies:
+  alchemist: ^0.14.1                     # screenshot goldens (CI goldens on Linux)
+  camouflage_skin_testing: ^0.1.0-dev.1   # test-only, same layer (ADR-27)
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:camouflage_core/camouflage_core.dart';
 import 'package:camouflage_skin_fluent/camouflage_skin_fluent.dart';
+import 'package:camouflage_skin_material/camouflage_skin_material.dart';
 import 'package:camouflage_skin_minimal/camouflage_skin_minimal.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -48,6 +49,9 @@ enum SampleSkin {
   /// Fluent 2 with Acrylic flyouts and dialogs.
   fluentAcrylic('Fluent Acrylic'),
 
+  /// Material Design 3.
+  material('Material'),
+
   /// The reference renderers.
   debug('Debug');
 
@@ -61,6 +65,7 @@ enum SampleSkin {
     SampleSkin.minimal => minimalSkin,
     SampleSkin.fluent => fluentSkinDefault,
     SampleSkin.fluentAcrylic => _acrylic,
+    SampleSkin.material => materialSkin,
     SampleSkin.debug => debugSkin,
   };
 
@@ -72,6 +77,7 @@ enum SampleSkin {
   CamoTheme theme(Brightness b) => switch (this) {
     SampleSkin.minimal => minimalTheme(brightness: b),
     SampleSkin.fluent || SampleSkin.fluentAcrylic => fluentTheme(brightness: b),
+    SampleSkin.material => materialTheme(brightness: b),
     SampleSkin.debug => CamoTheme(
       colors: CamoColors.fromSeed(primary: _debugSeed, brightness: b),
       typography: CamoTypography.system(),
@@ -86,6 +92,8 @@ CamoTheme sampleTheme(SampleSkin skin, Brand brand, Brightness brightness) {
   final seed = brand.tokens?.brand[600];
   final base = skin.isFluent && seed != null
       ? fluentTheme(brand: seed, brightness: brightness)
+      : skin == SampleSkin.material && seed != null
+      ? materialTheme(seed: seed, brightness: brightness)
       : skin.theme(brightness);
   return brand.on(base, brightness);
 }

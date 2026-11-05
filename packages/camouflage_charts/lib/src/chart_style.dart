@@ -267,6 +267,15 @@ abstract final class CamoCharts {
       gridDashed: true,
       sliceGap: 3,
     ),
+    'material': const ChartStyle(
+      lineWidth: 3,
+      markerSize: 8,
+      areaOpacity: 0.16,
+      barRadius: 8,
+      barGap: 2,
+      donutThickness: 0.3,
+      sliceGap: 4,
+    ),
   };
 
   /// Sets the preset charts use while the skin named [skinName] is active.

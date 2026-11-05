@@ -88,8 +88,12 @@ class _PanelsDemoState extends State<PanelsDemo> {
                 ),
               ),
             ),
+            // Flexible, so a docked sheet wider than the room (Material's is 360) shrinks instead of overflowing.
             if (_details)
-              _sheet(onClose: () => setState(() => _details = false)),
+              Flexible(
+                flex: 2,
+                child: _sheet(onClose: () => setState(() => _details = false)),
+              ),
           ],
         ),
       ),
