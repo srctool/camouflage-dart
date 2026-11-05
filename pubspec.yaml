@@ -9,6 +9,7 @@ workspace:
   - packages/camouflage_skin_minimal
   - packages/camouflage_skin_fluent
   - packages/camouflage_skin_material
+  - packages/camouflage_skin_cupertino
   - packages/camouflage_skin_testing
   - packages/camouflage_charts
   - example

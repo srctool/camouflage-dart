@@ -28,6 +28,22 @@ void main() {
     await settleProducts(tester);
   });
 
+  testWidgets('the example switches to the Cupertino skin and its glass', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1200, 4000);
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(const CamouflageExampleApp());
+    await tester.pump();
+    await tester.tap(find.text('Cupertino'));
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(find.text('solid'), findsNWidgets(4));
+    await tester.tap(find.text('Cupertino Glass'));
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(find.text('solid'), findsNWidgets(4));
+    await settleProducts(tester);
+  });
+
   testWidgets('the example switches to the Material skin', (tester) async {
     tester.view.physicalSize = const Size(1200, 4000);
     addTearDown(tester.view.reset);

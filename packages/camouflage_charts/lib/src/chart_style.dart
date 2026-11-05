@@ -267,6 +267,15 @@ abstract final class CamoCharts {
       gridDashed: true,
       sliceGap: 3,
     ),
+    'cupertino': const ChartStyle(
+      lineWidth: 2,
+      markerSize: 7,
+      areaOpacity: 0.2,
+      barRadius: 4,
+      barGap: 2,
+      donutThickness: 0.4,
+      sliceGap: 2,
+    ),
     'material': const ChartStyle(
       lineWidth: 3,
       markerSize: 8,
