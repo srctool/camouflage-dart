@@ -11,13 +11,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  camouflage_charts: ^0.1.0-dev.1
-  camouflage_core: ^0.1.0-dev.1
-  camouflage_skin_minimal: ^0.1.0-dev.1
-  camouflage_skin_fluent: ^0.1.0-dev.1
-  camouflage_skin_material: ^0.1.0-dev.1
-  camouflage_skin_cupertino: ^0.1.0-dev.1
-  camouflage_skin_carbon: ^0.1.0-dev.1
+  camouflage_charts: ^0.1.0
+  camouflage_core: ^0.1.0
+  camouflage_skin_minimal: ^0.1.0
+  camouflage_skin_fluent: ^0.1.0
+  camouflage_skin_material: ^0.1.0
+  camouflage_skin_cupertino: ^0.1.0
+  camouflage_skin_carbon: ^0.1.0
   intl: ^0.20.2           # date and time names for every locale: initializeDateFormatting (CamoDatePicker)
   flutter_svg: ^2.3.0   # the AppIcon pattern: SVG assets, an app-side dependency (CamoIcon §3)
 

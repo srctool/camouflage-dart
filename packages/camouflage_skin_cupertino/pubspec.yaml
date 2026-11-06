@@ -1,6 +1,6 @@
 name: camouflage_skin_cupertino
 description: "The Cupertino skin: Apple HIG anatomy, blur materials and Liquid Glass, press-fade feedback. Widgets layer only, no Material or Cupertino."
-version: 0.1.0-dev.1
+version: 0.1.0
 repository: https://github.com/srctool/camouflage-dart
 issue_tracker: https://github.com/srctool/camouflage-dart/issues
 resolution: workspace
@@ -12,11 +12,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  camouflage_core: ^0.1.0-dev.1
+  camouflage_core: ^0.1.0
 
 dev_dependencies:
   alchemist: ^0.14.1                     # screenshot goldens (CI goldens on Linux)
-  camouflage_skin_testing: ^0.1.0-dev.1   # test-only, same layer (ADR-27)
+  camouflage_skin_testing: ^0.1.0   # test-only, same layer (ADR-27)
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter

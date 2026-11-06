@@ -1,6 +1,6 @@
 name: camouflage_skin_testing
 description: "Test-only checks for any Camouflage skin: renderers apply behavior, and no literals."
-version: 0.1.0-dev.1
+version: 0.1.0
 repository: https://github.com/srctool/camouflage-dart
 issue_tracker: https://github.com/srctool/camouflage-dart/issues
 resolution: workspace
@@ -12,10 +12,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  camouflage_core: ^0.1.0-dev.1
+  camouflage_core: ^0.1.0
   flutter_test:          # the checks drive a WidgetTester
     sdk: flutter
 
 dev_dependencies:
-  camouflage_skin_minimal: ^0.1.0-dev.1   # a real skin to break on purpose; test-only, same layer (ADR-27)
+  camouflage_skin_minimal: ^0.1.0   # a real skin to break on purpose; test-only, same layer (ADR-27)
   flutter_lints: ^6.0.0
