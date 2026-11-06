@@ -1,11 +1,11 @@
 # camouflage_skin_carbon
 
-The Carbon skin for [Camouflage](https://github.com/srctool/camouflage-dart): IBM Carbon's dialect from the
-`widgets` layer only. Square corners, opaque layered surfaces (no shadows but for overlays), hover and active
-fills, an inset focus border, bottom-border text fields and a bold blue interactive color.
+**Carbon skin.** IBM Carbon for Camouflage, from the widgets layer: square corners, layered surfaces, an inset focus border, the White, G10, G90 and G100 themes.
 
 ```dart
 CamouflageProvider(skin: carbonSkin, theme: carbonLight, child: const MyApp())
 ```
 
-`carbonTheme(family: ...)` builds the White, G10, G90 and G100 themes; the font is the app's (`fontFamily`).
+Part of [Camouflage](https://github.com/srctool/camouflage-dart), a UI library whose look comes from a swappable skin and theme, for Flutter and Kotlin Multiplatform. Documentation: https://github.com/srctool/camouflage.
+
+Licensed under the Apache License 2.0.
