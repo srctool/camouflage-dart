@@ -1,7 +1,14 @@
 name: camouflage_skin_cupertino
 description: "The Cupertino skin: Apple HIG anatomy, blur materials and Liquid Glass, press-fade feedback. Widgets layer only, no Material or Cupertino."
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/srctool/camouflage-dart
+documentation: https://camouflage.srctool.com
+topics:
+  - ui
+  - design-system
+  - theming
+  - widgets
+  - accessibility
 issue_tracker: https://github.com/srctool/camouflage-dart/issues
 resolution: workspace
 

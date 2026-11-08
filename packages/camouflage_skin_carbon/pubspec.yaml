@@ -1,7 +1,14 @@
 name: camouflage_skin_carbon
 description: "The Carbon skin: IBM Carbon's dialect (square, layered, flat). Draws everything itself, no Material."
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/srctool/camouflage-dart
+documentation: https://camouflage.srctool.com
+topics:
+  - ui
+  - design-system
+  - theming
+  - widgets
+  - accessibility
 issue_tracker: https://github.com/srctool/camouflage-dart/issues
 resolution: workspace
 

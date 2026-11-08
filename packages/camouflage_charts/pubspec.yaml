@@ -1,7 +1,14 @@
 name: camouflage_charts
 description: "Charts without a chart library: line, bar, pie and sparkline, styled by theme tokens and a preset per skin."
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/srctool/camouflage-dart
+documentation: https://camouflage.srctool.com
+topics:
+  - charts
+  - data-visualization
+  - theming
+  - widgets
+  - accessibility
 issue_tracker: https://github.com/srctool/camouflage-dart/issues
 resolution: workspace
 

@@ -1,0 +1,1 @@
+The [example app](https://github.com/srctool/camouflage-dart/tree/main/example) has a dashboard with a sparkline, a line, a bar and a pie chart that switch skin, brand and light or dark live. The code is in [`example/lib/charts.dart`](https://github.com/srctool/camouflage-dart/blob/main/example/lib/charts.dart).
