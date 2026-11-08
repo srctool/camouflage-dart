@@ -75,7 +75,10 @@ class CarbonButtonGroupRenderer implements CamoButtonGroupRenderer {
         borderRadius: style.shape,
         border: Border.all(color: border, width: style.borderWidth),
       ),
-      child: ClipRRect(borderRadius: style.shape, child: row),
+      // A square group needs no clip, and a clip would cut off the buttons' touch semantics.
+      child: style.shape == BorderRadius.zero
+          ? row
+          : ClipRRect(borderRadius: style.shape, child: row),
     );
   }
 

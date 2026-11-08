@@ -57,8 +57,8 @@ class ButtonGallery extends StatelessWidget {
       children: [
         for (final tone in [Tone.defaultTone, Tone.error])
           for (final enabled in [true, false])
-            Row(
-              mainAxisSize: MainAxisSize.min,
+            _flow(
+              context,
               spacing: 8,
               children: [
                 for (final a in Appearance.values)
@@ -935,11 +935,8 @@ class DataDisplayGallery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget row(List<Widget> children, {double spacing = 8}) => Row(
-      mainAxisSize: MainAxisSize.min,
-      spacing: spacing,
-      children: children,
-    );
+    Widget row(List<Widget> children, {double spacing = 8}) =>
+        _flow(context, spacing: spacing, children: children);
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -1498,8 +1495,10 @@ class ActionsGallery extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          Row(
+          _flow(
+            context,
             spacing: 24,
+            expand: true,
             children: [
               CamoButtonGroup(
                 buttons: [
@@ -1865,4 +1864,27 @@ class CollectionsGallery extends StatelessWidget {
       ),
     );
   }
+}
+
+// A row of items that wraps when text is scaled up (a `Row` would overflow at 200%), and stays a `Row` otherwise:
+// a `Wrap` has no intrinsic width, which would change how the goldens are sized.
+Widget _flow(
+  BuildContext context, {
+  required double spacing,
+  required List<Widget> children,
+  bool expand = false,
+}) {
+  final scaled = MediaQuery.textScalerOf(context).scale(10) > 12;
+  return scaled
+      ? Wrap(
+          spacing: spacing,
+          runSpacing: spacing,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: children,
+        )
+      : Row(
+          mainAxisSize: expand ? MainAxisSize.max : MainAxisSize.min,
+          spacing: spacing,
+          children: children,
+        );
 }

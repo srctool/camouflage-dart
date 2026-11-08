@@ -303,7 +303,7 @@ class MaterialSegmentedControlRenderer implements CamoSegmentedControlRenderer {
             width: style.borderWidth,
           ),
         ),
-        child: ClipRRect(
+        child: CamoClipRRect(
           borderRadius: style.shape,
           child: Row(children: segments),
         ),
