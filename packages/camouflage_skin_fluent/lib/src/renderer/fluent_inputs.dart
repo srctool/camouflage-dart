@@ -317,7 +317,7 @@ class FluentSegmentedControlRenderer implements CamoSegmentedControlRenderer {
             width: style.borderWidth,
           ),
         ),
-        child: ClipRRect(
+        child: CamoClipRRect(
           borderRadius: style.shape,
           child: ColoredBox(
             color: style.colors.container,

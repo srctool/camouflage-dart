@@ -75,7 +75,8 @@ class MaterialButtonGroupRenderer implements CamoButtonGroupRenderer {
         borderRadius: style.shape,
         border: Border.all(color: border, width: style.borderWidth),
       ),
-      child: ClipRRect(borderRadius: style.shape, child: row),
+      // No clip: each button paints its own outer corners, and a clip would cut off the touch semantics.
+      child: row,
     );
   }
 

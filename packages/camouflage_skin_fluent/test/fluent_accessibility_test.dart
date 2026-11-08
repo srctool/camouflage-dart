@@ -33,13 +33,7 @@ void main() {
     'at 200% text': (theme: fluentTheme(), scale: 2, dir: TextDirection.ltr),
     'right to left': (theme: fluentTheme(), scale: 1, dir: TextDirection.rtl),
   };
-  const gaps = <String>{
-    'actions',
-    'buttons',
-    'inputs',
-    'lists',
-    'navigation chrome',
-  };
+  const gaps = <String>{'lists'};
   for (final MapEntry(key: axis, value: a) in axes.entries) {
     for (final MapEntry(key: name, value: gallery) in galleries.entries) {
       testWidgets('$name, $axis', (tester) async {

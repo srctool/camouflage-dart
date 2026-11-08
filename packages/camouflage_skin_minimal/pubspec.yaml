@@ -1,9 +1,22 @@
 name: camouflage_skin_minimal
 description: "The Minimal skin: Camouflage's own neutral dialect. Draws everything itself, no Material."
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/srctool/camouflage-dart
+documentation: https://camouflage.srctool.com
+topics:
+  - ui
+  - design-system
+  - theming
+  - widgets
+  - accessibility
 issue_tracker: https://github.com/srctool/camouflage-dart/issues
 resolution: workspace
+
+screenshots:
+  - description: 'The Minimal skin, light: a checkout card and selection controls.'
+    path: screenshots/light.png
+  - description: 'The Minimal skin, dark.'
+    path: screenshots/dark.png
 
 environment:
   sdk: ^3.13.0

@@ -1,9 +1,22 @@
 name: camouflage_skin_fluent
 description: "The Fluent 2 skin, built on widgets: Solid surfaces, Subtle feedback, Fluent's tokens. No Material."
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/srctool/camouflage-dart
+documentation: https://camouflage.srctool.com
+topics:
+  - ui
+  - design-system
+  - theming
+  - widgets
+  - accessibility
 issue_tracker: https://github.com/srctool/camouflage-dart/issues
 resolution: workspace
+
+screenshots:
+  - description: 'The Fluent skin, light: a checkout card and selection controls.'
+    path: screenshots/light.png
+  - description: 'The Fluent skin, dark.'
+    path: screenshots/dark.png
 
 environment:
   sdk: ^3.13.0

@@ -1,9 +1,22 @@
 name: camouflage_skin_material
 description: "The Material 3 skin: Paper surfaces, Ripple feedback and M3 proportions, drawn on widgets with material_ui for the ink."
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/srctool/camouflage-dart
+documentation: https://camouflage.srctool.com
+topics:
+  - ui
+  - design-system
+  - theming
+  - widgets
+  - accessibility
 issue_tracker: https://github.com/srctool/camouflage-dart/issues
 resolution: workspace
+
+screenshots:
+  - description: 'The Material skin, light: a checkout card and selection controls.'
+    path: screenshots/light.png
+  - description: 'The Material skin, dark.'
+    path: screenshots/dark.png
 
 environment:
   sdk: ^3.13.0

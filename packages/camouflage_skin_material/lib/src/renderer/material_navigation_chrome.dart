@@ -235,12 +235,12 @@ class MaterialNavigationBarRenderer implements CamoNavigationBarRenderer {
         decoration: const BoxDecoration(),
         child: Padding(
           padding: EdgeInsets.only(bottom: state.insets.bottom),
-          child: SizedBox(
-            height: style.height,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: style.height),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: items,
+              children: [for (final item in items) Flexible(child: item)],
             ),
           ),
         ),

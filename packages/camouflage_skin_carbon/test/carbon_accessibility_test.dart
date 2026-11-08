@@ -29,7 +29,7 @@ void main() {
     'at 200% text': (theme: carbonLight, scale: 2, dir: TextDirection.ltr),
     'right to left': (theme: carbonLight, scale: 1, dir: TextDirection.rtl),
   };
-  const gaps = <String>{'actions', 'buttons', 'navigation chrome'};
+  const gaps = <String>{};
   for (final MapEntry(key: axis, value: a) in axes.entries) {
     for (final MapEntry(key: name, value: gallery) in galleries.entries) {
       testWidgets('$name, $axis', (tester) async {

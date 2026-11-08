@@ -76,6 +76,7 @@ export 'src/skin/contract.dart';
 export 'src/skin/interaction.dart';
 export 'src/skin/positions.dart';
 export 'src/surface/camo_surface.dart';
+export 'src/util/camo_clip.dart';
 export 'src/switch/camo_switch.dart';
 export 'src/tabs/camo_tabs.dart';
 export 'src/text/camo_text.dart';
