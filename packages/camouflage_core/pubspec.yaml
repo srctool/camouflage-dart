@@ -12,6 +12,10 @@ topics:
 issue_tracker: https://github.com/srctool/camouflage-dart/issues
 resolution: workspace
 
+screenshots:
+  - description: 'The same checkout screen in the Minimal, Fluent, Material, Cupertino and Carbon skins.'
+    path: screenshots/skins.png
+
 environment:
   sdk: ^3.13.0
   flutter: ">=3.47.0"

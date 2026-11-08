@@ -12,6 +12,12 @@ topics:
 issue_tracker: https://github.com/srctool/camouflage-dart/issues
 resolution: workspace
 
+screenshots:
+  - description: 'The Fluent skin, light: a checkout card and selection controls.'
+    path: screenshots/light.png
+  - description: 'The Fluent skin, dark.'
+    path: screenshots/dark.png
+
 environment:
   sdk: ^3.13.0
   flutter: ">=3.47.0"
