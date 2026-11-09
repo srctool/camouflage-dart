@@ -1,3 +1,7 @@
+## 0.1.2
+
+- Fix: require `camouflage_core` ^0.1.1. 0.1.1 used `CamoClipRRect`, which only exists from core 0.1.1, so resolving core 0.1.0 failed to build.
+
 ## 0.1.1
 
 - A full README (features, getting started, usage, themes, other skins) and an example for pub.dev; topics and the documentation link in the pubspec.
