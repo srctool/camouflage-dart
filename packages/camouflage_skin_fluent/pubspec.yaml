@@ -1,6 +1,6 @@
 name: camouflage_skin_fluent
 description: "The Fluent 2 skin, built on widgets: Solid surfaces, Subtle feedback, Fluent's tokens. No Material."
-version: 0.1.1
+version: 0.1.2
 repository: https://github.com/srctool/camouflage-dart
 documentation: https://camouflage.srctool.com
 topics:
@@ -25,7 +25,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  camouflage_core: ^0.1.0
+  camouflage_core: ^0.1.1
   material_color_utilities: ^0.13.0   # brand ramps from a custom brand color
 
 dev_dependencies:
