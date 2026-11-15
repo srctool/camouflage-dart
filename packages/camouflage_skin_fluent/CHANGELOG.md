@@ -1,3 +1,8 @@
+## 0.1.3
+
+- Accessibility: the data table's select-all box and sortable headers keep their 48 touch targets (the table container no longer clips the semantics).
+- Requires `camouflage_core` ^0.1.3.
+
 ## 0.1.2
 
 - Fix: require `camouflage_core` ^0.1.1. 0.1.1 used `CamoClipRRect`, which only exists from core 0.1.1, so resolving core 0.1.0 failed to build.

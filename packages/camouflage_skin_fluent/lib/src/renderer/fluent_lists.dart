@@ -51,7 +51,7 @@ class FluentDataTableRenderer implements CamoDataTableRenderer {
     Widget child,
   ) {
     final shape = theme.shapes.small;
-    return ClipRRect(
+    return CamoClipRRect(
       borderRadius: shape,
       child: DecoratedBox(
         position: DecorationPosition.foreground,

@@ -15,7 +15,7 @@ class Paper implements SurfaceTreatment {
     required BorderRadius shape,
     required double elevation,
     required CamoTheme theme,
-  }) => PhysicalShape(
+  }) => CamoPhysicalShape(
     color: color,
     elevation: elevation,
     shadowColor: const Color(0xFF000000),

@@ -1,3 +1,7 @@
+## 0.1.3
+
+- Accessibility: the chip's remove button keeps its 48 touch target (the paper surface no longer clips the semantics). Requires `camouflage_core` ^0.1.3 for `CamoPhysicalShape`.
+
 ## 0.1.2
 
 - Fix: require `camouflage_core` ^0.1.1. 0.1.1 used `CamoClipRRect`, which only exists from core 0.1.1, so resolving core 0.1.0 failed to build.

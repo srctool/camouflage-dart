@@ -1,3 +1,8 @@
+## 0.1.3
+
+- Accessibility: the data table's select-all box and sortable headers keep their 48 touch targets (the table container no longer clips the semantics).
+- Requires `camouflage_core` ^0.1.3.
+
 ## 0.1.1
 
 - A full README (features, getting started, usage, themes, other skins) and an example for pub.dev; topics and the documentation link in the pubspec.
