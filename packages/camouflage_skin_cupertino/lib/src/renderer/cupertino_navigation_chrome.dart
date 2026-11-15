@@ -97,34 +97,42 @@ Widget _navItem(
     );
   } else {
     final pill = marked && state.indicator == NavIndicator.pill;
-    body = Padding(
-      padding: const EdgeInsets.symmetric(vertical: _gap),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(minWidth: paint.indicatorSize.width),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          spacing: _gap,
-          children: [
-            pill
-                ? DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: paint.indicatorColor,
-                      borderRadius: paint.indicatorShape,
-                    ),
-                    child: SizedBox.fromSize(
-                      size: paint.indicatorSize,
-                      child: Center(child: icon),
-                    ),
-                  )
-                : icon,
-            if (state.showLabel)
-              Text(
-                slots.label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: paint.labelStyle.copyWith(color: labelColor),
-              ),
-          ],
+    // At least 48 tall (the icon and label come to 47.5), so the item meets the touch target on its own.
+    body = ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: kCamoMinTouchTarget),
+      child: Center(
+        widthFactor: 1,
+        heightFactor: 1,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: _gap),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minWidth: paint.indicatorSize.width),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              spacing: _gap,
+              children: [
+                pill
+                    ? DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: paint.indicatorColor,
+                          borderRadius: paint.indicatorShape,
+                        ),
+                        child: SizedBox.fromSize(
+                          size: paint.indicatorSize,
+                          child: Center(child: icon),
+                        ),
+                      )
+                    : icon,
+                if (state.showLabel)
+                  Text(
+                    slots.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: paint.labelStyle.copyWith(color: labelColor),
+                  ),
+              ],
+            ),
+          ),
         ),
       ),
     );

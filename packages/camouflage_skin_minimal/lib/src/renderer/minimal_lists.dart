@@ -51,7 +51,7 @@ class MinimalDataTableRenderer implements CamoDataTableRenderer {
     Widget child,
   ) {
     final shape = theme.shapes.medium;
-    return ClipRRect(
+    return CamoClipRRect(
       borderRadius: shape,
       child: DecoratedBox(
         position: DecorationPosition.foreground,

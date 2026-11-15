@@ -1,3 +1,9 @@
+## 0.1.3
+
+- Accessibility: list rows are at least 48 tall (a row with a switch was 47), navigation bar items are at least 48 tall, and the blur material, grouped sections and cards no longer clip the semantics of their rows and items.
+- A one-line list row is now 48 instead of 44.
+- Requires `camouflage_core` ^0.1.3.
+
 ## 0.1.1
 
 - A full README (features, getting started, usage, themes, other skins) and an example for pub.dev; topics and the documentation link in the pubspec.

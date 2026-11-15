@@ -101,7 +101,7 @@ Widget _material(
       borderRadius: shape,
       boxShadow: shadow == null ? null : [shadow],
     ),
-    child: ClipRRect(
+    child: CamoClipRRect(
       borderRadius: shape,
       child: BackdropFilter(
         filter: ui.ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),

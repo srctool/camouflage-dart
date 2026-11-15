@@ -55,7 +55,7 @@ class CupertinoDataTableRenderer implements CamoDataTableRenderer {
     Widget child,
   ) {
     final shape = theme.shapes.medium;
-    return ClipRRect(
+    return CamoClipRRect(
       borderRadius: shape,
       child: ColoredBox(color: style.colors.container, child: child),
     );

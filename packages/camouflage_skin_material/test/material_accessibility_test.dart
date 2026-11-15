@@ -37,7 +37,7 @@ void main() {
       dir: TextDirection.rtl,
     ),
   };
-  const gaps = <String>{'data display'};
+  const gaps = <String>{};
   for (final MapEntry(key: axis, value: a) in axes.entries) {
     for (final MapEntry(key: name, value: gallery) in galleries.entries) {
       testWidgets('$name, $axis', (tester) async {

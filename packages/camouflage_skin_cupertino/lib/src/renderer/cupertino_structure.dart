@@ -116,7 +116,7 @@ Widget paintCard(
     shape: style.shape,
     elevation: theme.elevation.of(depth),
     theme: theme,
-    child: ClipRRect(borderRadius: style.shape, child: body),
+    child: CamoClipRRect(borderRadius: style.shape, child: body),
   );
   if (border != null) {
     card = DecoratedBox(
@@ -150,7 +150,7 @@ class CupertinoListItemRenderer implements CamoListItemRenderer {
     final t = theme.typography;
     final pad = theme.spacing.l;
     return CamoListItemStyle(
-      minHeightOneLine: 44,
+      minHeightOneLine: 48, // HIG says 44; 48 keeps a row with a switch at the 48 touch target
       minHeightTwoLines: 60,
       minHeightThreeLines: 76,
       contentPadding: EdgeInsetsDirectional.symmetric(
@@ -320,7 +320,7 @@ Widget paintListSection(
               ),
             ),
           ),
-        ClipRRect(
+        CamoClipRRect(
           borderRadius: style.sectionShape,
           child: ColoredBox(
             color: theme.colors.surfaceContainerLow,

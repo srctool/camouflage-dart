@@ -1,3 +1,8 @@
+## 0.1.3
+
+- Accessibility: a sortable data table header keeps a 48 touch target in its semantics, so it passes Flutter's tap-target guideline.
+- New `CamoPhysicalShape`: a `PhysicalShape` that clips only what is painted, so a small control with a larger touch target (a chip's remove button) is not cut off in the semantics.
+
 ## 0.1.1
 
 - A full README (features, getting started, usage, themes, other skins) and an example for pub.dev; topics and the documentation link in the pubspec.

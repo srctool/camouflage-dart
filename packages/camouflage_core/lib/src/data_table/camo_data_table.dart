@@ -659,6 +659,8 @@ class _HeaderCellState<T> extends State<_HeaderCell<T>> {
         : null;
     final sortable = column.sortable && widget.onSortChanged != null;
     return CamoBehavior(
+      // A sortable header is a button; it can be shorter than 48, so its semantics cover the target.
+      touchSemantics: sortable,
       controller: _interaction,
       enabled: sortable,
       onActivate: () => widget.onSortChanged?.call(

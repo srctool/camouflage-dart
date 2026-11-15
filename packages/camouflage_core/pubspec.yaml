@@ -1,6 +1,6 @@
 name: camouflage_core
 description: "Camouflage core: the components, the Theme and the Skin contract. Visually neutral, no Material."
-version: 0.1.1
+version: 0.1.3
 repository: https://github.com/srctool/camouflage-dart
 documentation: https://camouflage.srctool.com
 topics:
