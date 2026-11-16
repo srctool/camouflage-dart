@@ -1,3 +1,7 @@
+## Unreleased
+
+- Menu rows with a submenu end with a chevron (mirrored in right-to-left) and show an open state.
+
 ## 0.1.3
 
 - Accessibility: list rows are at least 48 tall (a row with a switch was 47), navigation bar items are at least 48 tall, and the blur material, grouped sections and cards no longer clip the semantics of their rows and items.

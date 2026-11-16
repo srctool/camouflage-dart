@@ -1,3 +1,7 @@
+## Unreleased
+
+- Menu rows with a submenu end with a chevron (mirrored in right-to-left) and show an open state.
+
 ## 0.1.3
 
 - Accessibility: the data table's select-all box and sortable headers keep their 48 touch targets (the table container no longer clips the semantics).

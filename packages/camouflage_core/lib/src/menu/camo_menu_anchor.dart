@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
@@ -14,7 +15,7 @@ import '../theme/roles.dart';
 import '../util/camo_behavior.dart';
 import 'camo_menu.dart';
 
-/// One entry in a menu: a [CamoMenuItem], a [CamoMenuDivider] or a [CamoMenuGroup].
+/// One entry in a menu: a [CamoMenuItem], a [CamoMenuDivider], a [CamoMenuGroup] or a [CamoMenuSubmenu].
 sealed class CamoMenuEntry {
   const CamoMenuEntry();
 }
@@ -72,6 +73,32 @@ class CamoMenuGroup extends CamoMenuEntry {
 
   /// Single choice.
   final bool exclusive;
+}
+
+/// A row that opens a nested menu of [items] beside it (Reset ▸ Soft, Mixed, Hard). Hovering opens it after a
+/// short delay; a tap, Enter and the arrow toward the child (Right, or Left in right-to-left) open it at once.
+/// The arrow back and Esc close only the submenu; picking a leaf closes every level. A submenu may hold submenus;
+/// more than two levels is a design smell.
+class CamoMenuSubmenu extends CamoMenuEntry {
+  /// Creates a submenu row.
+  const CamoMenuSubmenu({
+    required this.text,
+    required this.items,
+    this.leadingIcon,
+    this.enabled = true,
+  });
+
+  /// The row's text.
+  final String text;
+
+  /// The nested menu's entries.
+  final List<CamoMenuEntry> items;
+
+  /// An icon before the text.
+  final Widget? leadingIcon;
+
+  /// `false` disables it.
+  final bool enabled;
 }
 
 /// Opens and closes a [CamoMenuAnchor] from outside it.
@@ -283,16 +310,19 @@ class CamoMenuItemRow extends StatelessWidget {
   );
 }
 
-enum _RowKind { plain, check, radio }
+enum _RowKind { plain, check, radio, submenu }
 
 class _Row {
-  const _Row(this.item, this.kind);
+  const _Row(this.item, this.kind, [this.submenu]);
 
   final CamoMenuItem item;
   final _RowKind kind;
+  final CamoMenuSubmenu? submenu;
 }
 
 const _typeAheadMillis = 500;
+const _submenuOpenDelay = Duration(milliseconds: 250);
+const _submenuCloseGrace = Duration(milliseconds: 120);
 
 /// A menu's entries as rows, dividers and groups, at least [minWidth] wide (a select's field width), with the
 /// keys: Home and End jump, typed letters find the next item starting with them.
@@ -304,6 +334,7 @@ class MenuEntries extends StatefulWidget {
     required this.onSelected,
     this.minWidth = 0,
     this.focusFirst = false,
+    this.onBack,
   });
 
   /// The entries.
@@ -318,6 +349,9 @@ class MenuEntries extends StatefulWidget {
   /// Focus the first item: the menu was opened from the keyboard (a pointer opening shows no focus ring).
   final bool focusFirst;
 
+  /// Set on a submenu: the arrow back and Esc call it, and the caller closes the submenu.
+  final VoidCallback? onBack;
+
   @override
   State<MenuEntries> createState() => _MenuEntriesState();
 }
@@ -325,14 +359,26 @@ class MenuEntries extends StatefulWidget {
 class _MenuEntriesState extends State<MenuEntries> {
   late List<_Row> _rows;
   late List<FocusNode> _nodes;
+  late List<GlobalKey> _rowKeys;
+  late List<OverlayPortalController> _portals;
   String _prefix = '';
   DateTime _typed = DateTime.fromMillisecondsSinceEpoch(0);
+
+  // The submenu showing (a row index, -1 for none), whether its first item takes focus, and the hover timing.
+  int _open = -1;
+  bool _focusChild = false;
+  bool _childHovered = false;
+  int _hovered = -1;
+  Timer? _openTimer;
+  Timer? _closeTimer;
 
   @override
   void initState() {
     super.initState();
     _rows = _flatten(widget.entries);
     _nodes = [for (final _ in _rows) FocusNode()];
+    _rowKeys = [for (final _ in _rows) GlobalKey()];
+    _portals = [for (final _ in _rows) OverlayPortalController()];
     if (widget.focusFirst) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final first = _enabled.firstOrNull;
@@ -343,6 +389,8 @@ class _MenuEntriesState extends State<MenuEntries> {
 
   @override
   void dispose() {
+    _openTimer?.cancel();
+    _closeTimer?.cancel();
     for (final node in _nodes) {
       node.dispose();
     }
@@ -356,10 +404,84 @@ class _MenuEntriesState extends State<MenuEntries> {
 
   int get _focused => _nodes.indexWhere((n) => n.hasFocus);
 
+  bool _canOpen(int at) =>
+      at >= 0 &&
+      at < _rows.length &&
+      _rows[at].submenu != null &&
+      _rows[at].item.enabled;
+
+  void _openAt(int at, {required bool focusFirst}) {
+    if (!_canOpen(at) || (_open == at && !focusFirst)) return;
+    if (_open != -1 && _open != at) _portals[_open].hide();
+    setState(() {
+      _open = at;
+      _focusChild = focusFirst;
+    });
+    _portals[at].show();
+    // Keys (Esc, the arrow back) reach the menu: the row has focus until the child takes it.
+    if (!focusFirst) _nodes[at].requestFocus();
+  }
+
+  void _closeChild() {
+    final at = _open;
+    if (at == -1) return;
+    _portals[at].hide();
+    setState(() => _open = -1);
+    // Closed from the keyboard: focus returns to its row.
+    if (FocusManager.instance.highlightMode == FocusHighlightMode.traditional) {
+      _nodes[at].requestFocus();
+    }
+  }
+
+  // Hovering a submenu row opens it after a moment; hovering another row closes the open submenu after a short
+  // grace, so the pointer can cross a neighbour on its way to the child; it stays while the pointer is over it.
+  void _hover(int at, bool hovered) {
+    if (!mounted) return;
+    if (!hovered) {
+      if (_hovered == at) _hovered = -1;
+      _openTimer?.cancel();
+      return;
+    }
+    _hovered = at;
+    _closeTimer?.cancel();
+    _openTimer?.cancel();
+    if (_canOpen(at)) {
+      if (_open != at) {
+        _openTimer = Timer(_submenuOpenDelay, () {
+          if (mounted && _hovered == at) _openAt(at, focusFirst: false);
+        });
+      }
+    } else if (_open != -1 && !_childHovered) {
+      _closeTimer = Timer(_submenuCloseGrace, () {
+        if (mounted && !_childHovered && _hovered != _open) _closeChild();
+      });
+    }
+  }
+
   KeyEventResult _keys(FocusNode node, KeyEvent event) {
     if (event is! KeyDownEvent) return KeyEventResult.ignored;
     final enabled = _enabled;
     final key = event.logicalKey;
+    final rtl = Directionality.of(context) == TextDirection.rtl;
+    final toward = rtl
+        ? LogicalKeyboardKey.arrowLeft
+        : LogicalKeyboardKey.arrowRight;
+    final away = rtl
+        ? LogicalKeyboardKey.arrowRight
+        : LogicalKeyboardKey.arrowLeft;
+    if (key == toward && _canOpen(_focused)) {
+      _openAt(_focused, focusFirst: true);
+      return KeyEventResult.handled;
+    }
+    if ((key == away || key == LogicalKeyboardKey.escape) &&
+        widget.onBack != null) {
+      widget.onBack!();
+      return KeyEventResult.handled;
+    }
+    if (key == LogicalKeyboardKey.escape && _open != -1) {
+      _closeChild();
+      return KeyEventResult.handled;
+    }
     int? target;
     if (key == LogicalKeyboardKey.home) {
       target = enabled.firstOrNull;
@@ -399,6 +521,38 @@ class _MenuEntriesState extends State<MenuEntries> {
     return KeyEventResult.handled;
   }
 
+  // The nested menu, beside its row (end side, flipping to the start side, shifted up near the bottom edge).
+  Widget _submenu(BuildContext overlay, int at) {
+    final row = _rowKeys[at].currentContext?.findRenderObject();
+    final box = Overlay.of(overlay).context.findRenderObject();
+    if (row is! RenderBox || box is! RenderBox || !row.attached) {
+      return const SizedBox.shrink();
+    }
+    final anchor = box.globalToLocal(row.localToGlobal(Offset.zero)) & row.size;
+    final submenu = _rows[at].submenu!;
+    return Positioned.fill(
+      child: CustomSingleChildLayout(
+        delegate: _BesideDelegate(anchor, Directionality.of(overlay)),
+        child: MouseRegion(
+          onEnter: (_) => _childHovered = true,
+          onExit: (_) => _childHovered = false,
+          child: CamoMenuPanel(
+            child: Semantics(
+              role: SemanticsRole.menu,
+              explicitChildNodes: true,
+              child: MenuEntries(
+                entries: submenu.items,
+                focusFirst: _focusChild,
+                onSelected: widget.onSelected,
+                onBack: _closeChild,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final skin = Camouflage.skinOf(context, component: 'CamoMenuAnchor');
@@ -409,13 +563,26 @@ class _MenuEntriesState extends State<MenuEntries> {
     var index = 0;
     Widget row(CamoMenuItem item) {
       final at = index++;
-      return _MenuRow(
+      final submenu = _rows[at].submenu;
+      final line = _MenuRow(
+        key: _rowKeys[at],
         item: item,
         kind: _rows[at].kind,
         reserveCheck: reserveCheck,
         reserveIcon: reserveIcon,
         focusNode: _nodes[at],
-        onSelected: () => widget.onSelected(item),
+        onSelected: submenu == null
+            ? () => widget.onSelected(item)
+            : () => _openAt(at, focusFirst: false),
+        onHover: (h) => _hover(at, h),
+        submenuOpen: _open == at,
+        onCollapse: _closeChild,
+      );
+      if (submenu == null) return line;
+      return OverlayPortal(
+        controller: _portals[at],
+        overlayChildBuilder: (overlay) => _submenu(overlay, at),
+        child: line,
       );
     }
 
@@ -440,6 +607,14 @@ class _MenuEntriesState extends State<MenuEntries> {
                 for (final entry in widget.entries)
                   switch (entry) {
                     CamoMenuItem() => row(entry),
+                    CamoMenuSubmenu() => row(
+                      CamoMenuItem(
+                        text: entry.text,
+                        onPressed: () {},
+                        leadingIcon: entry.leadingIcon,
+                        enabled: entry.enabled,
+                      ),
+                    ),
                     CamoMenuDivider() => divider,
                     CamoMenuGroup() => Column(
                       mainAxisSize: MainAxisSize.min,
@@ -456,11 +631,58 @@ class _MenuEntriesState extends State<MenuEntries> {
   }
 }
 
+// Beside the anchor on its end side with its top at the anchor's top (a submenu next to its row); the start side
+// when it doesn't fit; shifted up near the bottom edge and never past the overlay's edges.
+class _BesideDelegate extends SingleChildLayoutDelegate {
+  const _BesideDelegate(this.anchor, this.direction);
+
+  final Rect anchor;
+  final TextDirection direction;
+
+  @override
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
+      constraints.loosen();
+
+  @override
+  Offset getPositionForChild(Size size, Size child) {
+    final rtl = direction == TextDirection.rtl;
+    final atEnd = rtl ? anchor.left - child.width : anchor.right;
+    final atStart = rtl ? anchor.right : anchor.left - child.width;
+    final endFits = atEnd >= 0 && atEnd + child.width <= size.width;
+    final startFits = atStart >= 0 && atStart + child.width <= size.width;
+    final x = endFits
+        ? atEnd
+        : startFits
+        ? atStart
+        : atEnd.clamp(0, math.max(0, size.width - child.width)).toDouble();
+    final y = anchor.top
+        .clamp(0, math.max(0, size.height - child.height))
+        .toDouble();
+    return Offset(x, y);
+  }
+
+  @override
+  bool shouldRelayout(_BesideDelegate old) =>
+      old.anchor != anchor || old.direction != direction;
+}
+
 List<_Row> _flatten(List<CamoMenuEntry> entries) => [
   for (final entry in entries)
     ...switch (entry) {
       CamoMenuItem() => [
         _Row(entry, entry.checked == null ? _RowKind.plain : _RowKind.check),
+      ],
+      CamoMenuSubmenu() => [
+        _Row(
+          CamoMenuItem(
+            text: entry.text,
+            onPressed: () {},
+            leadingIcon: entry.leadingIcon,
+            enabled: entry.enabled,
+          ),
+          _RowKind.submenu,
+          entry,
+        ),
       ],
       CamoMenuDivider() => const <_Row>[],
       CamoMenuGroup() => [
@@ -479,12 +701,16 @@ List<_Row> _flatten(List<CamoMenuEntry> entries) => [
 
 class _MenuRow extends StatefulWidget {
   const _MenuRow({
+    super.key,
     required this.item,
     required this.kind,
     required this.reserveCheck,
     required this.reserveIcon,
     required this.onSelected,
     this.focusNode,
+    this.onHover,
+    this.submenuOpen = false,
+    this.onCollapse,
   });
 
   final CamoMenuItem item;
@@ -493,6 +719,9 @@ class _MenuRow extends StatefulWidget {
   final bool reserveIcon;
   final VoidCallback onSelected;
   final FocusNode? focusNode;
+  final ValueChanged<bool>? onHover;
+  final bool submenuOpen;
+  final VoidCallback? onCollapse;
 
   @override
   State<_MenuRow> createState() => _MenuRowState();
@@ -500,9 +729,24 @@ class _MenuRow extends StatefulWidget {
 
 class _MenuRowState extends State<_MenuRow> {
   final _interaction = CamoInteractionController();
+  bool _wasHovered = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _interaction.addListener(_hovered);
+  }
+
+  void _hovered() {
+    final hovered = _interaction.value.hovered;
+    if (hovered == _wasHovered) return;
+    _wasHovered = hovered;
+    widget.onHover?.call(hovered);
+  }
 
   @override
   void dispose() {
+    _interaction.removeListener(_hovered);
     _interaction.dispose();
     super.dispose();
   }
@@ -514,7 +758,8 @@ class _MenuRowState extends State<_MenuRow> {
     final skin = Camouflage.skinOf(context, component: 'CamoMenuItemRow');
     final theme = Camouflage.themeOf(context, component: 'CamoMenuItemRow');
     final style = skin.menu.defaults(theme).merge(theme.components.menu);
-    final checkable = w.kind != _RowKind.plain;
+    final checkable = w.kind == _RowKind.check || w.kind == _RowKind.radio;
+    final submenu = w.kind == _RowKind.submenu;
     // The merge sits outside the behavior, so the tap action joins the row node.
     return MergeSemantics(
       child: CamoBehavior(
@@ -524,13 +769,16 @@ class _MenuRowState extends State<_MenuRow> {
         onActivate: w.onSelected,
         semantics: (child) => Semantics(
           role: switch (w.kind) {
-            _RowKind.plain => SemanticsRole.menuItem,
+            _RowKind.plain || _RowKind.submenu => SemanticsRole.menuItem,
             _RowKind.check => SemanticsRole.menuItemCheckbox,
             _RowKind.radio => SemanticsRole.menuItemRadio,
           },
           enabled: item.enabled,
           checked: checkable ? item.checked == true : null,
           inMutuallyExclusiveGroup: w.kind == _RowKind.radio ? true : null,
+          expanded: submenu ? w.submenuOpen : null,
+          onExpand: submenu && !w.submenuOpen ? w.onSelected : null,
+          onCollapse: submenu && w.submenuOpen ? w.onCollapse : null,
           child: child,
         ),
         child: ListenableBuilder(
@@ -547,6 +795,8 @@ class _MenuRowState extends State<_MenuRow> {
               reserveIcon: w.reserveIcon,
               interaction: _interaction.value,
               controller: _interaction,
+              hasSubmenu: submenu,
+              submenuOpen: w.submenuOpen,
             ),
             MenuItemSlots(leadingIcon: item.leadingIcon),
             theme,
