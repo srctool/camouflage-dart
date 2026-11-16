@@ -971,6 +971,11 @@ Widget paintMenuItem(
                 padding: EdgeInsetsDirectional.only(start: gap),
                 child: CamoIcon(style.checkIcon, color: text),
               ),
+            if (state.hasSubmenu)
+              Padding(
+                padding: EdgeInsetsDirectional.only(start: gap),
+                child: _submenuChevron(context, text),
+              ),
           ],
         ),
       ),
@@ -981,8 +986,24 @@ Widget paintMenuItem(
     contentColor: style.colors.text,
     shape: shape,
     theme: theme,
-    child: row,
+    child: state.submenuOpen
+        ? DecoratedBox(
+            decoration: BoxDecoration(
+              color: style.colors.text.withValues(alpha: 0.08),
+              borderRadius: shape,
+            ),
+            child: row,
+          )
+        : row,
   );
+}
+
+// The chevron that ends a submenu row, mirrored in right-to-left.
+Widget _submenuChevron(BuildContext context, Color color) {
+  final chevron = CamoIcon(const IconSource.builder(_chevronEnd), color: color);
+  return Directionality.of(context) == TextDirection.rtl
+      ? Transform.flip(flipX: true, child: chevron)
+      : chevron;
 }
 
 /// The checkmark of a checked menu item.

@@ -113,11 +113,14 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       onPressed: () => _rename(doc),
       leadingIcon: const AppIcon.edit(),
     ),
-    CamoMenuItem(
+    CamoMenuSubmenu(
       text: 'Share',
-      onPressed: () {},
       leadingIcon: const AppIcon.share(),
-      trailingText: 'Ctrl+S',
+      items: [
+        CamoMenuItem(text: 'Copy link', onPressed: () {}),
+        CamoMenuItem(text: 'Email', onPressed: () {}),
+        CamoMenuItem(text: 'Message', onPressed: () {}),
+      ],
     ),
     const CamoMenuDivider(),
     CamoMenuItem(

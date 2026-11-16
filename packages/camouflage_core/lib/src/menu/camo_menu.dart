@@ -233,7 +233,8 @@ class CamoMenuStyle {
 /// destructive items) and dimmed when not [enabled]. [checked] is `null` for a plain item; otherwise draw the
 /// check when `true`, at `style.checkPosition`. Keep the text aligned across the menu: leave the check column
 /// when [reserveCheck] (some item is checkable) and the icon column when [reserveIcon] (some item has an icon).
-/// Show the highlight from [interaction] (hovered, focused, pressed).
+/// Show the highlight from [interaction] (hovered, focused, pressed). A row with a [hasSubmenu] ends with a
+/// chevron (mirrored in right-to-left) and shows an "open" state while [submenuOpen].
 @immutable
 class MenuItemState {
   /// Creates a row state.
@@ -247,6 +248,8 @@ class MenuItemState {
     required this.reserveIcon,
     required this.interaction,
     required this.controller,
+    this.hasSubmenu = false,
+    this.submenuOpen = false,
   });
 
   /// The item's text.
@@ -275,6 +278,12 @@ class MenuItemState {
 
   /// For the skin's feedback.
   final CamoInteractionController controller;
+
+  /// The row opens a submenu: end it with a chevron.
+  final bool hasSubmenu;
+
+  /// Its submenu is showing: draw the open state.
+  final bool submenuOpen;
 }
 
 /// The item's leading icon, if any.

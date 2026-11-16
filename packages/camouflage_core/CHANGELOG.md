@@ -1,3 +1,7 @@
+## Unreleased
+
+- Menu submenus: `CamoMenuSubmenu(text:, items:)` is a new `CamoMenuEntry`: a row that opens a nested menu beside it (Reset ▸ Soft, Mixed, Hard). Hover opens it after 250 ms, a tap, Enter and the arrow toward the child open it at once and focus its first item; the arrow back and Esc close only the submenu, and a leaf closes every level. It flips to the start side near the edge and mirrors in right-to-left. `MenuItemState` gains `hasSubmenu` and `submenuOpen`.
+
 ## 0.1.3
 
 - Accessibility: a sortable data table header keeps a 48 touch target in its semantics, so it passes Flutter's tap-target guideline.

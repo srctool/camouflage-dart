@@ -1,3 +1,7 @@
+## Unreleased
+
+- Menu rows with a submenu end with a chevron (mirrored in right-to-left) and show an open state.
+
 ## 0.1.3
 
 - Accessibility: the chip's remove button keeps its 48 touch target (the paper surface no longer clips the semantics). Requires `camouflage_core` ^0.1.3 for `CamoPhysicalShape`.
