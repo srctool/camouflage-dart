@@ -34,10 +34,16 @@ void main() {
     }
   });
 
-  test('text fields are 40 tall on the field fill', () {
+  test('text fields follow the density, on the field fill', () {
     for (final theme in themes) {
       final style = carbonSkin.textField.defaults(theme);
-      expect(style.height, 40);
+      expect(style.height, 48); // no density asked for and no pointer: lg
+      expect(
+        carbonSkin.textField
+            .defaults(carbonTheme(density: CarbonDensity.md))
+            .height,
+        40,
+      );
       expect(style.colors.container, theme.colors.surfaceContainerLow);
     }
   });

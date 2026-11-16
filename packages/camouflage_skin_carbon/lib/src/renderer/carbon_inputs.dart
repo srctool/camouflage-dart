@@ -1,6 +1,8 @@
 import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
+import '../carbon_density.dart';
+
 // Carbon's selection controls, slider and stepper (base Carbon Skin §3.4): ink when on, hairlines when off.
 
 const double _hairline = 1;
@@ -260,10 +262,10 @@ class CarbonSegmentedControlRenderer implements CamoSegmentedControlRenderer {
   CamoSegmentedControlStyle defaults(CamoTheme theme) {
     final c = theme.colors;
     return CamoSegmentedControlStyle(
-      height: 40,
+      height: theme.carbonDensity.size,
       shape: theme.shapes.none,
       borderWidth: _hairline,
-      textStyle: theme.typography.labelLarge,
+      textStyle: theme.typography.labelLarge.forDensity(theme.carbonDensity),
       iconSize: 16,
       showCheckIcon: false,
       colors: SegmentedColors(
@@ -407,7 +409,7 @@ class CarbonStepperRenderer implements CamoStepperRenderer {
     return CamoStepperStyle(
       layout: StepperLayout.split, // Carbon's number input
       buttonAppearance: Appearance.outline,
-      height: 40,
+      height: theme.carbonDensity.size,
       valueMinWidth: 40,
       valueStyle: theme.typography.titleMedium,
       decreaseIcon: const IconSource.builder(_minusIcon),

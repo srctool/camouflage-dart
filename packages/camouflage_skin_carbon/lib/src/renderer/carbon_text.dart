@@ -2,6 +2,7 @@ import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
 import 'carbon_pickers.dart' show dropdownChevronIcon;
+import '../carbon_density.dart';
 
 // Carbon's text field and search field (base Carbon Skin §3.4): a 44 field with a hairline, a 2 px primary
 // ring when focused, the label above by default.
@@ -24,12 +25,12 @@ class CarbonTextFieldRenderer implements CamoTextFieldRenderer {
     final t = theme.typography;
     return CamoTextFieldStyle(
       labelPlacement: labelPlacement,
-      height: 40,
+      height: theme.carbonDensity.size,
       shape: theme.shapes.none,
       contentPadding: EdgeInsetsDirectional.symmetric(
         horizontal: theme.spacing.m,
       ),
-      textStyle: t.bodyMedium,
+      textStyle: t.bodyMedium.forDensity(theme.carbonDensity),
       labelStyle: t.labelMedium,
       floatingLabelStyle: t.labelMedium,
       supportingTextStyle: t.bodySmall,
@@ -115,10 +116,12 @@ class CarbonSearchFieldRenderer implements CamoSearchFieldRenderer {
   CamoSearchFieldStyle defaults(CamoTheme theme) {
     final c = theme.colors;
     return CamoSearchFieldStyle(
-      height: 40,
+      height: theme.carbonDensity.size,
       shape: theme.shapes.none,
-      textStyle: theme.typography.bodyMedium,
-      placeholderStyle: theme.typography.bodyMedium,
+      textStyle: theme.typography.bodyMedium.forDensity(theme.carbonDensity),
+      placeholderStyle: theme.typography.bodyMedium.forDensity(
+        theme.carbonDensity,
+      ),
       iconSize: 18,
       searchIcon: const IconSource.builder(_searchIcon),
       clearIcon: const IconSource.builder(_clearIcon),

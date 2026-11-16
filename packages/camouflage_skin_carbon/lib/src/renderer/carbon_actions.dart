@@ -3,6 +3,8 @@ import 'dart:math' as math;
 import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
+import '../carbon_density.dart';
+
 // Carbon's buttons, icon buttons and progress circle (base Carbon Skin §3.3 and §3.4).
 
 const double _hairline = 1;
@@ -20,14 +22,14 @@ class CarbonButtonRenderer implements CamoButtonRenderer {
     final c = theme.colors;
     return CamoButtonStyle(
       defaultAppearance: Appearance.solid,
-      height: 48,
+      height: theme.carbonDensity.size,
       minWidth: 96,
       shape: theme.shapes.none,
       padding: EdgeInsetsDirectional.symmetric(horizontal: theme.spacing.l),
       paddingWithIcon: EdgeInsetsDirectional.symmetric(
         horizontal: theme.spacing.l,
       ),
-      textStyle: theme.typography.labelLarge,
+      textStyle: theme.typography.labelLarge.forDensity(theme.carbonDensity),
       iconSize: 16,
       iconGap: theme
           .spacing
@@ -163,7 +165,7 @@ class CarbonIconButtonRenderer implements CamoIconButtonRenderer {
     final c = theme.colors;
     return CamoIconButtonStyle(
       defaultAppearance: Appearance.ghost,
-      containerSize: 48,
+      containerSize: theme.carbonDensity.size,
       shape: theme.shapes.none,
       iconSize: 16,
       borderWidth: _hairline,

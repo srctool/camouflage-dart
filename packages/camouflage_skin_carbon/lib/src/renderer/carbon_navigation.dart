@@ -2,6 +2,8 @@ import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
+import '../carbon_density.dart';
+
 // Carbon's tab bar and FAB (base Carbon Skin §3.4): a hairline under the bar with a thin ink indicator, and a
 // small flat FAB. Carbon has no raised depth, so the raised FAB gets a hairline instead.
 
@@ -20,7 +22,7 @@ class CarbonTabsRenderer implements CamoTabsRenderer {
     return CamoTabsStyle(
       defaultAppearance:
           Appearance.ghost, // line tabs; solid is the contained tabs
-      height: 40,
+      height: theme.carbonDensity.size,
       heightWithIcon: 56,
       indicatorHeight: 2,
       indicatorWidth: IndicatorWidth.tab,

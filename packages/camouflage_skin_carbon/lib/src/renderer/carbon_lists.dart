@@ -4,6 +4,7 @@ import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
 import 'carbon_indicators.dart' show arrowUpGlyph, chevronRightGlyph;
+import '../carbon_density.dart';
 
 // Carbon's data table and tree: a hairline grid with soft selection.
 
@@ -21,8 +22,8 @@ class CarbonDataTableRenderer implements CamoDataTableRenderer {
   CamoTableStyle defaults(CamoTheme theme) {
     final c = theme.colors;
     return CamoTableStyle(
-      headerHeight: 48,
-      rowHeight: 48,
+      headerHeight: theme.carbonDensity.size,
+      rowHeight: theme.carbonDensity.size,
       cellPadding: theme.spacing.l,
       striped: false,
       dividers: true,
@@ -217,7 +218,7 @@ class CarbonTreeRenderer implements CamoTreeRenderer {
   CamoTreeStyle defaults(CamoTheme theme) {
     final c = theme.colors;
     return CamoTreeStyle(
-      rowHeight: 32,
+      rowHeight: theme.carbonDensity.size,
       indent: 20,
       showLines: false,
       chevron: const IconSource.builder(chevronRightGlyph),

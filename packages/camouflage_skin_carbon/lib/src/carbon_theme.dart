@@ -1,6 +1,8 @@
 import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
+import 'carbon_density.dart';
+
 /// Carbon's four themes: [white] and [g10] are light, [g90] and [g100] dark.
 enum CarbonThemeFamily {
   /// The light default.
@@ -30,11 +32,13 @@ const Color carbonGray10 = Color(0xFFF4F4F4);
 /// `border-strong` and `border-subtle` `outline` and `outlineVariant`, `interactive` the `primary` (blue 60, blue
 /// 50 in the dark families, or the brand [accent]), and the support colors the status families. Square shapes,
 /// productive motion and the IBM Plex type set in [fontFamily] (`null`: the platform font; skins never bundle
-/// fonts, ADR-33).
+/// fonts, ADR-33). [density] sets every control's size (24, 32, 40 or 48); `null` follows the input (ADR-41):
+/// `md` with a pointer, `lg` with fingers.
 CamoTheme carbonTheme({
   CarbonThemeFamily family = CarbonThemeFamily.white,
   Color? accent,
   String? fontFamily,
+  CarbonDensity? density,
 }) {
   final dark =
       family == CarbonThemeFamily.g90 || family == CarbonThemeFamily.g100;
@@ -70,11 +74,27 @@ CamoTheme carbonTheme({
       highest: const Color(0xFF525252),
     ),
   };
-  return CamoTheme(
+  final theme = CamoTheme(
     colors: _withAccent(base, accent, dark),
     typography: _typography(fontFamily),
     shapes: _shapes,
     motion: _motion,
+    tokenSets: [CarbonDensityTokens(density ?? CarbonDensity.lg)],
+  );
+  if (density != null) return theme;
+  // No density asked for: follow the input (ADR-41), `md` with a pointer and `lg` with fingers.
+  return theme.adapt(
+    (t, env) => env.input == InputMode.pointer
+        ? t.copyWith(
+            tokenSets: [
+              for (final set in t.tokenSets)
+                if (set is CarbonDensityTokens)
+                  const CarbonDensityTokens(CarbonDensity.md)
+                else
+                  set,
+            ],
+          )
+        : t,
   );
 }
 
