@@ -89,6 +89,60 @@ Future<void> _hover(WidgetTester tester, Finder finder) async {
 }
 
 void main() {
+  // A chart narrower than its own axis labels has a plot with no width: no label spacing may divide by it (the
+  // line chart threw "Infinity or NaN toInt" on a phone at large text). Every error counts, not just the first.
+  for (final width in [40.0, 5.0, 0.0]) {
+    testWidgets('charts $width dp wide lay out without an error', (
+      tester,
+    ) async {
+      final errors = <FlutterErrorDetails>[];
+      final previous = FlutterError.onError;
+      FlutterError.onError = errors.add;
+      addTearDown(() => FlutterError.onError = previous);
+      await tester.pumpWidget(
+        _app(
+          Column(
+            children: [
+              for (final chart in <Widget>[
+                const CamoLineChart(
+                  categories: _months,
+                  series: [_sales, _costs],
+                  title: 'Revenue',
+                ),
+                CamoLineChart(
+                  categories: _months,
+                  series: const [_sales],
+                  title: 'Revenue',
+                  times: [
+                    for (var i = 0; i < 3; i++) 1700000000000 + i * 86400000,
+                  ],
+                ),
+                const CamoBarChart(
+                  categories: _months,
+                  series: [_sales],
+                  title: 'Orders',
+                ),
+                const CamoBarChart(
+                  categories: _months,
+                  series: [_sales],
+                  title: 'Orders',
+                  orientation: BarOrientation.horizontal,
+                ),
+              ])
+                SizedBox(width: width, height: 200, child: chart),
+            ],
+          ),
+        ),
+      );
+      await tester.pump();
+      final bad = errors
+          .where((e) => !e.exceptionAsString().contains('overflowed'))
+          .map((e) => e.exceptionAsString())
+          .toList();
+      expect(bad, isEmpty);
+    });
+  }
+
   testWidgets('a line chart is one image with each series trend', (
     tester,
   ) async {

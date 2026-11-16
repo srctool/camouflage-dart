@@ -263,7 +263,11 @@ List<AxisLabel> _axisLabels(
   final across = input.vertical
       ? env.widest(input.categories)
       : env.labelHeight;
-  final step = math.max(1, (across * 1.4 / band).ceil());
+  // `band` is 0 when the plot has collapsed (a chart narrower than its labels): show only the first name.
+  final fit = across * 1.4 / band;
+  final step = fit.isFinite
+      ? math.max(1, fit.ceil())
+      : math.max(1, input.categories.length);
   final names = <AxisLabel>[];
   for (var c = 0; c < input.categories.length; c += step) {
     final center = _categoryCenter(bars, c, vertical: input.vertical);

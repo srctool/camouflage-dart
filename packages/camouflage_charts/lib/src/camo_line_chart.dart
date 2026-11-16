@@ -262,7 +262,9 @@ List<AxisLabel> _xLabels(
   final times = validTimes(input.times, input.categories.length);
   if (times != null) {
     final widest = env.widest(const ['00:00', 'Mar 30', '2030']);
-    final max = math.max(2, (plot.width / (widest * 1.6)).floor());
+    // A plot narrower than its labels has no width to divide: keep the minimum.
+    final fit = plot.width / (widest * 1.6);
+    final max = fit.isFinite ? math.max(2, fit.floor()) : 2;
     final ticks = timeTicks(
       times.first,
       times.last,
@@ -288,7 +290,11 @@ List<AxisLabel> _xLabels(
   final slot = model.xs.length < 2
       ? plot.width
       : plot.width / (model.xs.length - 1);
-  final step = math.max(1, (widest / slot).ceil());
+  // `slot` is 0 when the plot has collapsed (a chart narrower than its axis labels): show only the first label.
+  final ratio = widest / slot;
+  final step = ratio.isFinite
+      ? math.max(1, ratio.ceil())
+      : math.max(1, input.categories.length);
   return [
     for (var i = 0; i < input.categories.length; i += step)
       AxisLabel(
