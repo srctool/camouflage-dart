@@ -1,3 +1,7 @@
+## Unreleased
+
+- Fixed: a line or bar chart narrower than its own axis labels (a tiny cell, or large text on a phone) threw `Unsupported operation: Infinity or NaN toInt` while laying out its labels. The plot has no width then, so the labels thin to the first one.
+
 ## 0.1.1
 
 - A full README (features, getting started, usage, themes, other skins) and an example for pub.dev; topics and the documentation link in the pubspec.
