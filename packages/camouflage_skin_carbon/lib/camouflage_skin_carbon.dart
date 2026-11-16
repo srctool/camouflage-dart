@@ -26,6 +26,7 @@ import 'src/renderer/carbon_text.dart';
 
 export 'src/carbon_states.dart';
 export 'src/layered.dart';
+export 'src/carbon_density.dart' show CarbonDensity, CarbonDensityTokens;
 export 'src/carbon_theme.dart';
 export 'src/renderer/carbon_actions.dart'
     show

@@ -4,6 +4,7 @@ import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
 import 'carbon_pickers.dart' show dropdownChevronIcon;
+import '../carbon_density.dart';
 
 // Carbon's button groups, split buttons and toolbars (base Carbon Skin): hairline outlines, an ink pressed state and a quiet docked bar.
 
@@ -23,7 +24,7 @@ class CarbonButtonGroupRenderer implements CamoButtonGroupRenderer {
     final c = theme.colors;
     return CamoButtonGroupStyle(
       defaultAppearance: Appearance.outline,
-      height: 40,
+      height: theme.carbonDensity.size,
       shape: theme.shapes.none,
       innerShape: theme.shapes.none,
       spacing: theme.spacing.none,
@@ -202,7 +203,7 @@ class CarbonSplitButtonRenderer implements CamoSplitButtonRenderer {
   @override
   CamoSplitButtonStyle defaults(CamoTheme theme) => CamoSplitButtonStyle(
     defaultAppearance: Appearance.solid,
-    height: 40,
+    height: theme.carbonDensity.size,
     shape: theme.shapes.none,
     innerShape: theme.shapes.none,
     arrowWidth: 36,
@@ -363,8 +364,8 @@ class CarbonToolbarRenderer implements CamoToolbarRenderer {
   @override
   CamoToolbarStyle defaults(CamoTheme theme) => CamoToolbarStyle(
     placement: ToolbarPlacement.docked,
-    height: 48,
-    actionSize: 48,
+    height: theme.carbonDensity.size,
+    actionSize: theme.carbonDensity.size,
     floatingMargin: theme.spacing.l,
     floatingShape: theme.shapes.medium,
     floatingElevation: ElevationLevel.level2,

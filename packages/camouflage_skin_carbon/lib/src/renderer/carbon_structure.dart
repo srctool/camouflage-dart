@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import '../carbon_theme.dart' show carbonGray10, carbonGray100;
+import '../carbon_density.dart';
 
 // Carbon's structure components (base Carbon Skin §3.4): hairlines instead of fills, ink for emphasis.
 
@@ -148,7 +149,7 @@ class CarbonListItemRenderer implements CamoListItemRenderer {
     final t = theme.typography;
     final pad = theme.spacing.l;
     return CamoListItemStyle(
-      minHeightOneLine: 48,
+      minHeightOneLine: theme.carbonDensity.size,
       minHeightTwoLines: 64,
       minHeightThreeLines: 80,
       contentPadding: EdgeInsetsDirectional.symmetric(

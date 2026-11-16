@@ -1,3 +1,8 @@
+## Unreleased
+
+- Carbon density: `carbonTheme(density: CarbonDensity.md)` sets every control's size (`xs` 24, `sm` 32, `md` 40, `lg` 48) in one place: buttons, icon buttons, text and search fields, steppers, segmented controls, menu items, list rows, tree rows, data table rows, tabs, button groups and toolbar actions. `null` follows the input: a pointer gets `md`, fingers get `lg`. A touch target stays 48.
+- Changed defaults: a pointer now draws 40 (it drew 48 for most controls), and fields, menus, tabs and similar draw 48 with fingers (they drew 40). Pass `density: CarbonDensity.lg` for the old buttons and rows.
+
 ## 0.1.1
 
 - A full README (features, getting started, usage, themes, other skins) and an example for pub.dev; topics and the documentation link in the pubspec.

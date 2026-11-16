@@ -3,6 +3,8 @@ import 'dart:math' as math;
 import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
+import '../carbon_density.dart';
+
 // Carbon's overlays and pickers (base Carbon Skin §3.3): flat surfaces with a hairline, ink for the selection.
 
 const double _disabled = 0.38;
@@ -22,11 +24,11 @@ class CarbonMenuRenderer implements CamoMenuRenderer {
       shape: theme.shapes.medium,
       minWidth: 112,
       maxWidth: 280,
-      itemHeight: 40,
+      itemHeight: theme.carbonDensity.size,
       contentPadding: EdgeInsetsDirectional.symmetric(
         vertical: theme.spacing.xs,
       ),
-      textStyle: theme.typography.bodyMedium,
+      textStyle: theme.typography.bodyMedium.forDensity(theme.carbonDensity),
       iconSize: 18,
       elevation: theme.elevation.level3, // overlays get the one shadow
       checkPosition: CheckPosition.trailing,
