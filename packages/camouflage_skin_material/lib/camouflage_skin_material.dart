@@ -22,6 +22,7 @@ import 'src/renderer/material_panels.dart';
 import 'src/renderer/material_pickers.dart';
 import 'src/renderer/material_primitives.dart';
 import 'src/renderer/material_structure.dart';
+import 'src/renderer/material_split_pane.dart';
 import 'src/renderer/material_text.dart';
 import 'src/renderer/material_wavy.dart';
 
@@ -89,6 +90,7 @@ export 'src/renderer/material_structure.dart'
         MaterialPagedListRenderer,
         MaterialSkeletonRenderer,
         MaterialTopBarRenderer;
+export 'src/renderer/material_split_pane.dart' show MaterialSplitPaneRenderer;
 export 'src/renderer/material_text.dart'
     show MaterialSearchFieldRenderer, MaterialTextFieldRenderer;
 export 'src/renderer/material_wavy.dart' show MaterialWavyProgressBarRenderer;
@@ -151,6 +153,7 @@ const CamoSkin materialSkin = CamoSkin(
   tree: MaterialTreeRenderer(),
   carousel: MaterialCarouselRenderer(),
   fileUploader: MaterialFileUploaderRenderer(),
+  splitPane: MaterialSplitPaneRenderer(),
 );
 
 /// The Material skin with its options: [expressiveProgress] draws the linear progress indicator as M3

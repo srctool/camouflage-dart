@@ -76,6 +76,7 @@ const CamoSkin debugSkin = CamoSkin(
   tree: DebugTree(),
   carousel: DebugCarousel(),
   fileUploader: DebugFileUploader(),
+  splitPane: DebugSplitPane(),
 );
 
 /// Fills the container and nothing else: no depth, no border.
@@ -159,6 +160,39 @@ class PressTint implements InteractionFeedback {
             : null,
       ),
       child: child,
+    ),
+  );
+}
+
+/// The debug skin's divider: a flat gray bar that turns blue while dragged.
+class DebugSplitPane implements CamoSplitPaneRenderer {
+  /// Creates the renderer.
+  const DebugSplitPane();
+
+  @override
+  CamoSplitPaneStyle defaults(CamoTheme theme) => const CamoSplitPaneStyle(
+    thickness: 2,
+    hitSize: 8,
+    keyStep: 16,
+    keyStepLarge: 64,
+    grip: false,
+    colors: CamoSplitPaneColors(
+      line: Color(0xFF888888),
+      hover: Color(0xFF444444),
+      dragging: Color(0xFF0000FF),
+      focus: Color(0xFFFF0000),
+    ),
+  );
+
+  @override
+  Widget divider(
+    BuildContext context,
+    SplitDividerState state,
+    CamoTheme theme,
+    CamoSplitPaneStyle style,
+  ) => SizedBox.expand(
+    child: ColoredBox(
+      color: state.dragging ? style.colors.dragging : style.colors.line,
     ),
   );
 }
