@@ -18,6 +18,7 @@ import '../dialog/camo_dialog.dart';
 import '../divider/camo_divider.dart';
 import '../fab/camo_fab.dart';
 import '../file_uploader/camo_file_uploader.dart';
+import '../split_pane/camo_split_pane.dart';
 import '../icon/camo_icon.dart';
 import '../icon_button/camo_icon_button.dart';
 import '../image/camo_image.dart';
@@ -116,6 +117,7 @@ class CamoSkin {
     required this.tree,
     required this.carousel,
     required this.fileUploader,
+    required this.splitPane,
   });
 
   /// For debugging and tests, e.g. `'minimal'`.
@@ -283,6 +285,9 @@ class CamoSkin {
   /// File uploaders.
   final CamoFileUploaderRenderer fileUploader;
 
+  /// Split pane dividers.
+  final CamoSplitPaneRenderer splitPane;
+
   /// A copy with the given fields replaced; the others stay `identical`.
   CamoSkin copyWith({
     String? name,
@@ -340,6 +345,7 @@ class CamoSkin {
     CamoTreeRenderer? tree,
     CamoCarouselRenderer? carousel,
     CamoFileUploaderRenderer? fileUploader,
+    CamoSplitPaneRenderer? splitPane,
   }) => CamoSkin(
     name: name ?? this.name,
     surfaceTreatment: surfaceTreatment ?? this.surfaceTreatment,
@@ -396,6 +402,7 @@ class CamoSkin {
     tree: tree ?? this.tree,
     carousel: carousel ?? this.carousel,
     fileUploader: fileUploader ?? this.fileUploader,
+    splitPane: splitPane ?? this.splitPane,
   );
 
   @override
@@ -455,7 +462,8 @@ class CamoSkin {
       other.dataTable == dataTable &&
       other.tree == tree &&
       other.carousel == carousel &&
-      other.fileUploader == fileUploader;
+      other.fileUploader == fileUploader &&
+      other.splitPane == splitPane;
 
   @override
   int get hashCode => Object.hashAll([
@@ -514,6 +522,7 @@ class CamoSkin {
     tree,
     carousel,
     fileUploader,
+    splitPane,
   ]);
 
   @override

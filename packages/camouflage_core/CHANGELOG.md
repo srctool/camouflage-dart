@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Split panes: `CamoSplitPane(axis:, panes:, state:)` lays out two or more panes side by side or stacked with a draggable divider between each pair. The layout is the app's `CamoSplitState` (pane sizes as fractions, so a saved layout restores on any window size, and which panes are collapsed; `snapshot()` and `apply()` to persist it); a `CamoPane` has `minSize` and `maxSize` and can be `collapsible`. A divider is focusable and adjustable by a screen reader ("Resize panel, 35 percent"); arrow keys resize (Shift for a larger step), Home and End go to a limit, Enter collapses or restores, a double tap resets, and right to left mirrors a horizontal split. **The skin contract grows by one renderer, `splitPane` (`CamoSplitPaneRenderer`), so every skin, including your own, must add it** (ADR-45).
 - Menu submenus: `CamoMenuSubmenu(text:, items:)` is a new `CamoMenuEntry`: a row that opens a nested menu beside it (Reset ▸ Soft, Mixed, Hard). Hover opens it after 250 ms, a tap, Enter and the arrow toward the child open it at once and focus its first item; the arrow back and Esc close only the submenu, and a leaf closes every level. It flips to the start side near the edge and mirrors in right-to-left. `MenuItemState` gains `hasSubmenu` and `submenuOpen`.
 
 ## 0.1.3

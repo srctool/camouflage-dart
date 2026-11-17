@@ -23,6 +23,7 @@ import 'src/renderer/cupertino_panels.dart';
 import 'src/renderer/cupertino_pickers.dart';
 import 'src/renderer/cupertino_primitives.dart';
 import 'src/renderer/cupertino_structure.dart';
+import 'src/renderer/cupertino_split_pane.dart';
 import 'src/renderer/cupertino_text.dart';
 
 export 'src/cupertino_material.dart';
@@ -89,6 +90,7 @@ export 'src/renderer/cupertino_structure.dart'
         CupertinoPagedListRenderer,
         CupertinoSkeletonRenderer,
         CupertinoTopBarRenderer;
+export 'src/renderer/cupertino_split_pane.dart' show CupertinoSplitPaneRenderer;
 export 'src/renderer/cupertino_text.dart'
     show CupertinoSearchFieldRenderer, CupertinoTextFieldRenderer;
 
@@ -152,6 +154,7 @@ const CamoSkin cupertinoSkin = CamoSkin(
   tree: CupertinoTreeRenderer(),
   carousel: CupertinoCarouselRenderer(),
   fileUploader: CupertinoFileUploaderRenderer(),
+  splitPane: CupertinoSplitPaneRenderer(),
 );
 
 /// The Cupertino skin with its surface option: [CupertinoSurface.liquidGlass] draws bars, sheets, menus and the

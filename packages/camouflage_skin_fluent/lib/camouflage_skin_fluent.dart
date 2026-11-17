@@ -23,6 +23,7 @@ import 'src/renderer/fluent_panels.dart';
 import 'src/renderer/fluent_pickers.dart';
 import 'src/renderer/fluent_primitives.dart';
 import 'src/renderer/fluent_structure.dart';
+import 'src/renderer/fluent_split_pane.dart';
 import 'src/renderer/fluent_text.dart';
 import 'src/subtle.dart';
 
@@ -82,6 +83,7 @@ export 'src/renderer/fluent_structure.dart'
         FluentPagedListRenderer,
         FluentSkeletonRenderer,
         FluentTopBarRenderer;
+export 'src/renderer/fluent_split_pane.dart' show FluentSplitPaneRenderer;
 export 'src/renderer/fluent_text.dart';
 export 'src/subtle.dart';
 
@@ -167,6 +169,7 @@ const CamoSkin fluentSkinDefault = CamoSkin(
   tree: FluentTreeRenderer(),
   carousel: FluentCarouselRenderer(),
   fileUploader: FluentFileUploaderRenderer(),
+  splitPane: FluentSplitPaneRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [fluentSkinDefault] and [fluentTheme].

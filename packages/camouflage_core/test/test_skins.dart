@@ -401,6 +401,7 @@ const skinA = CamoSkin(
   tree: PlainTree(),
   carousel: PlainCarousel(),
   fileUploader: PlainFileUploader(),
+  splitPane: PlainSplitPane(),
 );
 final skinB = skinA.copyWith(name: 'b');
 final themeT = CamoTheme(
@@ -410,3 +411,31 @@ final themeT = CamoTheme(
 final themeU = themeT.copyWith(
   colors: CamoColors.fromSeed(primary: const Color(0xFFB3261E)),
 );
+
+/// The split pane's test renderer: a gray bar that fills the hit area.
+class PlainSplitPane implements CamoSplitPaneRenderer {
+  const PlainSplitPane();
+
+  @override
+  CamoSplitPaneStyle defaults(CamoTheme theme) => const CamoSplitPaneStyle(
+    thickness: 2,
+    hitSize: 8,
+    keyStep: 16,
+    keyStepLarge: 64,
+    grip: false,
+    colors: CamoSplitPaneColors(
+      line: Color(0xFF888888),
+      hover: Color(0xFF444444),
+      dragging: Color(0xFF0000FF),
+      focus: Color(0xFFFF0000),
+    ),
+  );
+
+  @override
+  Widget divider(
+    BuildContext context,
+    SplitDividerState state,
+    CamoTheme theme,
+    CamoSplitPaneStyle style,
+  ) => SizedBox.expand(child: ColoredBox(color: style.colors.line));
+}
