@@ -13,6 +13,7 @@ import '../provider/camouflage.dart';
 import '../skin/interaction.dart';
 import '../theme/roles.dart';
 import '../util/camo_behavior.dart';
+import '../scrollbar/camo_scrollbar.dart';
 import 'camo_menu.dart';
 
 /// One entry in a menu: a [CamoMenuItem], a [CamoMenuDivider], a [CamoMenuGroup] or a [CamoMenuSubmenu].
@@ -599,30 +600,32 @@ class _MenuEntriesState extends State<MenuEntries> {
         child: Focus(
           onKeyEvent: _keys,
           skipTraversal: true,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                for (final entry in widget.entries)
-                  switch (entry) {
-                    CamoMenuItem() => row(entry),
-                    CamoMenuSubmenu() => row(
-                      CamoMenuItem(
-                        text: entry.text,
-                        onPressed: () {},
-                        leadingIcon: entry.leadingIcon,
-                        enabled: entry.enabled,
+          child: CamoScrollArea(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (final entry in widget.entries)
+                    switch (entry) {
+                      CamoMenuItem() => row(entry),
+                      CamoMenuSubmenu() => row(
+                        CamoMenuItem(
+                          text: entry.text,
+                          onPressed: () {},
+                          leadingIcon: entry.leadingIcon,
+                          enabled: entry.enabled,
+                        ),
                       ),
-                    ),
-                    CamoMenuDivider() => divider,
-                    CamoMenuGroup() => Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [for (final item in entry.items) row(item)],
-                    ),
-                  },
-              ],
+                      CamoMenuDivider() => divider,
+                      CamoMenuGroup() => Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [for (final item in entry.items) row(item)],
+                      ),
+                    },
+                ],
+              ),
             ),
           ),
         ),

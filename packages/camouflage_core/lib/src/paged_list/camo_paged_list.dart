@@ -6,6 +6,7 @@ import '../list/camo_list_item.dart' show listDivider;
 import '../provider/camouflage.dart';
 import '../skeleton/camo_skeleton.dart';
 import '../theme/camo_theme.dart';
+import '../scrollbar/camo_scrollbar.dart';
 
 /// Which load is running.
 enum PagedLoad {
@@ -677,20 +678,22 @@ class _CamoPagedListState<T> extends State<CamoPagedList<T>> {
           CamoSkeletonGroup(
             active: fullSkeleton || more > 0,
             child: LayoutBuilder(
-              builder: (context, constraints) => ListView.builder(
-                controller: _controller,
-                padding: widget.padding,
-                physics: const AlwaysScrollableScrollPhysics(),
-                itemCount: count,
-                findChildIndexCallback: (key) {
-                  if (key is! ValueKey || !showItems) return null;
-                  final index = s.items.indexWhere(
-                    (it) => widget.itemKey(it) == key.value,
-                  );
-                  return index < 0 ? null : index + head;
-                },
-                itemBuilder: (context, i) =>
-                    row(context, i, constraints.maxHeight),
+              builder: (context, constraints) => CamoScrollArea(
+                child: ListView.builder(
+                  controller: _controller,
+                  padding: widget.padding,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: count,
+                  findChildIndexCallback: (key) {
+                    if (key is! ValueKey || !showItems) return null;
+                    final index = s.items.indexWhere(
+                      (it) => widget.itemKey(it) == key.value,
+                    );
+                    return index < 0 ? null : index + head;
+                  },
+                  itemBuilder: (context, i) =>
+                      row(context, i, constraints.maxHeight),
+                ),
               ),
             ),
           ),

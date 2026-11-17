@@ -77,6 +77,7 @@ const CamoSkin debugSkin = CamoSkin(
   carousel: DebugCarousel(),
   fileUploader: DebugFileUploader(),
   splitPane: DebugSplitPane(),
+  scrollbar: DebugScrollbar(),
 );
 
 /// Fills the container and nothing else: no depth, no border.
@@ -195,4 +196,33 @@ class DebugSplitPane implements CamoSplitPaneRenderer {
       color: state.dragging ? style.colors.dragging : style.colors.line,
     ),
   );
+}
+
+/// The debug skin's scrollbar: an always-visible gray bar the full width of its lane.
+class DebugScrollbar implements CamoScrollbarRenderer {
+  /// Creates the renderer.
+  const DebugScrollbar();
+
+  @override
+  CamoScrollbarStyle defaults(CamoTheme theme) => const CamoScrollbarStyle(
+    thickness: 6,
+    hoverThickness: 10,
+    minThumb: 32,
+    visibility: CamoScrollbarVisibility.always,
+    hideDelay: Duration(milliseconds: 1200),
+    colors: CamoScrollbarColors(
+      thumb: Color(0xFF888888),
+      thumbHover: Color(0xFF444444),
+      thumbDrag: Color(0xFF0000FF),
+      track: Color(0x00000000),
+    ),
+  );
+
+  @override
+  Widget scrollbar(
+    BuildContext context,
+    CamoScrollbarState state,
+    CamoTheme theme,
+    CamoScrollbarStyle style,
+  ) => SizedBox.expand(child: ColoredBox(color: style.colors.thumb));
 }

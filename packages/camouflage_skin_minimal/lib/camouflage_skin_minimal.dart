@@ -22,6 +22,7 @@ import 'src/renderer/minimal_panels.dart';
 import 'src/renderer/minimal_pickers.dart';
 import 'src/renderer/minimal_primitives.dart';
 import 'src/renderer/minimal_structure.dart';
+import 'src/renderer/minimal_scrollbar.dart';
 import 'src/renderer/minimal_split_pane.dart';
 import 'src/renderer/minimal_text.dart';
 
@@ -89,6 +90,7 @@ export 'src/renderer/minimal_structure.dart'
         MinimalPagedListRenderer,
         MinimalSkeletonRenderer,
         MinimalTopBarRenderer;
+export 'src/renderer/minimal_scrollbar.dart' show MinimalScrollbarRenderer;
 export 'src/renderer/minimal_split_pane.dart' show MinimalSplitPaneRenderer;
 export 'src/renderer/minimal_text.dart'
     show MinimalSearchFieldRenderer, MinimalTextFieldRenderer;
@@ -154,6 +156,7 @@ const CamoSkin minimalSkin = CamoSkin(
   carousel: MinimalCarouselRenderer(),
   fileUploader: MinimalFileUploaderRenderer(),
   splitPane: MinimalSplitPaneRenderer(),
+  scrollbar: MinimalScrollbarRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [minimalSkin] and [minimalLight] or [minimalDark].

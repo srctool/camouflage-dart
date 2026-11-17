@@ -17,6 +17,7 @@ import '../paged_list/camo_paged_list.dart';
 import '../provider/camouflage.dart';
 import '../search/camo_search_field.dart';
 import '../text/camo_text.dart';
+import '../scrollbar/camo_scrollbar.dart';
 
 /// How a select shows its options: a menu under the field, a bottom sheet, or `auto` (see [CamoSelectTheme]).
 enum SelectPresentation {
@@ -447,17 +448,19 @@ class _OptionListState<T> extends State<_OptionList<T>> {
           )
         else
           Flexible(
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                for (final option in shown)
-                  _OptionRow<T>(
-                    option: option,
-                    selected: option.value == w.value,
-                    style: w.style,
-                    onPressed: () => w.onPicked(option.value),
-                  ),
-              ],
+            child: CamoScrollArea(
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  for (final option in shown)
+                    _OptionRow<T>(
+                      option: option,
+                      selected: option.value == w.value,
+                      style: w.style,
+                      onPressed: () => w.onPicked(option.value),
+                    ),
+                ],
+              ),
             ),
           ),
       ],

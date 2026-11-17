@@ -7,6 +7,7 @@ import '../theme/camo_theme.dart';
 import '../util/camo_behavior.dart';
 import '../util/camo_roving_focus.dart';
 import '../icon/camo_icon.dart';
+import '../scrollbar/camo_scrollbar.dart';
 
 /// Every color a tree uses.
 @immutable
@@ -391,16 +392,18 @@ class _CamoTreeState<T> extends State<CamoTree<T>> {
       explicitChildNodes: true,
       label: widget.semanticLabel,
       child: CamoRovingFocus(
-        child: ListView.builder(
-          padding: EdgeInsets.zero,
-          itemCount: visible.length,
-          itemBuilder: (context, i) => _NodeRow<T>(
-            key: ValueKey(visible[i].node.id),
-            tree: widget,
-            visible: visible,
-            index: i,
-            setExpanded: _setExpanded,
-            select: _select,
+        child: CamoScrollArea(
+          child: ListView.builder(
+            padding: EdgeInsets.zero,
+            itemCount: visible.length,
+            itemBuilder: (context, i) => _NodeRow<T>(
+              key: ValueKey(visible[i].node.id),
+              tree: widget,
+              visible: visible,
+              index: i,
+              setExpanded: _setExpanded,
+              select: _select,
+            ),
           ),
         ),
       ),

@@ -18,6 +18,7 @@ import '../dialog/camo_dialog.dart';
 import '../divider/camo_divider.dart';
 import '../fab/camo_fab.dart';
 import '../file_uploader/camo_file_uploader.dart';
+import '../scrollbar/camo_scrollbar.dart';
 import '../split_pane/camo_split_pane.dart';
 import '../icon/camo_icon.dart';
 import '../icon_button/camo_icon_button.dart';
@@ -109,6 +110,7 @@ class CamoComponentThemes {
     this.carousel,
     this.fileUploader,
     this.splitPane,
+    this.scrollbar,
   });
 
   /// Icons outside any component.
@@ -267,6 +269,9 @@ class CamoComponentThemes {
   /// Split pane dividers.
   final CamoSplitPaneTheme? splitPane;
 
+  /// Scrollbars.
+  final CamoScrollbarTheme? scrollbar;
+
   /// A copy with the given fields replaced.
   CamoComponentThemes copyWith({
     CamoIconTheme? icon,
@@ -321,6 +326,7 @@ class CamoComponentThemes {
     CamoCarouselTheme? carousel,
     CamoUploaderTheme? fileUploader,
     CamoSplitPaneTheme? splitPane,
+    CamoScrollbarTheme? scrollbar,
   }) => CamoComponentThemes(
     icon: icon ?? this.icon,
     surface: surface ?? this.surface,
@@ -374,6 +380,7 @@ class CamoComponentThemes {
     carousel: carousel ?? this.carousel,
     fileUploader: fileUploader ?? this.fileUploader,
     splitPane: splitPane ?? this.splitPane,
+    scrollbar: scrollbar ?? this.scrollbar,
   );
 
   @override
@@ -430,7 +437,8 @@ class CamoComponentThemes {
       other.tree == tree &&
       other.carousel == carousel &&
       other.fileUploader == fileUploader &&
-      other.splitPane == splitPane;
+      other.splitPane == splitPane &&
+      other.scrollbar == scrollbar;
 
   @override
   int get hashCode => Object.hashAll([
@@ -486,5 +494,6 @@ class CamoComponentThemes {
     carousel,
     fileUploader,
     splitPane,
+    scrollbar,
   ]);
 }
