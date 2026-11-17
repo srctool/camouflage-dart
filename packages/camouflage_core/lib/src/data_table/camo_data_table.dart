@@ -9,6 +9,7 @@ import '../theme/camo_theme.dart';
 import '../util/camo_behavior.dart';
 import '../util/camo_roving_focus.dart';
 import '../util/camo_touch_target.dart';
+import '../scrollbar/camo_scrollbar.dart';
 
 /// Every color a data table uses.
 @immutable
@@ -597,19 +598,21 @@ class CamoDataTable<T> extends StatelessWidget {
                             ? const CamoProgressCircle(semanticLabel: 'Loading')
                             : empty,
                       )
-                    : ListView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount: rows.length,
-                        itemBuilder: (context, i) => _BodyRow<T>(
-                          key: ValueKey(rowKey(rows[i])),
-                          index: i,
-                          row: rows[i],
-                          rowKey: rowKey(rows[i]),
-                          columns: columns,
-                          selection: selection,
-                          toggle: toggle,
-                          onRowPressed: onRowPressed,
-                          sized: sized,
+                    : CamoScrollArea(
+                        child: ListView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: rows.length,
+                          itemBuilder: (context, i) => _BodyRow<T>(
+                            key: ValueKey(rowKey(rows[i])),
+                            index: i,
+                            row: rows[i],
+                            rowKey: rowKey(rows[i]),
+                            columns: columns,
+                            selection: selection,
+                            toggle: toggle,
+                            onRowPressed: onRowPressed,
+                            sized: sized,
+                          ),
                         ),
                       ),
               ),

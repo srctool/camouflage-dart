@@ -22,6 +22,7 @@ import 'src/renderer/carbon_panels.dart';
 import 'src/renderer/carbon_pickers.dart';
 import 'src/renderer/carbon_primitives.dart';
 import 'src/renderer/carbon_structure.dart';
+import 'src/renderer/carbon_scrollbar.dart';
 import 'src/renderer/carbon_split_pane.dart';
 import 'src/renderer/carbon_text.dart';
 
@@ -90,6 +91,7 @@ export 'src/renderer/carbon_structure.dart'
         CarbonPagedListRenderer,
         CarbonSkeletonRenderer,
         CarbonTopBarRenderer;
+export 'src/renderer/carbon_scrollbar.dart' show CarbonScrollbarRenderer;
 export 'src/renderer/carbon_split_pane.dart' show CarbonSplitPaneRenderer;
 export 'src/renderer/carbon_text.dart'
     show CarbonSearchFieldRenderer, CarbonTextFieldRenderer;
@@ -154,6 +156,7 @@ const CamoSkin carbonSkin = CamoSkin(
   carousel: CarbonCarouselRenderer(),
   fileUploader: CarbonFileUploaderRenderer(),
   splitPane: CarbonSplitPaneRenderer(),
+  scrollbar: CarbonScrollbarRenderer(),
 );
 
 /// A provider for widget previews and golden setups with [carbonSkin] and [carbonLight] or [carbonDark].

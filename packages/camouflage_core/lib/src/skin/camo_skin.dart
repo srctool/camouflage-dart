@@ -18,6 +18,7 @@ import '../dialog/camo_dialog.dart';
 import '../divider/camo_divider.dart';
 import '../fab/camo_fab.dart';
 import '../file_uploader/camo_file_uploader.dart';
+import '../scrollbar/camo_scrollbar.dart';
 import '../split_pane/camo_split_pane.dart';
 import '../icon/camo_icon.dart';
 import '../icon_button/camo_icon_button.dart';
@@ -118,6 +119,7 @@ class CamoSkin {
     required this.carousel,
     required this.fileUploader,
     required this.splitPane,
+    required this.scrollbar,
   });
 
   /// For debugging and tests, e.g. `'minimal'`.
@@ -288,6 +290,9 @@ class CamoSkin {
   /// Split pane dividers.
   final CamoSplitPaneRenderer splitPane;
 
+  /// Scrollbars.
+  final CamoScrollbarRenderer scrollbar;
+
   /// A copy with the given fields replaced; the others stay `identical`.
   CamoSkin copyWith({
     String? name,
@@ -346,6 +351,7 @@ class CamoSkin {
     CamoCarouselRenderer? carousel,
     CamoFileUploaderRenderer? fileUploader,
     CamoSplitPaneRenderer? splitPane,
+    CamoScrollbarRenderer? scrollbar,
   }) => CamoSkin(
     name: name ?? this.name,
     surfaceTreatment: surfaceTreatment ?? this.surfaceTreatment,
@@ -403,6 +409,7 @@ class CamoSkin {
     carousel: carousel ?? this.carousel,
     fileUploader: fileUploader ?? this.fileUploader,
     splitPane: splitPane ?? this.splitPane,
+    scrollbar: scrollbar ?? this.scrollbar,
   );
 
   @override
@@ -463,7 +470,8 @@ class CamoSkin {
       other.tree == tree &&
       other.carousel == carousel &&
       other.fileUploader == fileUploader &&
-      other.splitPane == splitPane;
+      other.splitPane == splitPane &&
+      other.scrollbar == scrollbar;
 
   @override
   int get hashCode => Object.hashAll([
@@ -523,6 +531,7 @@ class CamoSkin {
     carousel,
     fileUploader,
     splitPane,
+    scrollbar,
   ]);
 
   @override

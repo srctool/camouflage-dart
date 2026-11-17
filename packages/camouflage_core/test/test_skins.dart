@@ -402,6 +402,7 @@ const skinA = CamoSkin(
   carousel: PlainCarousel(),
   fileUploader: PlainFileUploader(),
   splitPane: PlainSplitPane(),
+  scrollbar: PlainScrollbar(),
 );
 final skinB = skinA.copyWith(name: 'b');
 final themeT = CamoTheme(
@@ -438,4 +439,46 @@ class PlainSplitPane implements CamoSplitPaneRenderer {
     CamoTheme theme,
     CamoSplitPaneStyle style,
   ) => SizedBox.expand(child: ColoredBox(color: style.colors.line));
+}
+
+/// The scrollbar's test renderer: an always-visible gray bar that fills its lane.
+class PlainScrollbar implements CamoScrollbarRenderer {
+  const PlainScrollbar();
+
+  @override
+  CamoScrollbarStyle defaults(CamoTheme theme) => const CamoScrollbarStyle(
+    thickness: 6,
+    hoverThickness: 10,
+    minThumb: 32,
+    visibility: CamoScrollbarVisibility.always,
+    hideDelay: Duration(milliseconds: 100),
+    colors: CamoScrollbarColors(
+      thumb: Color(0xFF888888),
+      thumbHover: Color(0xFF444444),
+      thumbDrag: Color(0xFF0000FF),
+      track: Color(0x00000000),
+    ),
+  );
+
+  @override
+  Widget scrollbar(
+    BuildContext context,
+    CamoScrollbarState state,
+    CamoTheme theme,
+    CamoScrollbarStyle style,
+  ) => Stack(
+    children: [
+      Positioned.directional(
+        textDirection: Directionality.of(context),
+        top: state.axis == Axis.vertical ? state.thumbStart : 0,
+        start: state.axis == Axis.vertical ? 0 : state.thumbStart,
+        width: state.axis == Axis.vertical ? 6 : state.thumbLength,
+        height: state.axis == Axis.vertical ? state.thumbLength : 6,
+        child: ColoredBox(
+          key: const ValueKey('scrollbar'),
+          color: style.colors.thumb,
+        ),
+      ),
+    ],
+  );
 }
