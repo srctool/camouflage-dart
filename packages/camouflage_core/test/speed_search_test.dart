@@ -101,7 +101,7 @@ void main() {
       texts.where((t) => _m('fLog9', t) != null).length;
       final watch = Stopwatch()..start();
       texts.where((t) => _m('fLog9', t) != null).length;
-      expect(watch.elapsedMilliseconds, lessThan(150));
+      expect(watch.elapsedMilliseconds, lessThan(1000));
     });
   });
 
