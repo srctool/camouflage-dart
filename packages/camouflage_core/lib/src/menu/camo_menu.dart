@@ -1,6 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import '../speed_search/camo_matcher.dart';
+
 import '../icon/camo_icon.dart';
 import '../provider/camouflage.dart';
 import '../skin/interaction.dart';
@@ -250,6 +252,7 @@ class MenuItemState {
     required this.controller,
     this.hasSubmenu = false,
     this.submenuOpen = false,
+    this.highlight = const [],
   });
 
   /// The item's text.
@@ -284,6 +287,9 @@ class MenuItemState {
 
   /// Its submenu is showing: draw the open state.
   final bool submenuOpen;
+
+  /// The ranges of [text] a speed search matched; draw the text with `CamoHighlightedText(text, highlight)`.
+  final List<MatchRange> highlight;
 }
 
 /// The item's leading icon, if any.

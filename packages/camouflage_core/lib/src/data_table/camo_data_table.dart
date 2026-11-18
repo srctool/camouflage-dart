@@ -15,6 +15,8 @@ import '../util/camo_roving_focus.dart';
 import '../util/camo_touch_target.dart';
 import '../scrollbar/camo_scrollbar.dart';
 import '../menu/camo_menu_anchor.dart';
+import '../speed_search/camo_highlighted_text.dart';
+import '../speed_search/camo_speed_search_state.dart';
 
 part 'camo_column_header.dart';
 part 'camo_column_state.dart';
@@ -522,6 +524,7 @@ class CamoDataTable<T> extends StatelessWidget {
     this.loading = false,
     this.footer,
     this.columnState,
+    this.speedSearch,
   });
 
   /// The columns.
@@ -563,13 +566,62 @@ class CamoDataTable<T> extends StatelessWidget {
   /// The user's column layout; `null` keeps the columns as given.
   final CamoColumnState? columnState;
 
+  /// Typing in the rows filters them (or jumps) by the columns that give their `text`; draw the matches in your
+  /// cells with `CamoHighlightedText(text, speedSearch.match(text) ?? [])`.
+  final CamoSpeedSearchState? speedSearch;
+
   @override
   Widget build(BuildContext context) {
+    final search = speedSearch;
+    if (search == null) return _withColumns(context, rows, const [], null);
+    return ListenableBuilder(
+      listenable: search,
+      builder: (context, _) {
+        final shown = _shownColumns();
+        final hits = [
+          for (var i = 0; i < rows.length; i++)
+            if (_rowMatches(search, shown, rows[i])) i,
+        ];
+        search.matchCount = hits.length;
+        if (!search.active || search.mode == SpeedSearchMode.jump) {
+          return _withColumns(context, rows, hits, search);
+        }
+        return _withColumns(
+          context,
+          [for (final i in hits) rows[i]],
+          [for (var i = 0; i < hits.length; i++) i],
+          search,
+        );
+      },
+    );
+  }
+
+  List<CamoColumn<T>> _shownColumns() {
     final state = columnState;
-    if (state == null) return _build(context, columns, null);
+    return state == null ? columns : _shown(state, columns);
+  }
+
+  // A row matches when any shown column that gives its text matches.
+  bool _rowMatches(
+    CamoSpeedSearchState search,
+    List<CamoColumn<T>> shown,
+    T row,
+  ) => shown.any((c) => c.text != null && search.matches(c.text!(row)));
+
+  Widget _withColumns(
+    BuildContext context,
+    List<T> rows,
+    List<int> hitRows,
+    CamoSpeedSearchState? search,
+  ) {
+    final state = columnState;
+    if (state == null) {
+      return _build(context, columns, null, rows, hitRows, search);
+    }
     return ListenableBuilder(
       listenable: state,
-      builder: (context, _) => _build(context, _shown(state, columns), state),
+      builder: (context, _) =>
+          _build(context, _shown(state, columns), state, rows, hitRows, search),
     );
   }
 
@@ -577,6 +629,9 @@ class CamoDataTable<T> extends StatelessWidget {
     BuildContext context,
     List<CamoColumn<T>> columns,
     CamoColumnState? state,
+    List<T> rows,
+    List<int> hitRows,
+    CamoSpeedSearchState? search,
   ) {
     final skin = Camouflage.skinOf(context, component: 'CamoDataTable');
     final theme = Camouflage.themeOf(context, component: 'CamoDataTable');
@@ -621,81 +676,181 @@ class CamoDataTable<T> extends StatelessWidget {
         ),
         theme,
         style,
-        CamoRovingFocus(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              skin.dataTable.renderHeaderRow(context, theme, style, [
-                if (selectable)
-                  SizedBox(
-                    width: _selectColumn,
-                    child: Center(
-                      // The header can be shorter than 48; the semantics still cover the target.
-                      child: CamoTouchSemantics(
-                        child: Semantics(
-                          label: 'Select all rows',
-                          child: CamoCheckbox(
-                            checked: allSelected,
-                            onChanged: (_) => toggleAll(),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                for (var i = 0; i < columns.length; i++)
-                  sized(
-                    columns[i].width,
-                    state == null
-                        ? _HeaderCell(
-                            column: columns[i],
-                            sort: sort,
-                            onSortChanged: onSortChanged,
-                          )
-                        : _ColumnHeader<T>(
-                            key: ValueKey(columns[i].id),
-                            column: columns[i],
-                            index: i,
-                            table: _ColumnContext<T>(
-                              this.columns,
-                              columns,
-                              rows,
-                              state,
+        _SearchFocus(
+          search: search,
+          hitRows: hitRows,
+          rowHeight: style.rowHeight,
+          builder: (context, scroll, focus) => CamoSpeedSearchKeys(
+            state: search,
+            child: CamoRovingFocus(
+              controller: focus,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  skin.dataTable.renderHeaderRow(context, theme, style, [
+                    if (selectable)
+                      SizedBox(
+                        width: _selectColumn,
+                        child: Center(
+                          // The header can be shorter than 48; the semantics still cover the target.
+                          child: CamoTouchSemantics(
+                            child: Semantics(
+                              label: 'Select all rows',
+                              child: CamoCheckbox(
+                                checked: allSelected,
+                                onChanged: (_) => toggleAll(),
+                              ),
                             ),
-                            sort: sort,
-                            onSortChanged: onSortChanged,
-                          ),
-                  ),
-              ]),
-              Flexible(
-                child: rows.isEmpty
-                    ? Center(
-                        child: loading
-                            ? const CamoProgressCircle(semanticLabel: 'Loading')
-                            : empty,
-                      )
-                    : CamoScrollArea(
-                        child: ListView.builder(
-                          padding: EdgeInsets.zero,
-                          itemCount: rows.length,
-                          itemBuilder: (context, i) => _BodyRow<T>(
-                            key: ValueKey(rowKey(rows[i])),
-                            index: i,
-                            row: rows[i],
-                            rowKey: rowKey(rows[i]),
-                            columns: columns,
-                            selection: selection,
-                            toggle: toggle,
-                            onRowPressed: onRowPressed,
-                            sized: sized,
                           ),
                         ),
                       ),
+                    for (var i = 0; i < columns.length; i++)
+                      sized(
+                        columns[i].width,
+                        state == null
+                            ? _HeaderCell(
+                                column: columns[i],
+                                sort: sort,
+                                onSortChanged: onSortChanged,
+                              )
+                            : _ColumnHeader<T>(
+                                key: ValueKey(columns[i].id),
+                                column: columns[i],
+                                index: i,
+                                table: _ColumnContext<T>(
+                                  this.columns,
+                                  columns,
+                                  rows,
+                                  state,
+                                ),
+                                sort: sort,
+                                onSortChanged: onSortChanged,
+                              ),
+                      ),
+                  ]),
+                  Flexible(
+                    child: rows.isEmpty
+                        ? Center(
+                            child: loading
+                                ? const CamoProgressCircle(
+                                    semanticLabel: 'Loading',
+                                  )
+                                : empty,
+                          )
+                        : CamoScrollArea(
+                            child: ListView.builder(
+                              controller: scroll,
+                              padding: EdgeInsets.zero,
+                              itemCount: rows.length,
+                              itemBuilder: (context, i) => _BodyRow<T>(
+                                key: ValueKey(rowKey(rows[i])),
+                                index: i,
+                                row: rows[i],
+                                rowKey: rowKey(rows[i]),
+                                columns: columns,
+                                selection: selection,
+                                toggle: toggle,
+                                onRowPressed: onRowPressed,
+                                sized: sized,
+                              ),
+                            ),
+                          ),
+                  ),
+                  ?footer,
+                ],
               ),
-              ?footer,
-            ],
+            ),
           ),
         ),
       ),
+    );
+  }
+}
+
+// Moves focus to a match when the query changes (the focused row may be gone from a filtered table), and puts the
+// typed text over the rows' bottom start corner.
+class _SearchFocus extends StatefulWidget {
+  const _SearchFocus({
+    required this.search,
+    required this.hitRows,
+    required this.rowHeight,
+    required this.builder,
+  });
+
+  final CamoSpeedSearchState? search;
+  final List<int> hitRows;
+  final double rowHeight;
+  final Widget Function(
+    BuildContext context,
+    ScrollController scroll,
+    CamoRovingFocusController focus,
+  )
+  builder;
+
+  @override
+  State<_SearchFocus> createState() => _SearchFocusState();
+}
+
+class _SearchFocusState extends State<_SearchFocus> {
+  final _scroll = ScrollController();
+  final _focus = CamoRovingFocusController();
+  String _last = '';
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  void _moveFocus() {
+    final search = widget.search;
+    final rows = widget.hitRows;
+    if (search == null || rows.isEmpty) return;
+    final from = search.mode == SpeedSearchMode.jump
+        ? (_focus.lastFocused ?? 0)
+        : 0;
+    final target = rows.firstWhere((i) => i >= from, orElse: () => rows.first);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (_scroll.hasClients) {
+        _scroll.jumpTo(
+          (target * widget.rowHeight).clamp(
+            0,
+            _scroll.position.maxScrollExtent,
+          ),
+        );
+      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _focus.focusItem(target);
+      });
+    });
+  }
+
+  @override
+  void didUpdateWidget(_SearchFocus old) {
+    super.didUpdateWidget(old);
+    final query = widget.search?.query ?? '';
+    if (query != _last) {
+      _last = query;
+      if (query.isNotEmpty) _moveFocus();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final body = widget.builder(context, _scroll, _focus);
+    final search = widget.search;
+    if (search == null) return body;
+    final spacing = Camouflage.spacingOf(context);
+    return Stack(
+      children: [
+        body,
+        PositionedDirectional(
+          start: spacing.s,
+          bottom: spacing.s,
+          child: CamoSpeedSearchOverlay(state: search),
+        ),
+      ],
     );
   }
 }

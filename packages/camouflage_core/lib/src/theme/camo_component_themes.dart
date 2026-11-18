@@ -50,6 +50,7 @@ import '../timepicker/camo_time_picker.dart';
 import '../toolbar/camo_toolbar.dart';
 import '../tooltip/camo_tooltip.dart';
 import '../topbar/camo_top_bar.dart';
+import '../speed_search/camo_highlighted_text.dart';
 import '../tree/camo_tree.dart';
 
 /// Per-component overrides: one nullable `CamoXTheme` per component, `null` meaning the skin's default.
@@ -111,6 +112,7 @@ class CamoComponentThemes {
     this.fileUploader,
     this.splitPane,
     this.scrollbar,
+    this.speedSearch,
   });
 
   /// Icons outside any component.
@@ -272,6 +274,9 @@ class CamoComponentThemes {
   /// Scrollbars.
   final CamoScrollbarTheme? scrollbar;
 
+  /// Speed search highlights and words.
+  final CamoSpeedSearchTheme? speedSearch;
+
   /// A copy with the given fields replaced.
   CamoComponentThemes copyWith({
     CamoIconTheme? icon,
@@ -327,6 +332,7 @@ class CamoComponentThemes {
     CamoUploaderTheme? fileUploader,
     CamoSplitPaneTheme? splitPane,
     CamoScrollbarTheme? scrollbar,
+    CamoSpeedSearchTheme? speedSearch,
   }) => CamoComponentThemes(
     icon: icon ?? this.icon,
     surface: surface ?? this.surface,
@@ -381,6 +387,7 @@ class CamoComponentThemes {
     fileUploader: fileUploader ?? this.fileUploader,
     splitPane: splitPane ?? this.splitPane,
     scrollbar: scrollbar ?? this.scrollbar,
+    speedSearch: speedSearch ?? this.speedSearch,
   );
 
   @override
@@ -438,7 +445,8 @@ class CamoComponentThemes {
       other.carousel == carousel &&
       other.fileUploader == fileUploader &&
       other.splitPane == splitPane &&
-      other.scrollbar == scrollbar;
+      other.scrollbar == scrollbar &&
+      other.speedSearch == speedSearch;
 
   @override
   int get hashCode => Object.hashAll([
@@ -495,5 +503,6 @@ class CamoComponentThemes {
     fileUploader,
     splitPane,
     scrollbar,
+    speedSearch,
   ]);
 }

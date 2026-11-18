@@ -943,8 +943,9 @@ Widget paintMenuItem(
                 ),
               ),
             Expanded(
-              child: Text(
+              child: CamoHighlightedText(
                 state.text,
+                state.highlight,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: style.textStyle.copyWith(color: text),
