@@ -35,6 +35,13 @@ class _ListsDemoState extends State<ListsDemo> {
   var _expanded = <Object>{'docs'};
   var _selected = <Object>{};
   List<CamoTreeNode<String>>? _remote;
+  final _columns = CamoColumnState(['name', 'role', 'age']);
+
+  @override
+  void dispose() {
+    _columns.dispose();
+    super.dispose();
+  }
 
   List<_Member> get _rows {
     final rows = [..._members]
@@ -55,11 +62,13 @@ class _ListsDemoState extends State<ListsDemo> {
       SizedBox(
         height: 260,
         child: CamoDataTable<_Member>(
+          columnState: _columns,
           columns: [
             CamoColumn(
               id: 'name',
               header: 'Name',
               sortable: true,
+              text: (m) => m.name,
               cell: (context, m) => CamoText(m.name),
             ),
             CamoColumn(

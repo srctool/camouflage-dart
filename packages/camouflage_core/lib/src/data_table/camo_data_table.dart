@@ -1,3 +1,7 @@
+import 'dart:math' as math;
+
+import 'package:flutter/semantics.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import '../checkbox/camo_checkbox.dart';
@@ -10,6 +14,10 @@ import '../util/camo_behavior.dart';
 import '../util/camo_roving_focus.dart';
 import '../util/camo_touch_target.dart';
 import '../scrollbar/camo_scrollbar.dart';
+import '../menu/camo_menu_anchor.dart';
+
+part 'camo_column_header.dart';
+part 'camo_column_state.dart';
 
 /// Every color a data table uses.
 @immutable
@@ -280,6 +288,11 @@ class CamoColumn<T> {
     this.width = const ColumnWidth.weight(),
     this.align = ColumnAlign.start,
     this.sortable = false,
+    this.minWidth = CamoColumnState.defaultMinWidth,
+    this.resizable = true,
+    this.hideable = true,
+    this.reorderable = true,
+    this.text,
   });
 
   /// Identifies the column; [TableSort] refers to it.
@@ -299,6 +312,36 @@ class CamoColumn<T> {
 
   /// Whether a click on its header sorts by it.
   final bool sortable;
+
+  /// The narrowest the user can drag the column.
+  final double minWidth;
+
+  /// Whether the user can resize it (with a `columnState`).
+  final bool resizable;
+
+  /// Whether the user can hide it.
+  final bool hideable;
+
+  /// Whether the user can move it.
+  final bool reorderable;
+
+  /// The text of a row's cell: with it, a double-tap on the resize edge fits the widest of the first rows;
+  /// without it, the column goes back to its own width.
+  final String Function(T row)? text;
+
+  CamoColumn<T> _withWidth(ColumnWidth width) => CamoColumn<T>(
+    id: id,
+    header: header,
+    cell: cell,
+    width: width,
+    align: align,
+    sortable: sortable,
+    minWidth: minWidth,
+    resizable: resizable,
+    hideable: hideable,
+    reorderable: reorderable,
+    text: text,
+  );
 }
 
 /// The sort the table shows: by the column with [columnId], ascending or not. The app sorts the rows.
@@ -460,7 +503,8 @@ const double _selectColumn = 48;
 /// (and does the sorting) and the [selection] (a set of [rowKey]s; `null` means rows can't be selected). A press
 /// on a header of a sortable column calls [onSortChanged]; a press or Space on a row toggles its selection (it
 /// calls [onRowPressed] instead when that is set); Up and Down move between rows. [semanticLabel] names the table.
-/// Rows are lazy and the header stays above them: give the table a height.
+/// Rows are lazy and the header stays above them: give the table a height. With a [columnState] the user can
+/// resize, hide and reorder the columns (see [CamoColumn]); `null` keeps the columns as given.
 class CamoDataTable<T> extends StatelessWidget {
   /// Creates a data table.
   const CamoDataTable({
@@ -477,6 +521,7 @@ class CamoDataTable<T> extends StatelessWidget {
     this.empty,
     this.loading = false,
     this.footer,
+    this.columnState,
   });
 
   /// The columns.
@@ -515,8 +560,24 @@ class CamoDataTable<T> extends StatelessWidget {
   /// Below the rows.
   final Widget? footer;
 
+  /// The user's column layout; `null` keeps the columns as given.
+  final CamoColumnState? columnState;
+
   @override
   Widget build(BuildContext context) {
+    final state = columnState;
+    if (state == null) return _build(context, columns, null);
+    return ListenableBuilder(
+      listenable: state,
+      builder: (context, _) => _build(context, _shown(state, columns), state),
+    );
+  }
+
+  Widget _build(
+    BuildContext context,
+    List<CamoColumn<T>> columns,
+    CamoColumnState? state,
+  ) {
     final skin = Camouflage.skinOf(context, component: 'CamoDataTable');
     final theme = Camouflage.themeOf(context, component: 'CamoDataTable');
     final style = skin.dataTable
@@ -581,14 +642,28 @@ class CamoDataTable<T> extends StatelessWidget {
                       ),
                     ),
                   ),
-                for (final column in columns)
+                for (var i = 0; i < columns.length; i++)
                   sized(
-                    column.width,
-                    _HeaderCell(
-                      column: column,
-                      sort: sort,
-                      onSortChanged: onSortChanged,
-                    ),
+                    columns[i].width,
+                    state == null
+                        ? _HeaderCell(
+                            column: columns[i],
+                            sort: sort,
+                            onSortChanged: onSortChanged,
+                          )
+                        : _ColumnHeader<T>(
+                            key: ValueKey(columns[i].id),
+                            column: columns[i],
+                            index: i,
+                            table: _ColumnContext<T>(
+                              this.columns,
+                              columns,
+                              rows,
+                              state,
+                            ),
+                            sort: sort,
+                            onSortChanged: onSortChanged,
+                          ),
                   ),
               ]),
               Flexible(
