@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/semantics.dart';
 import 'package:flutter/widgets.dart';
 
 import '../list/camo_list_item.dart' show listDivider;
@@ -444,14 +443,6 @@ class _CamoPagedListState<T> extends State<CamoPagedList<T>> {
         ..clear()
         ..addAll(s.items.map(widget.itemKey).where((k) => !before.contains(k)));
     }
-    if (s.loading == PagedLoad.more && old.state.loading != PagedLoad.more) {
-      final style = _style(context);
-      SemanticsService.sendAnnouncement(
-        View.of(context),
-        style.strings.loadingMore,
-        Directionality.of(context),
-      );
-    }
     _focusRetryIfFailed(old.state);
     _maybeFinishRefresh();
   }
@@ -604,8 +595,11 @@ class _CamoPagedListState<T> extends State<CamoPagedList<T>> {
             : firstPageFailed || isEmpty
             ? 1
             : items + more + (retry ? 1 : 0));
+    // The live region says what is loading; "loading more" used to be an announcement event, which Android has
+    // deprecated (flutter/flutter#165510).
     final announce = switch (loading) {
       PagedLoad.initial || PagedLoad.refresh => style.strings.loading,
+      PagedLoad.more => style.strings.loadingMore,
       _ => null,
     };
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -717,7 +711,7 @@ class _CamoPagedListState<T> extends State<CamoPagedList<T>> {
               ),
             ),
           ),
-          // One polite announcement per first load; the skeleton rows themselves are hidden.
+          // One polite announcement per load; the skeleton rows themselves are hidden.
           Semantics(
             liveRegion: true,
             label: announce,

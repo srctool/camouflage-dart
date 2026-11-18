@@ -517,6 +517,19 @@ void main() {
       },
     );
 
+    testWidgets('loading more is a live region, not an announcement event', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        _app(_paged(CamoPagedListState(items: _page, loading: PagedLoad.more))),
+      );
+      await tester.pump();
+      final live = tester.getSemantics(find.bySemanticsLabel('Loading more'));
+      expect(live.getSemanticsData().flagsCollection.isLiveRegion, isTrue);
+      handle.dispose();
+    });
+
     testWidgets('a short first page loads more right away', (tester) async {
       var calls = 0;
       await tester.pumpWidget(
