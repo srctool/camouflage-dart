@@ -284,8 +284,9 @@ class CupertinoTreeRenderer implements CamoTreeRenderer {
               spacing: 4,
               children: [
                 ?slots.icon,
-                Text(
+                CamoHighlightedText(
                   slots.label,
+                  slots.highlight,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: style.textStyle.copyWith(color: c.text),

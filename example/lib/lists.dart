@@ -36,10 +36,12 @@ class _ListsDemoState extends State<ListsDemo> {
   var _selected = <Object>{};
   List<CamoTreeNode<String>>? _remote;
   final _columns = CamoColumnState(['name', 'role', 'age']);
+  final _search = CamoSpeedSearchState();
 
   @override
   void dispose() {
     _columns.dispose();
+    _search.dispose();
     super.dispose();
   }
 
@@ -99,6 +101,7 @@ class _ListsDemoState extends State<ListsDemo> {
       SizedBox(
         height: 200,
         child: CamoTree<String>(
+          speedSearch: _search,
           roots: [
             const CamoTreeNode<String>(
               id: 'docs',

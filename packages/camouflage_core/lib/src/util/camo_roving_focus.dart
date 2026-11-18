@@ -7,7 +7,10 @@ import 'package:flutter/widgets.dart';
 /// [CamoRovingFocusItem].
 class CamoRovingFocus extends StatefulWidget {
   /// Creates the group around [child].
-  const CamoRovingFocus({super.key, required this.child});
+  const CamoRovingFocus({super.key, this.controller, required this.child});
+
+  /// Lets the owner put focus on an item (a speed search jumping to a match).
+  final CamoRovingFocusController? controller;
 
   /// The items, anywhere below.
   final Widget child;
@@ -16,9 +19,47 @@ class CamoRovingFocus extends StatefulWidget {
   State<CamoRovingFocus> createState() => _CamoRovingFocusState();
 }
 
+/// Puts focus on an item of a [CamoRovingFocus] from outside it.
+class CamoRovingFocusController {
+  _CamoRovingFocusState? _group;
+
+  /// The item that last had focus, or `null` before any did.
+  int? get lastFocused => _group?._lastFocused;
+
+  /// Puts focus on item [index] if it is built and enabled; `false` when it is not (a lazy row out of view).
+  bool focusItem(int index) {
+    final item = _group?._items[index];
+    if (item == null || !item.widget.enabled) return false;
+    _group!._lastFocused = index;
+    item._node.requestFocus();
+    return true;
+  }
+}
+
 class _CamoRovingFocusState extends State<CamoRovingFocus> {
   final Map<int, _CamoRovingFocusItemState> _items = {};
   int? _lastFocused;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller?._group = this;
+  }
+
+  @override
+  void didUpdateWidget(CamoRovingFocus oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller?._group = null;
+      widget.controller?._group = this;
+    }
+  }
+
+  @override
+  void dispose() {
+    if (widget.controller?._group == this) widget.controller?._group = null;
+    super.dispose();
+  }
 
   List<int> get _enabled =>
       (_items.entries

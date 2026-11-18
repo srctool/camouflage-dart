@@ -14,6 +14,9 @@ import '../skin/interaction.dart';
 import '../theme/roles.dart';
 import '../util/camo_behavior.dart';
 import '../scrollbar/camo_scrollbar.dart';
+import '../speed_search/camo_highlighted_text.dart';
+import '../speed_search/camo_matcher.dart';
+import '../speed_search/camo_speed_search_state.dart';
 import 'camo_menu.dart';
 
 /// One entry in a menu: a [CamoMenuItem], a [CamoMenuDivider], a [CamoMenuGroup] or a [CamoMenuSubmenu].
@@ -122,7 +125,9 @@ class CamoMenuController extends ChangeNotifier {
 /// `open` for its press. The menu shows [items], or [panel] (custom content in a [CamoMenuPanel], ADR-30),
 /// below the anchor (above it near the bottom edge). Opened from the keyboard, the first item takes focus; Up
 /// and Down move, Home and End jump, typing jumps to the next item starting with the typed letters, Enter
-/// selects, and Esc or an outside tap closes it, returning focus to the anchor.
+/// selects, and Esc or an outside tap closes it, returning focus to the anchor. With [speedSearch] typing instead
+/// filters the items by what was typed (prefix, substring or camel-hump), highlights the matches, and Esc clears
+/// the text before it closes the menu; a menu with submenus keeps the plain type-ahead.
 class CamoMenuAnchor extends StatefulWidget {
   /// Creates an anchor.
   const CamoMenuAnchor({
@@ -130,8 +135,12 @@ class CamoMenuAnchor extends StatefulWidget {
     this.items = const [],
     this.panel,
     this.controller,
+    this.speedSearch = false,
     required this.builder,
   });
+
+  /// Typing filters the items instead of jumping to the next item that starts with the letters.
+  final bool speedSearch;
 
   /// The menu's entries.
   final List<CamoMenuEntry> items;
@@ -179,6 +188,9 @@ class _CamoMenuAnchorState extends State<CamoMenuAnchor> {
       (_) => widget.controller?._changed(),
     );
     final keyboard = openedByKeyboard(context);
+    final search = widget.speedSearch && widget.panel == null
+        ? CamoSpeedSearchState()
+        : null;
     final picked = await showCamoAnchoredPopup<CamoMenuItem>(
       context,
       builder: (popup) {
@@ -191,12 +203,14 @@ class _CamoMenuAnchorState extends State<CamoMenuAnchor> {
               MenuEntries(
                 entries: widget.items,
                 focusFirst: keyboard,
+                speedSearch: search,
                 onSelected: (item) => Navigator.of(popup).pop(item),
               ),
         );
       },
     );
     _popup = null;
+    search?.dispose();
     widget.controller?._changed();
     runAfterFrame(picked);
   }
@@ -336,7 +350,11 @@ class MenuEntries extends StatefulWidget {
     this.minWidth = 0,
     this.focusFirst = false,
     this.onBack,
+    this.speedSearch,
   });
+
+  /// Typing filters the entries (the root level of a menu without submenus).
+  final CamoSpeedSearchState? speedSearch;
 
   /// The entries.
   final List<CamoMenuEntry> entries;
@@ -376,10 +394,11 @@ class _MenuEntriesState extends State<MenuEntries> {
   @override
   void initState() {
     super.initState();
-    _rows = _flatten(widget.entries);
+    _rows = _flatten(_entries);
     _nodes = [for (final _ in _rows) FocusNode()];
     _rowKeys = [for (final _ in _rows) GlobalKey()];
     _portals = [for (final _ in _rows) OverlayPortalController()];
+    widget.speedSearch?.addListener(_searchChanged);
     if (widget.focusFirst) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final first = _enabled.firstOrNull;
@@ -388,8 +407,63 @@ class _MenuEntriesState extends State<MenuEntries> {
     }
   }
 
+  // The entries shown: the matching ones while a search runs (dividers go; a group keeps its matching items).
+  List<CamoMenuEntry> get _entries {
+    final search = widget.speedSearch;
+    if (search == null || !search.active) return widget.entries;
+    return [
+      for (final entry in widget.entries)
+        ...switch (entry) {
+          CamoMenuItem() => [if (search.matches(entry.text)) entry],
+          CamoMenuSubmenu() => [if (search.matches(entry.text)) entry],
+          CamoMenuDivider() => const <CamoMenuEntry>[],
+          CamoMenuGroup() => [
+            if (entry.items.any((i) => search.matches(i.text)))
+              CamoMenuGroup(
+                items: [
+                  for (final i in entry.items)
+                    if (search.matches(i.text)) i,
+                ],
+                exclusive: entry.exclusive,
+              ),
+          ],
+        },
+    ];
+  }
+
+  // The query changed: the rows are the new matches, and focus goes to the first (the focused row may be gone).
+  void _searchChanged() {
+    final old = _nodes;
+    setState(() {
+      _rows = _flatten(_entries);
+      _nodes = [for (final _ in _rows) FocusNode()];
+      _rowKeys = [for (final _ in _rows) GlobalKey()];
+      _portals = [for (final _ in _rows) OverlayPortalController()];
+      _open = -1;
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      for (final node in old) {
+        node.dispose();
+      }
+      final first = _enabled.firstOrNull;
+      if (mounted && first != null && widget.speedSearch!.active) {
+        _nodes[first].requestFocus();
+      }
+    });
+  }
+
+  @override
+  void didUpdateWidget(MenuEntries old) {
+    super.didUpdateWidget(old);
+    if (old.speedSearch != widget.speedSearch) {
+      old.speedSearch?.removeListener(_searchChanged);
+      widget.speedSearch?.addListener(_searchChanged);
+    }
+  }
+
   @override
   void dispose() {
+    widget.speedSearch?.removeListener(_searchChanged);
     _openTimer?.cancel();
     _closeTimer?.cancel();
     for (final node in _nodes) {
@@ -461,6 +535,10 @@ class _MenuEntriesState extends State<MenuEntries> {
 
   KeyEventResult _keys(FocusNode node, KeyEvent event) {
     if (event is! KeyDownEvent) return KeyEventResult.ignored;
+    // Speed search takes the typed keys first (and Esc and Backspace, while it has text).
+    if (widget.speedSearch?.handleKey(event) == KeyEventResult.handled) {
+      return KeyEventResult.handled;
+    }
     final enabled = _enabled;
     final key = event.logicalKey;
     final rtl = Directionality.of(context) == TextDirection.rtl;
@@ -522,6 +600,23 @@ class _MenuEntriesState extends State<MenuEntries> {
     return KeyEventResult.handled;
   }
 
+  // The typed text and the match count, over the menu's bottom start corner while a search runs.
+  Widget _withSearchOverlay(Widget menu) {
+    final search = widget.speedSearch;
+    if (search == null) return menu;
+    final spacing = Camouflage.spacingOf(context);
+    return Stack(
+      children: [
+        menu,
+        PositionedDirectional(
+          start: spacing.xs,
+          bottom: spacing.xs,
+          child: CamoSpeedSearchOverlay(state: search),
+        ),
+      ],
+    );
+  }
+
   // The nested menu, beside its row (end side, flipping to the start side, shifted up near the bottom edge).
   Widget _submenu(BuildContext overlay, int at) {
     final row = _rowKeys[at].currentContext?.findRenderObject();
@@ -561,6 +656,7 @@ class _MenuEntriesState extends State<MenuEntries> {
     final style = skin.menu.defaults(theme).merge(theme.components.menu);
     final reserveCheck = _rows.any((r) => r.item.checked != null);
     final reserveIcon = _rows.any((r) => r.item.leadingIcon != null);
+    widget.speedSearch?.matchCount = _rows.length;
     var index = 0;
     Widget row(CamoMenuItem item) {
       final at = index++;
@@ -578,6 +674,7 @@ class _MenuEntriesState extends State<MenuEntries> {
         onHover: (h) => _hover(at, h),
         submenuOpen: _open == at,
         onCollapse: _closeChild,
+        highlight: widget.speedSearch?.match(item.text) ?? const [],
       );
       if (submenu == null) return line;
       return OverlayPortal(
@@ -600,31 +697,33 @@ class _MenuEntriesState extends State<MenuEntries> {
         child: Focus(
           onKeyEvent: _keys,
           skipTraversal: true,
-          child: CamoScrollArea(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (final entry in widget.entries)
-                    switch (entry) {
-                      CamoMenuItem() => row(entry),
-                      CamoMenuSubmenu() => row(
-                        CamoMenuItem(
-                          text: entry.text,
-                          onPressed: () {},
-                          leadingIcon: entry.leadingIcon,
-                          enabled: entry.enabled,
+          child: _withSearchOverlay(
+            CamoScrollArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (final entry in _entries)
+                      switch (entry) {
+                        CamoMenuItem() => row(entry),
+                        CamoMenuSubmenu() => row(
+                          CamoMenuItem(
+                            text: entry.text,
+                            onPressed: () {},
+                            leadingIcon: entry.leadingIcon,
+                            enabled: entry.enabled,
+                          ),
                         ),
-                      ),
-                      CamoMenuDivider() => divider,
-                      CamoMenuGroup() => Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [for (final item in entry.items) row(item)],
-                      ),
-                    },
-                ],
+                        CamoMenuDivider() => divider,
+                        CamoMenuGroup() => Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [for (final item in entry.items) row(item)],
+                        ),
+                      },
+                  ],
+                ),
               ),
             ),
           ),
@@ -714,7 +813,10 @@ class _MenuRow extends StatefulWidget {
     this.onHover,
     this.submenuOpen = false,
     this.onCollapse,
+    this.highlight = const [],
   });
+
+  final List<MatchRange> highlight;
 
   final CamoMenuItem item;
   final _RowKind kind;
@@ -800,6 +902,7 @@ class _MenuRowState extends State<_MenuRow> {
               controller: _interaction,
               hasSubmenu: submenu,
               submenuOpen: w.submenuOpen,
+              highlight: w.highlight,
             ),
             MenuItemSlots(leadingIcon: item.leadingIcon),
             theme,

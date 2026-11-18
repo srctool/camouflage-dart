@@ -8,6 +8,11 @@ import '../util/camo_behavior.dart';
 import '../util/camo_roving_focus.dart';
 import '../icon/camo_icon.dart';
 import '../scrollbar/camo_scrollbar.dart';
+import '../speed_search/camo_highlighted_text.dart';
+import '../speed_search/camo_matcher.dart';
+import '../speed_search/camo_speed_search_state.dart';
+
+part 'tree_search.dart';
 
 /// Every color a tree uses.
 @immutable
@@ -245,6 +250,7 @@ class TreeNodeSlots {
     this.icon,
     required this.label,
     required this.wrapToggle,
+    this.highlight = const [],
   });
 
   /// The node's icon.
@@ -255,6 +261,9 @@ class TreeNodeSlots {
 
   /// Wraps the chevron so a press on it expands or collapses the node.
   final Widget Function(Widget chevron) wrapToggle;
+
+  /// The ranges of [label] a speed search matched; draw the label with `CamoHighlightedText(label, highlight)`.
+  final List<MatchRange> highlight;
 }
 
 /// Draws one node row.
@@ -318,6 +327,7 @@ class CamoTree<T> extends StatefulWidget {
     this.multiSelect = false,
     this.onLoadChildren,
     this.icon,
+    this.speedSearch,
   });
 
   /// The top-level nodes.
@@ -350,12 +360,72 @@ class CamoTree<T> extends StatefulWidget {
   /// A node's icon, given whether it is expanded.
   final Widget? Function(T value, bool expanded)? icon;
 
+  /// Typing in the tree filters it (or jumps) by the typed text, highlights the matches and keeps the ancestors
+  /// of matches open; `null` for no speed search.
+  final CamoSpeedSearchState? speedSearch;
+
   @override
   State<CamoTree<T>> createState() => _CamoTreeState<T>();
 }
 
 class _CamoTreeState<T> extends State<CamoTree<T>> {
   final _asked = <Object>{};
+  final _scroll = ScrollController();
+  final _focus = CamoRovingFocusController();
+  String _lastQuery = '';
+  _TreeSearch<T>? _found;
+  List<CamoTreeNode<T>>? _foundRoots;
+  String _foundQuery = '';
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  // The search result, kept while the roots and the query stay as they are.
+  _TreeSearch<T>? _search(CamoSpeedSearchState? search) {
+    if (search == null || !search.active) return _found = null;
+    if (_found == null ||
+        !identical(_foundRoots, widget.roots) ||
+        _foundQuery != search.query) {
+      _found = _searchTree(
+        widget.roots,
+        widget.label,
+        search.match,
+        filter: search.mode == SpeedSearchMode.filter,
+      );
+      _foundRoots = widget.roots;
+      _foundQuery = search.query;
+    }
+    return _found;
+  }
+
+  // After the query changed, moves focus to a match: the focused row may be gone from a filtered tree.
+  void _focusMatch(
+    CamoSpeedSearchState search,
+    List<int> hitRows,
+    double rowHeight,
+  ) {
+    final from = search.mode == SpeedSearchMode.jump
+        ? (_focus.lastFocused ?? 0)
+        : 0;
+    final target = hitRows.firstWhere(
+      (i) => i >= from,
+      orElse: () => hitRows.first,
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (_scroll.hasClients) {
+        _scroll.jumpTo(
+          (target * rowHeight).clamp(0, _scroll.position.maxScrollExtent),
+        );
+      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _focus.focusItem(target);
+      });
+    });
+  }
 
   void _setExpanded(Object id, bool open) => widget.onExpandedChanged(
     open ? {...widget.expanded, id} : ({...widget.expanded}..remove(id)),
@@ -374,7 +444,38 @@ class _CamoTreeState<T> extends State<CamoTree<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final visible = _flatten(widget.roots, widget.expanded);
+    final search = widget.speedSearch;
+    if (search == null) return _tree(context, null);
+    return ListenableBuilder(
+      listenable: search,
+      builder: (context, _) => _tree(context, search),
+    );
+  }
+
+  Widget _tree(BuildContext context, CamoSpeedSearchState? search) {
+    final found = _search(search);
+    final visible = found == null
+        ? _flatten(widget.roots, widget.expanded)
+        : _flatten(found.roots, {...widget.expanded, ...found.open});
+    final hitRows = found == null
+        ? const <int>[]
+        : [
+            for (var i = 0; i < visible.length; i++)
+              if (found.hits.containsKey(visible[i].node.id)) i,
+          ];
+    if (search != null) {
+      search.matchCount = found?.hits.length ?? 0;
+      final query = search.query;
+      if (query != _lastQuery) {
+        _lastQuery = query;
+        if (found != null && hitRows.isNotEmpty) {
+          final skin = Camouflage.skinOf(context, component: 'CamoTree');
+          final theme = Camouflage.themeOf(context, component: 'CamoTree');
+          final style = skin.tree.defaults(theme).merge(theme.components.tree);
+          _focusMatch(search, hitRows, style.rowHeight);
+        }
+      }
+    }
     // Unloaded children are asked for once, after the frame in which their node expanded.
     for (final v in visible) {
       final node = v.node;
@@ -387,27 +488,49 @@ class _CamoTreeState<T> extends State<CamoTree<T>> {
         );
       }
     }
-    return Semantics(
+    Widget tree = Semantics(
       container: true,
       explicitChildNodes: true,
       label: widget.semanticLabel,
-      child: CamoRovingFocus(
-        child: CamoScrollArea(
-          child: ListView.builder(
-            padding: EdgeInsets.zero,
-            itemCount: visible.length,
-            itemBuilder: (context, i) => _NodeRow<T>(
-              key: ValueKey(visible[i].node.id),
-              tree: widget,
-              visible: visible,
-              index: i,
-              setExpanded: _setExpanded,
-              select: _select,
+      child: CamoSpeedSearchKeys(
+        state: search,
+        child: CamoRovingFocus(
+          controller: _focus,
+          child: CamoScrollArea(
+            child: ListView.builder(
+              controller: _scroll,
+              padding: EdgeInsets.zero,
+              itemCount: visible.length,
+              itemBuilder: (context, i) => _NodeRow<T>(
+                key: ValueKey(visible[i].node.id),
+                tree: widget,
+                visible: visible,
+                index: i,
+                setExpanded: _setExpanded,
+                select: _select,
+                ranges: found?.hits[visible[i].node.id] ?? const [],
+                hitRows: hitRows,
+                focus: _focus,
+              ),
             ),
           ),
         ),
       ),
     );
+    if (search != null) {
+      final spacing = Camouflage.spacingOf(context);
+      tree = Stack(
+        children: [
+          Positioned.fill(child: tree),
+          PositionedDirectional(
+            start: spacing.s,
+            bottom: spacing.s,
+            child: CamoSpeedSearchOverlay(state: search),
+          ),
+        ],
+      );
+    }
+    return tree;
   }
 }
 
@@ -419,8 +542,14 @@ class _NodeRow<T> extends StatefulWidget {
     required this.index,
     required this.setExpanded,
     required this.select,
+    required this.ranges,
+    required this.hitRows,
+    required this.focus,
   });
 
+  final List<MatchRange> ranges;
+  final List<int> hitRows;
+  final CamoRovingFocusController focus;
   final CamoTree<T> tree;
   final List<_Visible<T>> visible;
   final int index;
@@ -442,8 +571,29 @@ class _NodeRowState<T> extends State<_NodeRow<T>> {
     super.dispose();
   }
 
+  // While a search runs, Up and Down move between the matches (skipping ancestors kept only to show them).
+  KeyEventResult _searchKey(KeyEvent event) {
+    final rows = widget.hitRows;
+    final down = event.logicalKey == LogicalKeyboardKey.arrowDown;
+    final up = event.logicalKey == LogicalKeyboardKey.arrowUp;
+    if (widget.tree.speedSearch?.active != true ||
+        rows.isEmpty ||
+        !(down || up)) {
+      return KeyEventResult.ignored;
+    }
+    final at = widget.index;
+    final target = down
+        ? rows.firstWhere((i) => i > at, orElse: () => rows.first)
+        : rows.lastWhere((i) => i < at, orElse: () => rows.last);
+    widget.focus.focusItem(target);
+    return KeyEventResult.handled;
+  }
+
   KeyEventResult _key(KeyEvent event, bool Function(int step) move) {
     if (event is! KeyDownEvent) return KeyEventResult.ignored;
+    if (_searchKey(event) == KeyEventResult.handled) {
+      return KeyEventResult.handled;
+    }
     final v = widget.visible[widget.index];
     final node = v.node;
     final open = widget.tree.expanded.contains(node.id);
@@ -533,6 +683,7 @@ class _NodeRowState<T> extends State<_NodeRow<T>> {
             TreeNodeSlots(
               icon: tree.icon?.call(node.value, open),
               label: tree.label(node.value),
+              highlight: widget.ranges,
               wrapToggle: (chevron) => expandable
                   ? GestureDetector(
                       behavior: HitTestBehavior.opaque,
