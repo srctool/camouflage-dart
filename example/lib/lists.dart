@@ -37,11 +37,48 @@ class _ListsDemoState extends State<ListsDemo> {
   List<CamoTreeNode<String>>? _remote;
   final _columns = CamoColumnState(['name', 'role', 'age']);
   final _search = CamoSpeedSearchState();
+  final _palette = CamoCommandPaletteState();
+  var _lastRun = 'Nothing yet';
+  late final List<CamoCommandSource> _sources = _buildSources();
+
+  CamoCommandItem _item(String title, [String? shortcut]) => CamoCommandItem(
+    id: title,
+    title: title,
+    shortcut: shortcut,
+    onSelect: () => setState(() => _lastRun = title),
+  );
+
+  List<CamoCommandSource> _buildSources() => [
+    CamoCommandSource.of(
+      title: 'Actions',
+      items: [
+        _item('Open Repository', 'Ctrl+O'),
+        _item('Commit', 'Ctrl+Enter'),
+        _item('Toggle Theme'),
+      ],
+    ),
+    CamoCommandSource.of(
+      title: 'Files',
+      items: [for (final m in _members) _item('${m.name}.md')],
+    ),
+    // A slow source: the others answer at once and this group shows a loading row.
+    CamoCommandSource(
+      title: 'Remote',
+      limit: 3,
+      search: (query) async {
+        await Future<void>.delayed(const Duration(milliseconds: 600));
+        return query.isEmpty
+            ? const []
+            : [_item('origin/main'), _item('origin/$query')];
+      },
+    ),
+  ];
 
   @override
   void dispose() {
     _columns.dispose();
     _search.dispose();
+    _palette.dispose();
     super.dispose();
   }
 
@@ -61,6 +98,9 @@ class _ListsDemoState extends State<ListsDemo> {
     crossAxisAlignment: CrossAxisAlignment.start,
     spacing: Camouflage.spacingOf(context).m,
     children: [
+      CamoButton(text: 'Find action', onPressed: _palette.show),
+      Text('Last run: $_lastRun'),
+      CamoCommandPalette(state: _palette, sources: _sources),
       SizedBox(
         height: 260,
         child: CamoDataTable<_Member>(

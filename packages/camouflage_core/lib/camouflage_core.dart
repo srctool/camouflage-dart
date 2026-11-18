@@ -59,6 +59,8 @@ export 'src/tree/camo_tree.dart';
 export 'src/carousel/camo_carousel.dart';
 export 'src/file_uploader/camo_file_uploader.dart' hide formatSize;
 export 'src/scrollbar/camo_scrollbar.dart';
+export 'src/palette/camo_command_palette.dart';
+export 'src/palette/camo_command_palette_model.dart';
 export 'src/speed_search/camo_highlighted_text.dart';
 export 'src/speed_search/camo_matcher.dart';
 export 'src/speed_search/camo_speed_search_state.dart';
