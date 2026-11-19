@@ -198,6 +198,13 @@ class _CamoRovingFocusItemState extends State<CamoRovingFocusItem> {
       (step) => _group?.move(widget.index, step) ?? false,
     );
     if (custom == KeyEventResult.handled) return custom!;
+    // Alt, Ctrl and Cmd with an arrow are the app's shortcut (reorder, jump), not a move between items.
+    final keyboard = HardwareKeyboard.instance;
+    if (keyboard.isAltPressed ||
+        keyboard.isControlPressed ||
+        keyboard.isMetaPressed) {
+      return KeyEventResult.ignored;
+    }
     final rtl = Directionality.of(context) == TextDirection.rtl;
     final key = event.logicalKey;
     final int step;

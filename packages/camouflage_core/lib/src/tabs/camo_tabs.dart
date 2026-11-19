@@ -583,7 +583,12 @@ class CamoTabsContainer extends StatefulWidget {
     this.appearance,
     this.position,
     this.enabled = true,
+    this.onOverflowChanged,
   });
+
+  /// Called when the scrolling row starts or stops being wider than the bar (a custom bar shows its "all tabs"
+  /// button then).
+  final ValueChanged<bool>? onOverflowChanged;
 
   /// The selected tab's index, or `-1`.
   final int selectedIndex;
@@ -690,11 +695,22 @@ class _CamoTabsContainerState extends State<CamoTabsContainer>
       );
     }
     _bounds = next;
+    _reportOverflow();
     _retarget();
     if (widget.scrollable && !_scrolledInitially && next.isNotEmpty) {
       _scrolledInitially = true;
       _scrollToSelected(animate: false);
     }
+  }
+
+  var _overflowing = false;
+
+  void _reportOverflow() {
+    final overflow =
+        _scroll.hasClients && _scroll.position.maxScrollExtent > 0.5;
+    if (overflow == _overflowing) return;
+    _overflowing = overflow;
+    widget.onOverflowChanged?.call(overflow);
   }
 
   TabIndicator? _targetFor(int index) => _bounds[index]?.indicator(_mode);
@@ -832,7 +848,15 @@ class CamoTabItem<T> extends StatefulWidget {
     required this.onPressed,
     required this.position,
     this.child,
+    this.semanticsValue,
+    this.customSemanticsActions,
   });
+
+  /// Extra state a screen reader reads after the label ("modified").
+  final String? semanticsValue;
+
+  /// Actions a screen reader offers besides activating the tab (Close, Move earlier).
+  final Map<CustomSemanticsAction, VoidCallback>? customSemanticsActions;
 
   /// The tab.
   final CamoTab<T> tab;
@@ -902,6 +926,8 @@ class _CamoTabItemState<T> extends State<CamoTabItem<T>> {
           enabled: enabled,
           selected: widget.selected,
           label: tab.semanticLabel ?? tab.label,
+          value: widget.semanticsValue,
+          customSemanticsActions: widget.customSemanticsActions,
           excludeSemantics: true,
           child: child,
         ),

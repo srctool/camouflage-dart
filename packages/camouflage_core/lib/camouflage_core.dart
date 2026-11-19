@@ -85,6 +85,8 @@ export 'src/skin/positions.dart';
 export 'src/surface/camo_surface.dart';
 export 'src/util/camo_clip.dart';
 export 'src/switch/camo_switch.dart';
+export 'src/tabs/camo_document_tabs.dart';
+export 'src/tabs/camo_document_tabs_model.dart';
 export 'src/tabs/camo_tabs.dart';
 export 'src/text/camo_text.dart';
 export 'src/textfield/camo_formats.dart';
