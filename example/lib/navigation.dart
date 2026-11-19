@@ -33,7 +33,12 @@ class NavigationDemo extends StatelessWidget {
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     spacing: Camouflage.spacingOf(context).l,
-    children: const [_ProductPage(), _CategoryBar(), _MessageList()],
+    children: const [
+      _ProductPage(),
+      _CategoryBar(),
+      _DocumentBar(),
+      _MessageList(),
+    ],
   );
 }
 
@@ -106,6 +111,75 @@ class _CategoryBarState extends State<_CategoryBar> {
     onChanged: (v) => setState(() => _selected = v),
     scrollable: true,
     tabs: [for (final c in _categories) CamoTab(c, label: c)],
+  );
+}
+
+// Editor-style tabs: twenty documents, close, drag or Alt+arrows to reorder, pin from the right-click menu.
+class _DocumentBar extends StatefulWidget {
+  const _DocumentBar();
+
+  @override
+  State<_DocumentBar> createState() => _DocumentBarState();
+}
+
+class _DocumentBarState extends State<_DocumentBar> {
+  final _state = CamoDocumentTabsState();
+  late var _documents = [
+    for (var i = 0; i < 20; i++)
+      CamoDocument(
+        id: i,
+        title: 'Document ${i + 1}.dart',
+        modified: i % 5 == 2,
+      ),
+  ];
+  Object _selected = 0;
+
+  @override
+  void dispose() {
+    _state.dispose();
+    super.dispose();
+  }
+
+  void _close(Object id) {
+    final order = _state.order;
+    final at = order.indexOf(id);
+    final next = at + 1 < order.length
+        ? order[at + 1]
+        : (at > 0 ? order[at - 1] : null);
+    setState(() {
+      _documents = [
+        for (final d in _documents)
+          if (d.id != id) d,
+      ];
+      if (_selected == id && next != null) _selected = next;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 420,
+    child: CamoDocumentTabs(
+      documents: _documents,
+      selected: _selected,
+      onSelect: (id) => setState(() => _selected = id),
+      onClose: _close,
+      state: _state,
+      onContextMenu: (doc) => [
+        CamoMenuItem(
+          text: _state.isPinned(doc.id) ? 'Unpin' : 'Pin',
+          onPressed: () => _state.isPinned(doc.id)
+              ? _state.unpin(doc.id)
+              : _state.pin(doc.id),
+        ),
+        CamoMenuItem(
+          text: 'Close others',
+          onPressed: () => setState(() {
+            _documents = [doc];
+            _selected = doc.id;
+          }),
+        ),
+      ],
+    ),
   );
 }
 
