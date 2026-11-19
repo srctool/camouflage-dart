@@ -377,11 +377,17 @@ class _CamoSearchFieldState extends State<CamoSearchField>
     final empty = _controller.text.isEmpty;
     final Widget input = Semantics(
       label: widget.placeholder,
-      child: CallbackShortcuts(
-        bindings: {
-          const SingleActivator(LogicalKeyboardKey.escape): () {
-            if (_controller.text.isNotEmpty) _clear();
-          },
+      // Esc clears a typed query; with nothing to clear it goes on (a command palette closes on it).
+      child: Focus(
+        canRequestFocus: false,
+        skipTraversal: true,
+        onKeyEvent: (node, event) {
+          final esc =
+              event is KeyDownEvent &&
+              event.logicalKey == LogicalKeyboardKey.escape;
+          if (!esc || _controller.text.isEmpty) return KeyEventResult.ignored;
+          _clear();
+          return KeyEventResult.handled;
         },
         child: _gestures.buildGestureDetector(
           behavior: HitTestBehavior.translucent,

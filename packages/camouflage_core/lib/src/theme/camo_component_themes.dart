@@ -50,6 +50,7 @@ import '../timepicker/camo_time_picker.dart';
 import '../toolbar/camo_toolbar.dart';
 import '../tooltip/camo_tooltip.dart';
 import '../topbar/camo_top_bar.dart';
+import '../palette/camo_command_palette.dart';
 import '../speed_search/camo_highlighted_text.dart';
 import '../tree/camo_tree.dart';
 
@@ -113,6 +114,7 @@ class CamoComponentThemes {
     this.splitPane,
     this.scrollbar,
     this.speedSearch,
+    this.commandPalette,
   });
 
   /// Icons outside any component.
@@ -277,6 +279,9 @@ class CamoComponentThemes {
   /// Speed search highlights and words.
   final CamoSpeedSearchTheme? speedSearch;
 
+  /// The command palette's words and size.
+  final CamoCommandPaletteTheme? commandPalette;
+
   /// A copy with the given fields replaced.
   CamoComponentThemes copyWith({
     CamoIconTheme? icon,
@@ -333,6 +338,7 @@ class CamoComponentThemes {
     CamoSplitPaneTheme? splitPane,
     CamoScrollbarTheme? scrollbar,
     CamoSpeedSearchTheme? speedSearch,
+    CamoCommandPaletteTheme? commandPalette,
   }) => CamoComponentThemes(
     icon: icon ?? this.icon,
     surface: surface ?? this.surface,
@@ -388,6 +394,7 @@ class CamoComponentThemes {
     splitPane: splitPane ?? this.splitPane,
     scrollbar: scrollbar ?? this.scrollbar,
     speedSearch: speedSearch ?? this.speedSearch,
+    commandPalette: commandPalette ?? this.commandPalette,
   );
 
   @override
@@ -446,7 +453,8 @@ class CamoComponentThemes {
       other.fileUploader == fileUploader &&
       other.splitPane == splitPane &&
       other.scrollbar == scrollbar &&
-      other.speedSearch == speedSearch;
+      other.speedSearch == speedSearch &&
+      other.commandPalette == commandPalette;
 
   @override
   int get hashCode => Object.hashAll([
@@ -504,5 +512,6 @@ class CamoComponentThemes {
     splitPane,
     scrollbar,
     speedSearch,
+    commandPalette,
   ]);
 }

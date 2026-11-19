@@ -307,6 +307,12 @@ class CamoMenuItemRow extends StatelessWidget {
     super.key,
     required this.item,
     required this.onSelected,
+    this.highlight = const [],
+    this.active = false,
+    this.reserveIcon = false,
+    this.hint,
+    this.focusable = true,
+    this.asOption = false,
   });
 
   /// The item.
@@ -315,13 +321,37 @@ class CamoMenuItemRow extends StatelessWidget {
   /// Runs when it's picked.
   final VoidCallback onSelected;
 
+  /// The ranges of the text to highlight (see [CamoMatcher]).
+  final List<MatchRange> highlight;
+
+  /// Draws the row as focused without giving it focus (the command palette keeps focus in its field).
+  final bool active;
+
+  /// `false` keeps the row out of the focus order (only a tap picks it).
+  final bool focusable;
+
+  /// Announce the row as a plain tappable row (no menu role), for rows outside a menu: a list's items
+  /// with the group in [hint].
+  final bool asOption;
+
+  /// Reserve the icon column even when this row has no icon.
+  final bool reserveIcon;
+
+  /// Extra words for a screen reader ("Actions, 2 of 5").
+  final String? hint;
+
   @override
   Widget build(BuildContext context) => _MenuRow(
     item: item,
     kind: item.checked == null ? _RowKind.plain : _RowKind.check,
     reserveCheck: item.checked != null,
-    reserveIcon: item.leadingIcon != null,
+    reserveIcon: reserveIcon || item.leadingIcon != null,
     onSelected: onSelected,
+    highlight: highlight,
+    active: active,
+    hint: hint,
+    focusable: focusable,
+    asOption: asOption,
   );
 }
 
@@ -814,9 +844,17 @@ class _MenuRow extends StatefulWidget {
     this.submenuOpen = false,
     this.onCollapse,
     this.highlight = const [],
+    this.active = false,
+    this.hint,
+    this.focusable = true,
+    this.asOption = false,
   });
 
   final List<MatchRange> highlight;
+  final bool active;
+  final bool focusable;
+  final bool asOption;
+  final String? hint;
 
   final CamoMenuItem item;
   final _RowKind kind;
@@ -834,12 +872,22 @@ class _MenuRow extends StatefulWidget {
 
 class _MenuRowState extends State<_MenuRow> {
   final _interaction = CamoInteractionController();
+  final _inert = FocusNode(canRequestFocus: false, skipTraversal: true);
   bool _wasHovered = false;
 
   @override
   void initState() {
     super.initState();
     _interaction.addListener(_hovered);
+    if (widget.active) _interaction.setFocused(true);
+  }
+
+  @override
+  void didUpdateWidget(_MenuRow oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.active != oldWidget.active) {
+      _interaction.setFocused(widget.active);
+    }
   }
 
   void _hovered() {
@@ -853,6 +901,7 @@ class _MenuRowState extends State<_MenuRow> {
   void dispose() {
     _interaction.removeListener(_hovered);
     _interaction.dispose();
+    _inert.dispose();
     super.dispose();
   }
 
@@ -870,15 +919,18 @@ class _MenuRowState extends State<_MenuRow> {
       child: CamoBehavior(
         controller: _interaction,
         enabled: item.enabled,
-        focusNode: w.focusNode,
+        focusNode: w.focusable ? w.focusNode : _inert,
         onActivate: w.onSelected,
         semantics: (child) => Semantics(
           role: switch (w.kind) {
-            _RowKind.plain || _RowKind.submenu => SemanticsRole.menuItem,
+            _RowKind.plain || _RowKind.submenu =>
+              w.asOption ? SemanticsRole.none : SemanticsRole.menuItem,
             _RowKind.check => SemanticsRole.menuItemCheckbox,
             _RowKind.radio => SemanticsRole.menuItemRadio,
           },
           enabled: item.enabled,
+          selected: w.active ? true : null,
+          hint: w.hint,
           checked: checkable ? item.checked == true : null,
           inMutuallyExclusiveGroup: w.kind == _RowKind.radio ? true : null,
           expanded: submenu ? w.submenuOpen : null,

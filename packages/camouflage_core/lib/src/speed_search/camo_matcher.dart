@@ -41,6 +41,19 @@ class MatchRange {
   String toString() => 'MatchRange($start, $end)';
 }
 
+/// A match with its [ranges] to highlight and a [score] to rank by: higher is a better match.
+@immutable
+class CamoMatch {
+  /// Creates a match.
+  const CamoMatch(this.ranges, this.score);
+
+  /// The matched stretches of the text.
+  final List<MatchRange> ranges;
+
+  /// How good the match is: higher ranks first.
+  final int score;
+}
+
 /// Matches a typed query against a text, case- and accent-insensitively ("zur" finds "Zürich"), and says which
 /// characters matched so they can be highlighted. Pure and window-free: the same rules back speed search and the
 /// command palette.
@@ -62,6 +75,77 @@ abstract final class CamoMatcher {
       MatchKind.fuzzy => _fuzzy(q, t),
       MatchKind.auto => _prefix(q, t) ?? _substring(q, t) ?? _hump(q, t, text),
     };
+  }
+
+  /// Like [match], and ranks the result: a prefix beats a substring (earlier and at a word start is better), that
+  /// beats a camel-hump match, and that beats a loose [MatchKind.fuzzy] one (consecutive letters and word starts
+  /// score, gaps cost). Shorter texts win ties. [MatchKind.fuzzy] tries every kind in that order. An empty query
+  /// matches everything with score 0.
+  static CamoMatch? score(
+    String query,
+    String text, {
+    MatchKind kind = MatchKind.fuzzy,
+  }) {
+    if (query.isEmpty) return const CamoMatch([], 0);
+    final q = _fold(query);
+    final t = _fold(text);
+    final kinds = switch (kind) {
+      MatchKind.auto => [
+        MatchKind.prefix,
+        MatchKind.substring,
+        MatchKind.camelHump,
+      ],
+      MatchKind.fuzzy => [
+        MatchKind.prefix,
+        MatchKind.substring,
+        MatchKind.camelHump,
+        MatchKind.fuzzy,
+      ],
+      _ => [kind],
+    };
+    for (final k in kinds) {
+      final ranges = switch (k) {
+        MatchKind.prefix => _prefix(q, t),
+        MatchKind.substring => _substring(q, t),
+        MatchKind.camelHump => _hump(q, t, text),
+        _ => _fuzzy(q, t),
+      };
+      if (ranges != null) return CamoMatch(ranges, _rank(k, ranges, text));
+    }
+    return null;
+  }
+
+  static int _rank(MatchKind kind, List<MatchRange> ranges, String text) {
+    final first = ranges.first.start;
+    final shortness = -(text.length < 200 ? text.length : 200) ~/ 4;
+    switch (kind) {
+      case MatchKind.prefix:
+        return 1000 + shortness;
+      case MatchKind.substring:
+        return 800 -
+            (first < 100 ? first : 100) +
+            (_isHumpStart(text, first) ? 100 : 0) +
+            shortness;
+      case MatchKind.camelHump:
+        return 600 + shortness;
+      default:
+        var runs = 0;
+        var matched = 0;
+        var starts = 0;
+        for (final r in ranges) {
+          final len = r.end - r.start;
+          runs += len * len * 4;
+          matched += len;
+          if (_isHumpStart(text, r.start)) starts += 15;
+        }
+        final gaps = ranges.last.end - first - matched;
+        return 200 +
+            runs +
+            starts -
+            (gaps < 100 ? gaps : 100) -
+            (first < 50 ? first : 50) +
+            shortness;
+    }
   }
 
   static List<MatchRange>? _prefix(String q, String t) =>
