@@ -258,6 +258,7 @@ class CamoContextMenuArea extends StatelessWidget {
     super.key,
     required this.items,
     required this.child,
+    this.excludeFromSemantics = false,
   });
 
   /// The menu's entries.
@@ -265,6 +266,10 @@ class CamoContextMenuArea extends StatelessWidget {
 
   /// The content.
   final Widget child;
+
+  /// `true` leaves the long-press action off the semantics tree, for content whose parent allows only certain
+  /// roles (a tab in a tab bar); the content then offers its own actions.
+  final bool excludeFromSemantics;
 
   Future<void> _open(BuildContext context, Offset global) async {
     final overlay =
@@ -292,6 +297,7 @@ class CamoContextMenuArea extends StatelessWidget {
     onEnter: kIsWeb ? (_) => BrowserContextMenu.disableContextMenu() : null,
     onExit: kIsWeb ? (_) => BrowserContextMenu.enableContextMenu() : null,
     child: GestureDetector(
+      excludeFromSemantics: excludeFromSemantics,
       onSecondaryTapUp: (d) => _open(context, d.globalPosition),
       onLongPressStart: (d) => _open(context, d.globalPosition),
       child: child,

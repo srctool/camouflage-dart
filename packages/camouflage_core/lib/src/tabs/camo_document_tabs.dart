@@ -266,7 +266,11 @@ class _CamoDocumentTabsState extends State<CamoDocumentTabs> {
     final menu = widget.onContextMenu;
     final Widget framed = menu == null
         ? tab
-        : CamoContextMenuArea(items: menu(doc), child: tab);
+        : CamoContextMenuArea(
+            items: menu(doc),
+            excludeFromSemantics: true,
+            child: tab,
+          );
     return KeyedSubtree(key: _key(doc.id), child: framed);
   }
 }

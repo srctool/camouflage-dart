@@ -250,5 +250,31 @@ void main() {
       expect(find.bySemanticsLabel('Show all tabs'), findsNothing);
       handle.dispose();
     });
+
+    testWidgets('a right-click menu keeps every child of the bar a tab', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        _app(
+          SizedBox(
+            width: 2000,
+            child: CamoDocumentTabs(
+              documents: _docs(3),
+              selected: 1,
+              onSelect: (_) {},
+              onClose: (_) {},
+              state: CamoDocumentTabsState(),
+              onContextMenu: (doc) => [
+                CamoMenuItem(text: 'Pin', onPressed: () {}),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      handle.dispose();
+    });
   });
 }
