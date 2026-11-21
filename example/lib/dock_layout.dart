@@ -1,16 +1,19 @@
 import 'package:camouflage_core/camouflage_core.dart';
 import 'package:flutter/widgets.dart';
 
+import 'app_icon.dart';
+
 // The M16 dock layout: five tool windows on three edges. Tap a stripe button to toggle a window, drag a divider,
 // use a window's menu to move it, maximize or hide it. "Show Log" moves keyboard focus into a window; Esc returns it
 // to the editor. The layout is app state: "Save layout" keeps a snapshot, "Restore" brings it back.
 
-const _windows = [
-  ('files', 'Files', DockEdge.left),
-  ('search', 'Search', DockEdge.left),
-  ('details', 'Details', DockEdge.right),
-  ('log', 'Log', DockEdge.bottom),
-  ('terminal', 'Terminal', DockEdge.bottom),
+// A stripe button's icon takes the skin's tint, so an open window shows in every skin (Material colors the icon).
+const _windows = <(String, String, DockEdge, Widget)>[
+  ('files', 'Files', DockEdge.left, AppIcon.archive()),
+  ('search', 'Search', DockEdge.left, AppIcon.search()),
+  ('details', 'Details', DockEdge.right, AppIcon.edit()),
+  ('log', 'Log', DockEdge.bottom, AppIcon.sort()),
+  ('terminal', 'Terminal', DockEdge.bottom, AppIcon.chevronRight()),
 ];
 
 /// The dock layout sample.
@@ -24,7 +27,7 @@ class DockLayoutDemo extends StatefulWidget {
 
 class _DockLayoutDemoState extends State<DockLayoutDemo> {
   final _state = CamoDockState(
-    {for (final (id, _, edge) in _windows) id: edge},
+    {for (final (id, _, edge, _) in _windows) id: edge},
     open: {'files', 'log'},
   );
   CamoDockSnapshot? _saved;
@@ -69,11 +72,11 @@ class _DockLayoutDemoState extends State<DockLayoutDemo> {
         child: CamoDockLayout(
           state: _state,
           toolWindows: [
-            for (final (id, title, edge) in _windows)
+            for (final (id, title, edge, icon) in _windows)
               CamoToolWindow(
                 id: id,
                 title: title,
-                icon: CamoText(title.substring(0, 1)),
+                icon: icon,
                 defaultEdge: edge,
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(12),
