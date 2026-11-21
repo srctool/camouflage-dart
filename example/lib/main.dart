@@ -24,6 +24,7 @@ import 'charts.dart';
 import 'editor.dart';
 import 'lists.dart';
 import 'panels.dart';
+import 'dock_layout.dart';
 import 'split_pane.dart';
 import 'small_data.dart';
 import 'selection.dart';
@@ -250,6 +251,7 @@ class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
                 child: PanelsDemo(),
               ),
               const _Section(title: 'Split panes', child: SplitPaneDemo()),
+              const _Section(title: 'Dock layout', child: DockLayoutDemo()),
               const _Section(
                 title: 'Editor: toolbars, button groups and a split button',
                 child: EditorDemo(),
