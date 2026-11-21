@@ -11,6 +11,8 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(const CamouflageExampleApp());
     await tester.pump();
+    await tester.tap(find.text('Overlays'));
+    await tester.pump(const Duration(milliseconds: 600));
     final button = find.text('Delete item');
     await tester.ensureVisible(button);
     await tester.pump(const Duration(seconds: 1));
@@ -26,9 +28,5 @@ void main() {
     }
     expect(find.text('Delete item?'), findsOneWidget);
     await gesture.removePointer();
-    // Let the paged list's fake requests finish before the tree goes.
-    for (var i = 0; i < 8; i++) {
-      await tester.pump(const Duration(seconds: 1));
-    }
   });
 }

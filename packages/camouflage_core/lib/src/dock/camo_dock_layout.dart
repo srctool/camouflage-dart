@@ -132,6 +132,16 @@ class _CamoDockLayoutState extends State<CamoDockLayout> {
     (inside ?? node).requestFocus();
   }
 
+  // Esc inside a window: focus goes to the center, or just out of the window when the center has nothing to focus.
+  void _leaveToCenter() {
+    final inside = _centerNode.traversalDescendants.firstOrNull;
+    if (inside != null) {
+      inside.requestFocus();
+    } else {
+      FocusManager.instance.primaryFocus?.unfocus();
+    }
+  }
+
   // A split of docks keeps its own state, which writes the dragged sizes back.
   CamoSplitState _split(String key, List<DockEdge?> edges) =>
       _splits.putIfAbsent(key, () {
@@ -270,7 +280,7 @@ class _CamoDockLayoutState extends State<CamoDockLayout> {
                 event.logicalKey != LogicalKeyboardKey.escape) {
               return KeyEventResult.ignored;
             }
-            _focusInto(_centerNode);
+            _leaveToCenter();
             return KeyEventResult.handled;
           },
           child: Column(
