@@ -28,6 +28,7 @@ class _DockLayoutDemoState extends State<DockLayoutDemo> {
     open: {'files', 'log'},
   );
   CamoDockSnapshot? _saved;
+  int _opened = 0;
 
   @override
   void dispose() {
@@ -64,7 +65,7 @@ class _DockLayoutDemoState extends State<DockLayoutDemo> {
         ],
       ),
       SizedBox(
-        height: 420,
+        height: 480,
         child: CamoDockLayout(
           state: _state,
           toolWindows: [
@@ -74,17 +75,41 @@ class _DockLayoutDemoState extends State<DockLayoutDemo> {
                 title: title,
                 icon: CamoText(title.substring(0, 1)),
                 defaultEdge: edge,
-                child: Padding(
+                child: SingleChildScrollView(
                   padding: const EdgeInsets.all(12),
-                  child: CamoText('$title tool window'),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 8,
+                    children: [
+                      CamoText('$title tool window'),
+                      // Something to focus: `focus(id)` lands here, Esc leaves.
+                      CamoButton(
+                        text: 'Refresh',
+                        appearance: Appearance.outline,
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
                 ),
               ),
           ],
-          center: const CamoSurface(
-            child: Padding(
-              padding: EdgeInsets.all(12),
-              child: CamoText(
-                'Editor: the center. Esc inside a tool window comes back here.',
+          center: CamoSurface(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 8,
+                children: [
+                  const CamoText(
+                    'Editor: the center. Esc inside a tool window comes back here.',
+                  ),
+                  CamoButton(
+                    text: 'Open file',
+                    appearance: Appearance.outline,
+                    onPressed: () => setState(() => _opened++),
+                  ),
+                  CamoText('Files opened: $_opened'),
+                ],
               ),
             ),
           ),

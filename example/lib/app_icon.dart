@@ -70,6 +70,11 @@ class AppIcon extends StatelessWidget {
     : _asset = 'upload',
       _mirror = false;
 
+  /// A paint palette.
+  const AppIcon.palette({super.key, this.size, this.color})
+    : _asset = 'palette',
+      _mirror = false;
+
   final String _asset;
   final bool _mirror;
 

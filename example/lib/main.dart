@@ -137,10 +137,168 @@ class CamouflageExampleApp extends StatefulWidget {
   State<CamouflageExampleApp> createState() => _CamouflageExampleAppState();
 }
 
+/// A component page of the catalog: a title, one line about it and its demo.
+class _Entry {
+  const _Entry(this.title, this.description, this.build);
+
+  final String title;
+  final String description;
+  final Widget Function() build;
+}
+
+final _entries = <_Entry>[
+  _Entry(
+    'Checkout',
+    'A screen built from the components: a bar, rows, text, a button, a link.',
+    () => const Checkout(),
+  ),
+  _Entry(
+    'Buttons',
+    'Six appearances in two tones, with icons, a disabled state and loading.',
+    () => const _Buttons(),
+  ),
+  _Entry(
+    'Icon buttons',
+    'Icon-only buttons: plain, tonal, toggled, destructive, tooltips.',
+    () => const _IconButtons(),
+  ),
+  _Entry(
+    'Text',
+    'The type scale, bold runs and links inside a sentence.',
+    () => const _Texts(),
+  ),
+  _Entry('Surfaces', 'Surfaces, levels and dividers.', () => const _Surfaces()),
+  _Entry(
+    'Progress',
+    'Linear and circular indicators, determinate and not.',
+    () => const _Progress(),
+  ),
+  _Entry(
+    'Selection controls',
+    'Checkboxes, switches, radios, a segmented control, a slider and a stepper.',
+    () => const SelectionControls(),
+  ),
+  _Entry(
+    'Forms',
+    'A sign-up form: text fields, validation and a submit button.',
+    () => const SignUpForm(),
+  ),
+  _Entry(
+    'Search',
+    'A search field filtering a list of countries.',
+    () => const CountrySearch(),
+  ),
+  _Entry(
+    'Dates and times',
+    'Date and time pickers, as fields and as wheels.',
+    () => const DatesAndTimes(),
+  ),
+  _Entry(
+    'Settings',
+    'A settings screen with grouped rows and toggles.',
+    () => const SettingsScreen(),
+  ),
+  _Entry(
+    'Cards',
+    'Cards in every appearance and tone, clickable and selectable.',
+    () => const Cards(),
+  ),
+  _Entry(
+    'Accordions',
+    'Disclosure sections that open and close.',
+    () => const Faq(),
+  ),
+  _Entry(
+    'Loading placeholders',
+    'Skeletons that stand in for content.',
+    () => const LoadingProfile(),
+  ),
+  _Entry(
+    'Paged list',
+    'An endless list with pull to refresh, retry and empty states.',
+    () => const Products(),
+  ),
+  _Entry(
+    'Overlays',
+    'Dialogs, sheets and the things that stack over the page.',
+    () => const OverlayDemo(),
+  ),
+  _Entry(
+    'Menus and dialogs',
+    'Menus, selects, dialogs and sheets over documents.',
+    () => const DocumentsScreen(),
+  ),
+  _Entry(
+    'Chips, badges, avatars',
+    'Small data display: tokens, counts and people.',
+    () => const DataDisplayDemo(),
+  ),
+  _Entry(
+    'Banners and snackbars',
+    'Messages: progress, snackbars and banners in an inbox.',
+    () => const InboxScreen(),
+  ),
+  _Entry(
+    'Tabs and FAB',
+    'Tabs and the floating action button.',
+    () => const NavigationDemo(),
+  ),
+  _Entry(
+    'Navigation',
+    'A bar, a rail and a drawer, by window size.',
+    () => const NavigationShellDemo(),
+  ),
+  _Entry(
+    'Popover and side sheet',
+    'Panels anchored to a control or to an edge.',
+    () => const PanelsDemo(),
+  ),
+  _Entry(
+    'Split panes',
+    'Resizable panes with an accessible, draggable divider.',
+    () => const SplitPaneDemo(),
+  ),
+  _Entry(
+    'Dock layout',
+    'Tool windows on side and bottom docks, opened from edge stripes.',
+    () => const DockLayoutDemo(),
+  ),
+  _Entry(
+    'Toolbars',
+    'Toolbars, button groups and a split button in an editor.',
+    () => const EditorDemo(),
+  ),
+  _Entry(
+    'Rating and steps',
+    'Stars, page controls, a path and progress steps.',
+    () => const SmallDataDemo(),
+  ),
+  _Entry(
+    'Table and tree',
+    'A data table and an outline tree.',
+    () => const ListsDemo(),
+  ),
+  _Entry(
+    'File upload',
+    'A folder, an uploader and a review.',
+    () => const AdminDemo(),
+  ),
+  _Entry(
+    'Charts',
+    'A dashboard of line, bar and donut charts.',
+    () => const ChartsDemo(),
+  ),
+];
+
+const _cardHeight = 112.0;
+const _cardIcon = 28.0;
+
 class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
   bool? _dark;
   SampleSkin _skin = SampleSkin.minimal;
   Brand _brand = Brand.defaultBrand;
+  _Entry? _open;
+  bool _themePage = false;
 
   @override
   Widget build(BuildContext context) => WidgetsApp(
@@ -165,135 +323,176 @@ class _CamouflageExampleAppState extends State<CamouflageExampleApp> {
     },
   );
 
-  // The gallery page. It reads the theme from the provider, so a skin, brand or dark switch rebuilds it
-  // inside the Navigator (which the date and time pickers open their routes on).
+  void _home() => setState(() {
+    _open = null;
+    _themePage = false;
+  });
+
+  // The page, laid out like a component catalog (as the Kotlin sample is): a home of component cards, a page per
+  // component (a title, a line about it and its demo), and a theme page for the skin, the brand and the dark mode,
+  // switched live at the provider. It reads the theme from the provider, so a switch rebuilds it inside the
+  // Navigator (which the date and time pickers open their routes on).
   Widget _page(BuildContext context) {
     final theme = Camouflage.themeOf(context);
     final brightness = theme.colors.surface.computeLuminance() < 0.5
         ? Brightness.dark
         : Brightness.light;
     final dark = brightness == Brightness.dark;
-    return CamoSurface(
-      child: SizedBox.expand(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(theme.spacing.l),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: theme.spacing.l,
-            children: [
-              _Switcher(
-                options: SampleSkin.values,
-                chosen: _skin,
-                label: (s) => s.label,
-                onChoose: (s) => setState(() => _skin = s),
-              ),
-              _Switcher(
-                options: Brand.values,
-                chosen: _brand,
-                label: (b) => b.label,
-                onChoose: (b) => setState(() => _brand = b),
-              ),
-              Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: CamoButton(
-                  text: dark ? 'Light' : 'Dark',
-                  onPressed: () => setState(() => _dark = !dark),
-                  appearance: Appearance.ghost,
-                ),
-              ),
-              const Checkout(),
-              const _Section(title: 'Buttons', child: _Buttons()),
-              const _Section(title: 'Icon buttons', child: _IconButtons()),
-              const _Section(title: 'Text', child: _Texts()),
-              const _Section(
-                title: 'Surfaces and dividers',
-                child: _Surfaces(),
-              ),
-              const _Section(title: 'Progress', child: _Progress()),
-              const _Section(
-                title: 'Selection controls',
-                child: SelectionControls(),
-              ),
-              const _Section(title: 'Sign-up form', child: SignUpForm()),
-              const _Section(title: 'Search', child: CountrySearch()),
-              const _Section(title: 'Dates and times', child: DatesAndTimes()),
-              const _Section(title: 'Settings screen', child: SettingsScreen()),
-              const _Section(title: 'Cards', child: Cards()),
-              const _Section(title: 'Accordions', child: Faq()),
-              const _Section(
-                title: 'Loading placeholders',
-                child: LoadingProfile(),
-              ),
-              const _Section(title: 'Paged list', child: Products()),
-              const _Section(title: 'Overlays', child: OverlayDemo()),
-              const _Section(
-                title: 'Documents: menus, selects, dialogs and sheets',
-                child: DocumentsScreen(),
-              ),
-              const _Section(
-                title: 'Chips, badges and avatars',
-                child: DataDisplayDemo(),
-              ),
-              const _Section(
-                title: 'Inbox: progress, snackbars and banners',
-                child: InboxScreen(),
-              ),
-              const _Section(
-                title: 'Tabs and the floating action button',
-                child: NavigationDemo(),
-              ),
-              const _Section(
-                title: 'Navigation: bar, rail and drawer by window size',
-                child: NavigationShellDemo(),
-              ),
-              const _Section(
-                title: 'Popover and side sheet',
-                child: PanelsDemo(),
-              ),
-              const _Section(title: 'Split panes', child: SplitPaneDemo()),
-              const _Section(title: 'Dock layout', child: DockLayoutDemo()),
-              const _Section(
-                title: 'Editor: toolbars, button groups and a split button',
-                child: EditorDemo(),
-              ),
-              const _Section(
-                title: 'Rating, pages, path and steps',
-                child: SmallDataDemo(),
-              ),
-              const _Section(title: 'Table and tree', child: ListsDemo()),
-              const _Section(
-                title: 'Admin: folder, upload and review',
-                child: AdminDemo(),
-              ),
-              const _Section(
-                title: 'Dashboard: line, bar and donut charts',
-                child: ChartsDemo(),
-              ),
-              CamouflageProvider(
-                theme: sampleTheme(_skin, _brand, brightness).copyWith(
-                  colors: CamoColors.fromSeed(
-                    primary: _promoSeed,
-                    brightness: brightness,
+    final inner = _themePage || _open != null;
+    final title = _themePage
+        ? 'Theme'
+        : _open != null
+        ? _open!.title
+        : 'Camouflage';
+    return PopScope(
+      canPop: !inner,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _home();
+      },
+      child: CamoSurface(
+        child: Column(
+          children: [
+            CamoTopBar(
+              title: title,
+              navigation: inner
+                  ? CamoIconButton(
+                      icon: const AppIcon.back(),
+                      semanticLabel: 'Back',
+                      onPressed: _home,
+                    )
+                  : null,
+              actions: [
+                if (!_themePage)
+                  CamoIconButton(
+                    icon: const AppIcon.palette(),
+                    semanticLabel: 'Theme',
+                    onPressed: () => setState(() {
+                      _open = null;
+                      _themePage = true;
+                    }),
                   ),
-                ),
-                child: _Section(
-                  title: 'Nested provider: a promo theme',
-                  child: Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: CamoButton(
-                      text: 'Claim offer',
-                      onPressed: () {},
-                      suffixIcon: const AppIcon.chevronRight(),
-                    ),
-                  ),
+              ],
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(theme.spacing.l),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  spacing: theme.spacing.l,
+                  children: [
+                    if (_themePage)
+                      ..._themeControls(theme, dark)
+                    else if (_open != null)
+                      ..._componentPage(theme, _open!, brightness)
+                    else
+                      ..._homeCards(theme),
+                    SizedBox(height: theme.spacing.xl),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
+
+  // The home: the component cards, two to a row.
+  List<Widget> _homeCards(CamoTheme theme) => [
+    CamoText('Components', style: theme.typography.titleMedium),
+    for (var i = 0; i < _entries.length; i += 2)
+      Row(
+        spacing: theme.spacing.m,
+        children: [
+          for (var j = i; j < i + 2; j++)
+            Expanded(
+              child: j < _entries.length
+                  ? CamoCard(
+                      onPressed: () => setState(() => _open = _entries[j]),
+                      child: SizedBox(
+                        height: _cardHeight,
+                        child: Padding(
+                          padding: EdgeInsets.all(theme.spacing.m),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const AppIcon.star(size: _cardIcon),
+                              Flexible(
+                                child: CamoText(
+                                  _entries[j].title,
+                                  style: theme.typography.labelLarge,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+        ],
+      ),
+  ];
+
+  // A component's page: what it is, then its demo (the promo nested provider is part of the checkout's page).
+  List<Widget> _componentPage(
+    CamoTheme theme,
+    _Entry entry,
+    Brightness brightness,
+  ) => [
+    CamoText('Description', style: theme.typography.titleMedium),
+    CamoText(entry.description, color: theme.colors.onSurfaceVariant),
+    CamoText('Examples', style: theme.typography.titleMedium),
+    _Section(title: entry.title, child: entry.build()),
+    if (entry.title == 'Checkout')
+      CamouflageProvider(
+        theme: sampleTheme(_skin, _brand, brightness).copyWith(
+          colors: CamoColors.fromSeed(
+            primary: _promoSeed,
+            brightness: brightness,
+          ),
+        ),
+        child: _Section(
+          title: 'Nested provider: a promo theme',
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: CamoButton(
+              text: 'Claim offer',
+              onPressed: () {},
+              suffixIcon: const AppIcon.chevronRight(),
+            ),
+          ),
+        ),
+      ),
+  ];
+
+  // The theme page: the skin, the brand and light or dark.
+  List<Widget> _themeControls(CamoTheme theme, bool dark) => [
+    CamoText('Skin', style: theme.typography.titleMedium),
+    _Switcher(
+      options: SampleSkin.values,
+      chosen: _skin,
+      label: (s) => s.label,
+      onChoose: (s) => setState(() => _skin = s),
+    ),
+    CamoText('Brand', style: theme.typography.titleMedium),
+    _Switcher(
+      options: Brand.values,
+      chosen: _brand,
+      label: (b) => b.label,
+      onChoose: (b) => setState(() => _brand = b),
+    ),
+    CamoText('Appearance', style: theme.typography.titleMedium),
+    _Switcher(
+      options: const [false, true],
+      chosen: dark,
+      label: (d) => d ? 'Dark' : 'Light',
+      onChoose: (d) => setState(() => _dark = d),
+    ),
+  ];
 }
 
 // A row of buttons, one per option; the chosen one is solid.

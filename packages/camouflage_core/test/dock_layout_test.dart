@@ -285,6 +285,62 @@ void main() {
       expect(_focusedKey(), const ValueKey('center'));
     });
 
+    testWidgets('Esc puts focus on the first control of the center', (
+      tester,
+    ) async {
+      final state = _state();
+      await tester.pumpWidget(
+        _app(
+          SizedBox(
+            width: 800,
+            height: 600,
+            child: CamoDockLayout(
+              state: state,
+              toolWindows: _windows,
+              center: CamoButton(text: 'Open file', onPressed: () {}),
+            ),
+          ),
+        ),
+      );
+      state.focus('details');
+      await tester.pumpAndSettle();
+      expect(_focusedKey(), const ValueKey('content-details'));
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pump();
+      final focus = FocusManager.instance.primaryFocus;
+      expect(focus, isNotNull);
+      expect(
+        focus!.context!.findAncestorWidgetOfExactType<CamoButton>(),
+        isNotNull,
+        reason: 'focus is inside the center button',
+      );
+    });
+
+    testWidgets('Esc leaves the window when the center has nothing to focus', (
+      tester,
+    ) async {
+      final state = _state();
+      await tester.pumpWidget(
+        _app(
+          SizedBox(
+            width: 800,
+            height: 600,
+            child: CamoDockLayout(
+              state: state,
+              toolWindows: _windows,
+              center: const SizedBox.expand(),
+            ),
+          ),
+        ),
+      );
+      state.focus('details');
+      await tester.pumpAndSettle();
+      expect(_focusedKey(), const ValueKey('content-details'));
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pump();
+      expect(_focusedKey(), isNot(const ValueKey('content-details')));
+    });
+
     testWidgets('the left dock sits at the end in right to left', (
       tester,
     ) async {
