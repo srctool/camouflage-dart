@@ -17,6 +17,7 @@ import '../datepicker/camo_calendar.dart';
 import '../dialog/camo_dialog.dart';
 import '../divider/camo_divider.dart';
 import '../fab/camo_fab.dart';
+import '../dock/camo_dock_model.dart';
 import '../file_uploader/camo_file_uploader.dart';
 import '../scrollbar/camo_scrollbar.dart';
 import '../split_pane/camo_split_pane.dart';
@@ -115,6 +116,7 @@ class CamoComponentThemes {
     this.scrollbar,
     this.speedSearch,
     this.commandPalette,
+    this.dock,
   });
 
   /// Icons outside any component.
@@ -282,6 +284,9 @@ class CamoComponentThemes {
   /// The command palette's words and size.
   final CamoCommandPaletteTheme? commandPalette;
 
+  /// The dock layout's stripes and words.
+  final CamoDockTheme? dock;
+
   /// A copy with the given fields replaced.
   CamoComponentThemes copyWith({
     CamoIconTheme? icon,
@@ -339,6 +344,7 @@ class CamoComponentThemes {
     CamoScrollbarTheme? scrollbar,
     CamoSpeedSearchTheme? speedSearch,
     CamoCommandPaletteTheme? commandPalette,
+    CamoDockTheme? dock,
   }) => CamoComponentThemes(
     icon: icon ?? this.icon,
     surface: surface ?? this.surface,
@@ -395,6 +401,7 @@ class CamoComponentThemes {
     scrollbar: scrollbar ?? this.scrollbar,
     speedSearch: speedSearch ?? this.speedSearch,
     commandPalette: commandPalette ?? this.commandPalette,
+    dock: dock ?? this.dock,
   );
 
   @override
@@ -454,7 +461,8 @@ class CamoComponentThemes {
       other.splitPane == splitPane &&
       other.scrollbar == scrollbar &&
       other.speedSearch == speedSearch &&
-      other.commandPalette == commandPalette;
+      other.commandPalette == commandPalette &&
+      other.dock == dock;
 
   @override
   int get hashCode => Object.hashAll([
@@ -513,5 +521,6 @@ class CamoComponentThemes {
     scrollbar,
     speedSearch,
     commandPalette,
+    dock,
   ]);
 }
