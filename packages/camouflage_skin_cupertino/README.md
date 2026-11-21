@@ -14,7 +14,7 @@ A *skin* is the part of Camouflage that decides how every component looks and fe
 - Opacity feedback instead of a ripple; a 3 px focus ring for the keyboard
 - Two surfaces: **Classic** (blur materials) and **Liquid Glass** (blur, tint and a specular edge)
 - Inset grouped lists, centered alerts, wheel date and time pickers, segmented-control tabs
-- All 52 components
+- All 57 components
 
 ## Getting started
 

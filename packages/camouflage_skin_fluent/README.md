@@ -14,7 +14,7 @@ A *skin* is the part of Camouflage that decides how every component looks and fe
 - Subtle hover and press layers, a focus ring in the brand color
 - Density that follows the input device (`FluentDensity`)
 - A brand ramp derived from one color: `fluentTheme(brand:)`
-- All 52 components
+- All 57 components
 
 ## Getting started
 

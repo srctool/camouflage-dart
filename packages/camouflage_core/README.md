@@ -10,7 +10,7 @@
 
 ## Features
 
-- **52 components** across actions, inputs and forms, structure, overlays, feedback, navigation and data (see the table below), all driven by the skin and theme.
+- **57 components** across actions, inputs and forms, structure, overlays, feedback, navigation and data (see the table below), all driven by the skin and theme.
 - **Five ready skins:** [Minimal](https://pub.dev/packages/camouflage_skin_minimal), [Fluent](https://pub.dev/packages/camouflage_skin_fluent), [Material](https://pub.dev/packages/camouflage_skin_material), [Cupertino](https://pub.dev/packages/camouflage_skin_cupertino) and [Carbon](https://pub.dev/packages/camouflage_skin_carbon); and a contract to write your own.
 - **A real theme system:** colors built from a seed (`CamoColors.fromSeed`), type scale, shapes, spacing, elevation, motion, component-level overrides and your own brand token sets. `theme.validate()` reports low-contrast pairs; it never silently changes a color.
 - **Adaptive:** the provider reads the window size, input kind and platform and applies the theme's adaptive rules; a navigation bar, rail and drawer can be one adaptive layout.
@@ -126,10 +126,10 @@ Per-component overrides (`CamoComponentThemes`) and your own token sets live on 
 | Text and surfaces | `CamoText`, `CamoIcon`, `CamoSurface`, `CamoDivider`, `CamoSkeleton` |
 | Actions | `CamoButton`, `CamoIconButton`, `CamoFab`, `CamoButtonGroup`, `CamoSplitButton`, `CamoToolbar` |
 | Inputs and forms | `CamoTextField`, `CamoSearchField`, `CamoCheckbox`, `CamoRadio`, `CamoSwitch`, `CamoSegmentedControl`, `CamoSlider`, `CamoStepper`, `CamoSelect`, `CamoDatePicker`, `CamoTimePicker`, `CamoRating`, `CamoFileUploader`, `CamoForm` and its rules |
-| Structure and lists | `CamoCard`, `CamoListItem`, `CamoAccordion`, `CamoTopBar`, `CamoPagedList`, `CamoDataTable`, `CamoTree`, `CamoCarousel`, `CamoImage` |
-| Overlays | `CamoDialog`, `CamoBottomSheet`, `CamoSideSheet`, `CamoPopover`, `CamoMenu`, `CamoTooltip` |
+| Structure and lists | `CamoCard`, `CamoListItem`, `CamoAccordion`, `CamoTopBar`, `CamoPagedList`, `CamoDataTable`, `CamoTree`, `CamoCarousel`, `CamoImage`, `CamoSplitPane`, `CamoDockLayout`, `CamoScrollArea` |
+| Overlays | `CamoDialog`, `CamoBottomSheet`, `CamoSideSheet`, `CamoPopover`, `CamoMenu`, `CamoTooltip`, `CamoCommandPalette` |
 | Feedback and status | `CamoProgressCircle`, `CamoProgressBar`, `CamoProgressSteps`, `CamoSnackbar` and the messenger, `CamoBanner`, `CamoChip`, `CamoBadge`, `CamoAvatar` |
-| Navigation | `CamoTabs`, `CamoNavigationBar`, `CamoNavigationRail`, `CamoNavigationDrawer`, `CamoBreadcrumb`, `CamoPagination` |
+| Navigation | `CamoTabs`, `CamoNavigationBar`, `CamoNavigationRail`, `CamoNavigationDrawer`, `CamoBreadcrumb`, `CamoPagination`, `CamoDocumentTabs` |
 
 ## Skins
 

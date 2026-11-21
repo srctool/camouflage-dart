@@ -1,4 +1,4 @@
-## Unreleased
+## 0.2.0
 
 - Scrollbars: a thin overlay thumb that grows under the pointer and shows while scrolling.
 - Split pane dividers: a hairline that darkens on hover and takes the accent while dragged, with a focus ring.

@@ -13,7 +13,7 @@ A *skin* is the part of Camouflage that decides how every component looks and fe
 - M3 proportions, shapes and state layers
 - The M3 ink ripple, from the small `material_ui` package (the only Material code this skin uses)
 - `materialTheme(seed:)` builds the whole color scheme from one seed color; without a seed, the M3 baseline
-- All 52 components
+- All 57 components
 
 ## Getting started
 

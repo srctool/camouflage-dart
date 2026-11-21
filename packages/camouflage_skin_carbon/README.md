@@ -14,7 +14,7 @@ A *skin* is the part of Camouflage that decides how every component looks and fe
 - Layered surfaces: each nested layer is one gray step, shadows only on overlays
 - Text fields with a bottom border only, a 48 px square button with the label at the start
 - An inset 2 px focus border that never moves the layout
-- All 52 components
+- All 57 components
 
 ## Getting started
 

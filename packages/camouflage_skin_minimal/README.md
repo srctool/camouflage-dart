@@ -13,7 +13,7 @@ A *skin* is the part of Camouflage that decides how every component looks and fe
 - Flat surfaces: no shadows, a 1 px hairline from the first level of depth
 - A content-color fade for hover and press, a 2 px focus ring for the keyboard
 - Ink (near black in light, near white in dark) as the primary, or your own `accent`
-- All 52 components
+- All 57 components
 
 ## Getting started
 
